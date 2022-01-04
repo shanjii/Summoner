@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:league_checker/checker/widgets/modals/add_summoner.dart';
+import 'package:league_checker/checker/widgets/modals/summoner_viewer.dart';
 import 'package:league_checker/repositories/checker_repository.dart';
-import 'package:league_checker/checker/widgets/summoner_viewer.dart';
 import 'package:league_checker/model/summoner_model.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/spacer.dart';
 import 'package:league_checker/utils/waiter.dart';
 import 'package:provider/provider.dart';
-import 'add_summoner.dart';
 
 class CardEmpty extends StatelessWidget {
   const CardEmpty({Key? key}) : super(key: key);
@@ -116,7 +116,7 @@ class CardSummoner extends StatefulWidget {
 class _CardSummonerState extends State<CardSummoner> {
   late CheckerRepository checkerRepository;
 
-  bool retrievingUser = false;
+  bool retrievingCardUser = false;
 
   @override
   Widget build(BuildContext context) {
@@ -127,8 +127,7 @@ class _CardSummonerState extends State<CardSummoner> {
       child: Material(
         color: primaryDarkblue,
         child: InkWell(
-          onTap: () => openSummonerCard(
-              widget.summoner.name, checkerRepository.statusBarHeight),
+          onTap: () => openSummonerCard(widget.summoner.name),
           child: Column(
             children: [
               SizedBox(
@@ -177,7 +176,7 @@ class _CardSummonerState extends State<CardSummoner> {
                       ],
                     ),
                     const Spacer(),
-                    retrievingUser == true
+                    retrievingCardUser == true
                         ? const CircularProgressIndicator()
                         : const Icon(
                             Icons.exit_to_app_rounded,
@@ -199,20 +198,22 @@ class _CardSummonerState extends State<CardSummoner> {
     );
   }
 
-  openSummonerCard(summonerName, statusBarHeight) async {
-    setState(() => retrievingUser = true);
-    var response = await checkerRepository.getSummonerData(summonerName);
-    if (response == 200) {
-      showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return const SummonerViewer();
-        },
-        backgroundColor: primaryDarkblue,
-        isScrollControlled: true,
-      );
-      await wait(200);
+  openSummonerCard(summonerName) async {
+    if (!checkerRepository.isLoadingSummoner) {
+      setState(() => retrievingCardUser = true);
+      var response = await checkerRepository.getSummonerData(summonerName);
+      if (response == 200) {
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return const SummonerViewer();
+          },
+          backgroundColor: primaryDarkblue,
+          isScrollControlled: true,
+        );
+        await wait(200);
+      }
+      setState(() => retrievingCardUser = false);
     }
-    setState(() => retrievingUser = false);
   }
 }

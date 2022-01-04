@@ -18,6 +18,7 @@ class CheckerRepository extends ChangeNotifier {
   double height = 0;
   double width = 0;
   String background = 'rengar';
+  bool isLoadingSummoner = false;
 
   List<SummonerModel> summonerList = [];
   List<ChampionMasteryModel> masteryList = [];
@@ -30,10 +31,17 @@ class CheckerRepository extends ChangeNotifier {
   //Return summoner data from specified summoner name
   getSummonerData(String summonerName) async {
     try {
+      isLoadingSummoner = true;
       var response = await summonerAPI.getSummonerData(summonerName);
 
-      if (response == 403) return 403;
-      if (response == 404) return 404;
+      if (response == 403) {
+        isLoadingSummoner = false;
+        return 403;
+      }
+      if (response == 404) {
+        isLoadingSummoner = false;
+        return 404;
+      }
 
       var decodedJsonData = convert.jsonDecode(response.body);
       summonerData = SummonerModel.fromJson(decodedJsonData);
@@ -45,6 +53,7 @@ class CheckerRepository extends ChangeNotifier {
         getMatchList()
       ]);
 
+      isLoadingSummoner = false;
       return 200;
     } catch (error) {
       throw Exception(error);

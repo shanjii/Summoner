@@ -52,10 +52,13 @@ class SummonerViewer extends StatelessWidget {
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: const Icon(
-                          Icons.close,
-                          color: primaryGold,
-                          size: 40,
+                        child: const RotatedBox(
+                          quarterTurns: 1,
+                          child: Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: primaryGold,
+                            size: 40,
+                          ),
                         ),
                       ),
                     ),

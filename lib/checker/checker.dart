@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/checker/widgets/background_selector.dart';
+import 'package:league_checker/checker/widgets/modals/background_selector.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/spacer.dart';
 import 'package:provider/provider.dart';
 import '../repositories/checker_repository.dart';
-import 'widgets/browser.dart';
-import 'widgets/cards.dart';
-import 'widgets/logo.dart';
+import 'widgets/components/browser.dart';
+import 'widgets/components/cards.dart';
+import 'widgets/components/logo.dart';
 
 class CheckerPage extends StatefulWidget {
   const CheckerPage({Key? key}) : super(key: key);

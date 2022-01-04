@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:league_checker/checker/widgets/modals/summoner_viewer.dart';
 import 'package:league_checker/repositories/checker_repository.dart';
-import 'package:league_checker/checker/widgets/summoner_viewer.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/spacer.dart';
