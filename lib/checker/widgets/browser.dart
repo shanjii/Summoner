@@ -5,42 +5,25 @@ import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/spacer.dart';
 import 'package:league_checker/utils/waiter.dart';
+import 'package:provider/provider.dart';
 
 class Browser extends StatefulWidget {
-  const Browser({Key? key, required this.vm}) : super(key: key);
-  final CheckerRepository vm;
+  const Browser({Key? key}) : super(key: key);
 
   @override
   _BrowserState createState() => _BrowserState();
 }
 
 class _BrowserState extends State<Browser> {
+  late CheckerRepository checkerRepository;
+
   TextEditingController searchController = TextEditingController();
   bool retrievingUser = false;
 
-  retrieveUser() async {
-    FocusManager.instance.primaryFocus?.unfocus();
-    setState(() => retrievingUser = true);
-    var response = await widget.vm.getSummonerData(searchController.text);
-    if (response == 200) {
-      showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return SummonerViewer(vm: widget.vm);
-        },
-        backgroundColor: primaryDarkblue,
-        isScrollControlled: true,
-      );
-      await wait(200);
-      setState(() => retrievingUser = false);
-    } else {
-      setState(() => retrievingUser = false);
-      //
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    checkerRepository = Provider.of<CheckerRepository>(context);
+
     return Column(
       children: [
         Padding(
@@ -94,5 +77,27 @@ class _BrowserState extends State<Browser> {
         ),
       ],
     );
+  }
+
+  retrieveUser() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    setState(() => retrievingUser = true);
+    var response =
+        await checkerRepository.getSummonerData(searchController.text);
+    if (response == 200) {
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return const SummonerViewer();
+        },
+        backgroundColor: primaryDarkblue,
+        isScrollControlled: true,
+      );
+      await wait(200);
+      setState(() => retrievingUser = false);
+    } else {
+      setState(() => retrievingUser = false);
+      await checkerRepository.showNotFoundMessage();
+    }
   }
 }

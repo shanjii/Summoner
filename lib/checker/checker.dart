@@ -17,7 +17,7 @@ class CheckerPage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<CheckerPage> {
-  late CheckerRepository vm;
+  late CheckerRepository checkerRepository;
 
   @override
   void initState() {
@@ -28,8 +28,8 @@ class _MyHomePageState extends State<CheckerPage> {
 
   @override
   Widget build(BuildContext context) {
-    vm = Provider.of<CheckerRepository>(context);
-    vm.getDeviceDimensions(context);
+    checkerRepository = Provider.of<CheckerRepository>(context);
+    checkerRepository.getDeviceDimensions(context);
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -46,13 +46,13 @@ class _MyHomePageState extends State<CheckerPage> {
                     colorFilter: const ColorFilter.mode(
                         primaryDarkblueOpacity, BlendMode.srcOver),
                     image: AssetImage(
-                        "assets/images/backgrounds/${vm.background}.jpg"),
+                        "assets/images/backgrounds/${checkerRepository.background}.jpg"),
                     fit: BoxFit.cover,
                   ),
                 ),
                 child: Column(
                   children: [
-                    verticalSpacer(vm.statusBarHeight + 20),
+                    verticalSpacer(checkerRepository.statusBarHeight + 20),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
@@ -60,8 +60,7 @@ class _MyHomePageState extends State<CheckerPage> {
                         child: Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            onTap: () =>
-                                openBackgroundSelector(vm.statusBarHeight),
+                            onTap: () => openBackgroundSelector(),
                             child: const Icon(
                               Icons.wallpaper,
                               color: primaryGold,
@@ -74,28 +73,28 @@ class _MyHomePageState extends State<CheckerPage> {
                     verticalSpacer(10),
                     titleLogo(),
                     verticalSpacer(20),
-                    Browser(vm: vm),
+                    const Browser(),
                     verticalSpacer(20),
                     MediaQuery.removePadding(
                       removeTop: true,
                       context: context,
                       child: SizedBox(
-                        height: vm.height - vm.statusBarHeight - 290,
+                        height: checkerRepository.height -
+                            checkerRepository.statusBarHeight -
+                            290,
                         child: ListView.builder(
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
-                            if (index == vm.summonerList.length) {
-                              return CardEmpty(
-                                vm: vm,
-                              );
+                            if (index ==
+                                checkerRepository.summonerList.length) {
+                              return const CardEmpty();
                             } else {
                               return CardSummoner(
-                                summoner: vm.summonerList[index],
-                                vm: vm,
+                                summoner: checkerRepository.summonerList[index],
                               );
                             }
                           },
-                          itemCount: vm.summonerList.length + 1,
+                          itemCount: checkerRepository.summonerList.length + 1,
                         ),
                       ),
                     ),
@@ -105,11 +104,13 @@ class _MyHomePageState extends State<CheckerPage> {
             ),
             AnimatedPositioned(
               duration: const Duration(milliseconds: 300),
-              top: vm.showUserNotFound == false ? -30 : vm.statusBarHeight + 15,
+              top: checkerRepository.showUserNotFound == false
+                  ? -30
+                  : checkerRepository.statusBarHeight + 15,
               curve: Curves.easeOut,
               child: Container(
                 height: 30,
-                width: vm.width - 100,
+                width: checkerRepository.width - 100,
                 decoration: BoxDecoration(
                   color: primaryGold,
                   borderRadius: BorderRadius.circular(20),
@@ -127,15 +128,11 @@ class _MyHomePageState extends State<CheckerPage> {
     );
   }
 
-  openBackgroundSelector(statusBarHeight) {
+  openBackgroundSelector() {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return BackgroundSelector(
-          statusBarHeight: statusBarHeight,
-          selected: vm.background,
-          vm: vm,
-        );
+        return const BackgroundSelector();
       },
       backgroundColor: primaryDarkblue,
     );

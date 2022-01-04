@@ -13,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 var summonerAPI = SummonerAPI();
 
 class CheckerRepository extends ChangeNotifier {
-
   bool showUserNotFound = false;
   double statusBarHeight = 0;
   double height = 0;
@@ -26,7 +25,9 @@ class CheckerRepository extends ChangeNotifier {
   List<ChampionData> championList = [];
   late SummonerModel summonerData;
   List<MatchData> matchList = [];
+  List myMatchStats = [];
 
+  //Return summoner data from specified summoner name
   getSummonerData(String summonerName) async {
     try {
       var response = await summonerAPI.getSummonerData(summonerName);
@@ -50,6 +51,7 @@ class CheckerRepository extends ChangeNotifier {
     }
   }
 
+  //Return the top 3 champion masteries from specified summoner ID
   Future getChampionMastery(summonerId) async {
     masteryList.clear();
 
@@ -64,6 +66,7 @@ class CheckerRepository extends ChangeNotifier {
     }
   }
 
+  //Return all recent matches from the selected summoner
   Future getMatchList() async {
     matchList.clear();
 
@@ -79,8 +82,22 @@ class CheckerRepository extends ChangeNotifier {
     if (promises.isNotEmpty) {
       await Future.wait(promises);
     }
+
+    matchList.sort((b, a) => a.info.gameCreation.compareTo(b.info
+        .gameCreation)); //Needed for match order based on most the recent match
+
+    if (matchList.isNotEmpty) {
+      for (var match in matchList) {
+        for (var participant in match.info.participants) {
+          if (participant.puuid == summonerData.puuid) {
+            myMatchStats.add(participant);
+          }
+        }
+      }
+    }
   }
 
+  //Return the match data from specified match ID
   Future getMatchData(id) async {
     var response = await summonerAPI.getMatchData(id);
     var decodedJsonData = convert.jsonDecode(response);
@@ -88,6 +105,7 @@ class CheckerRepository extends ChangeNotifier {
     matchList.add(MatchData.fromJson(decodedJsonData));
   }
 
+  //Return all the ranks of the specified summoner ID
   Future getSummonerRank(summonerId) async {
     rankList.clear();
     var response = await summonerAPI.getSummonerRank(summonerId);
@@ -98,6 +116,7 @@ class CheckerRepository extends ChangeNotifier {
     }
   }
 
+  //Load all champion data into a list
   Future getChampionData() async {
     if (championList.isEmpty) {
       var response = await summonerAPI.getChampionData();
@@ -109,6 +128,7 @@ class CheckerRepository extends ChangeNotifier {
     }
   }
 
+  //Add a favorited summoner to the summoner list and save them in the memory
   addFavoriteSummoner(String summonerName) async {
     try {
       var response = await summonerAPI.getSummonerData(summonerName);
@@ -122,12 +142,14 @@ class CheckerRepository extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('summoners', convert.jsonEncode(summonerList));
 
+      notifyListeners();
       return 200;
     } catch (error) {
       return 400;
     }
   }
 
+  //Return any stored summoners in the memory
   updateSummonerList() async {
     final prefs = await SharedPreferences.getInstance();
     var summonerString = prefs.getString('summoners');
@@ -141,6 +163,7 @@ class CheckerRepository extends ChangeNotifier {
     notifyListeners();
   }
 
+  //Clear summoner list variable and the data stored in the device
   removeSummonerList() async {
     summonerList.clear();
     final prefs = await SharedPreferences.getInstance();
@@ -148,6 +171,7 @@ class CheckerRepository extends ChangeNotifier {
     notifyListeners();
   }
 
+  //Return any selected background stored in the memory
   updateBackground() async {
     final prefs = await SharedPreferences.getInstance();
     var selectedBackground = prefs.getString('background');
@@ -157,6 +181,7 @@ class CheckerRepository extends ChangeNotifier {
     notifyListeners();
   }
 
+  //Register the selected background into memory
   selectBackground(background) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('background', background);
@@ -170,10 +195,22 @@ class CheckerRepository extends ChangeNotifier {
     width = MediaQuery.of(context).size.width;
   }
 
+  //Activate user not found warning
   showNotFoundMessage() async {
     showUserNotFound = true;
+    notifyListeners();
     await wait(3000);
     showUserNotFound = false;
     notifyListeners();
+  }
+
+  //Return the champion image url from a champion ID
+  getChampionImage(championId) {
+    for (var element in championList) {
+      if (element.key == championId.toString()) {
+        return element.image.full.replaceAll('.png', '');
+      }
+    }
+    return 'Undefined';
   }
 }

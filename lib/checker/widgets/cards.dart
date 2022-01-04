@@ -7,55 +7,17 @@ import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/spacer.dart';
 import 'package:league_checker/utils/waiter.dart';
+import 'package:provider/provider.dart';
 import 'add_summoner.dart';
 
 class CardEmpty extends StatelessWidget {
-  const CardEmpty({Key? key, required this.vm}) : super(key: key);
-  final CheckerRepository vm;
-
-  showAddSummoner(context) async {
-    await wait(200);
-    showModalBottomSheet(
-      barrierColor: Colors.transparent,
-      isScrollControlled: true,
-      context: context,
-      backgroundColor: primaryDarkblue,
-      builder: (BuildContext context) {
-        return AddSummoner(
-          vm: vm,
-        );
-      },
-    );
-  }
-
-  showRemoveSummoner(context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Remove all favorited Summoners?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('CANCEL'),
-            ),
-            TextButton(
-              onPressed: () {
-                vm.removeSummonerList();
-                Navigator.pop(context);
-              },
-              child: const Text('REMOVE'),
-            )
-          ],
-        );
-      },
-    );
-  }
+  const CardEmpty({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    late CheckerRepository checkerRepository;
+    checkerRepository = Provider.of<CheckerRepository>(context);
+
     return Row(
       children: [
         Padding(
@@ -64,10 +26,10 @@ class CardEmpty extends StatelessWidget {
             color: Colors.grey.withOpacity(0.2),
             child: InkWell(
               onTap: () {
-                showRemoveSummoner(context);
+                showRemoveSummoner(context, checkerRepository);
               },
               child: SizedBox(
-                width: (vm.width / 2) - 80,
+                width: (checkerRepository.width / 2) - 80,
                 height: 102,
                 child: const Icon(
                   Icons.delete_outline,
@@ -87,7 +49,7 @@ class CardEmpty extends StatelessWidget {
                 showAddSummoner(context);
               },
               child: SizedBox(
-                width: (vm.width / 2) + 10,
+                width: (checkerRepository.width / 2) + 10,
                 height: 102,
                 child: const Icon(
                   Icons.add,
@@ -101,12 +63,50 @@ class CardEmpty extends StatelessWidget {
       ],
     );
   }
+
+  showAddSummoner(context) async {
+    await wait(200);
+    showModalBottomSheet(
+      barrierColor: Colors.transparent,
+      isScrollControlled: true,
+      context: context,
+      backgroundColor: primaryDarkblue,
+      builder: (BuildContext context) {
+        return const AddSummoner();
+      },
+    );
+  }
+
+  showRemoveSummoner(context, checkerRepository) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Remove all favorited Summoners?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('CANCEL'),
+            ),
+            TextButton(
+              onPressed: () {
+                checkerRepository.removeSummonerList();
+                Navigator.pop(context);
+              },
+              child: const Text('REMOVE'),
+            )
+          ],
+        );
+      },
+    );
+  }
 }
 
 class CardSummoner extends StatefulWidget {
-  const CardSummoner({Key? key, required this.summoner, required this.vm})
-      : super(key: key);
-  final CheckerRepository vm;
+  const CardSummoner({Key? key, required this.summoner}) : super(key: key);
+
   final SummonerModel summoner;
 
   @override
@@ -114,34 +114,21 @@ class CardSummoner extends StatefulWidget {
 }
 
 class _CardSummonerState extends State<CardSummoner> {
-  bool retrievingUser = false;
+  late CheckerRepository checkerRepository;
 
-  openSummonerCard(summonerName, statusBarHeight) async {
-    setState(() => retrievingUser = true);
-    var response = await widget.vm.getSummonerData(summonerName);
-    if (response == 200) {
-      showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return SummonerViewer(vm: widget.vm);
-        },
-        backgroundColor: primaryDarkblue,
-        isScrollControlled: true,
-      );
-      await wait(200);
-    }
-    setState(() => retrievingUser = false);
-  }
+  bool retrievingUser = false;
 
   @override
   Widget build(BuildContext context) {
+    checkerRepository = Provider.of<CheckerRepository>(context);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 20, left: 30, right: 30),
       child: Material(
         color: primaryDarkblue,
         child: InkWell(
-          onTap: () =>
-              openSummonerCard(widget.summoner.name, widget.vm.statusBarHeight),
+          onTap: () => openSummonerCard(
+              widget.summoner.name, checkerRepository.statusBarHeight),
           child: Column(
             children: [
               SizedBox(
@@ -210,5 +197,22 @@ class _CardSummonerState extends State<CardSummoner> {
         ),
       ),
     );
+  }
+
+  openSummonerCard(summonerName, statusBarHeight) async {
+    setState(() => retrievingUser = true);
+    var response = await checkerRepository.getSummonerData(summonerName);
+    if (response == 200) {
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return const SummonerViewer();
+        },
+        backgroundColor: primaryDarkblue,
+        isScrollControlled: true,
+      );
+      await wait(200);
+    }
+    setState(() => retrievingUser = false);
   }
 }

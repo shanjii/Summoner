@@ -1,23 +1,17 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:league_checker/repositories/checker_repository.dart';
 import 'package:league_checker/style/color_palette.dart';
-import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/spacer.dart';
+import 'package:provider/provider.dart';
 
 class BackgroundSelector extends StatelessWidget {
-  const BackgroundSelector(
-      {Key? key,
-      required this.statusBarHeight,
-      required this.selected,
-      required this.vm})
-      : super(key: key);
-  final String selected;
-  final double statusBarHeight;
-  final CheckerRepository vm;
+  const BackgroundSelector({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    late CheckerRepository checkerRepository;
+    checkerRepository = Provider.of<CheckerRepository>(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -38,7 +32,7 @@ class BackgroundSelector extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border.all(width: 2, color: primaryGold),
               ),
-              height: selected == "rengar" ? 300 : 270,
+              height: checkerRepository.background == "rengar" ? 300 : 270,
               width: 100,
               child: Ink(
                 decoration: const BoxDecoration(
@@ -50,7 +44,7 @@ class BackgroundSelector extends StatelessWidget {
                 ),
                 child: InkWell(
                   onTap: () {
-                    vm.selectBackground('rengar');
+                    checkerRepository.selectBackground('rengar');
                     Navigator.pop(context);
                   },
                   splashColor: Colors.brown.withOpacity(0.5),
@@ -61,7 +55,7 @@ class BackgroundSelector extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border.all(width: 2, color: primaryGold),
               ),
-              height: selected == "aatrox" ? 300 : 270,
+              height: checkerRepository.background == "aatrox" ? 300 : 270,
               width: 100,
               child: Ink(
                 decoration: const BoxDecoration(
@@ -73,7 +67,7 @@ class BackgroundSelector extends StatelessWidget {
                 ),
                 child: InkWell(
                   onTap: () {
-                    vm.selectBackground('aatrox');
+                    checkerRepository.selectBackground('aatrox');
                     Navigator.pop(context);
                   },
                   splashColor: Colors.brown.withOpacity(0.5),
@@ -84,7 +78,7 @@ class BackgroundSelector extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border.all(width: 2, color: primaryGold),
               ),
-              height: selected == "mordekaiser" ? 300 : 270,
+              height: checkerRepository.background == "mordekaiser" ? 300 : 270,
               width: 100,
               child: Ink(
                 decoration: const BoxDecoration(
@@ -96,7 +90,7 @@ class BackgroundSelector extends StatelessWidget {
                 ),
                 child: InkWell(
                   onTap: () {
-                    vm.selectBackground('mordekaiser');
+                    checkerRepository.selectBackground('mordekaiser');
                     Navigator.pop(context);
                   },
                   splashColor: Colors.brown.withOpacity(0.5),

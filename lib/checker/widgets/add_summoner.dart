@@ -4,44 +4,26 @@ import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/spacer.dart';
 import 'package:league_checker/utils/waiter.dart';
+import 'package:provider/provider.dart';
 
 class AddSummoner extends StatefulWidget {
-  const AddSummoner({Key? key, required this.vm}) : super(key: key);
-
-  final CheckerRepository vm;
+  const AddSummoner({Key? key}) : super(key: key);
 
   @override
   _AddSummonerState createState() => _AddSummonerState();
 }
 
 class _AddSummonerState extends State<AddSummoner> {
+  late CheckerRepository checkerRepository;
+
   TextEditingController addFavoriteController = TextEditingController();
   bool retrievingUser = false;
   bool addedUser = false;
 
-  retrieveFavoriteUser() async {
-    setState(() => retrievingUser = true);
-    var response =
-        await widget.vm.addFavoriteSummoner(addFavoriteController.text);
-    if (response == 200) {
-      setState(() {
-        addedUser = true;
-        retrievingUser = false;
-      });
-      await wait(1300);
-      Navigator.pop(context);
-      setState(() => addedUser = false);
-      addFavoriteController.text = '';
-    } else {
-      setState(() {
-        retrievingUser = false;
-      });
-      widget.vm.showNotFoundMessage();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    checkerRepository = Provider.of<CheckerRepository>(context);
+
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -49,8 +31,8 @@ class _AddSummonerState extends State<AddSummoner> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding:
-                  EdgeInsets.fromLTRB(10, widget.vm.statusBarHeight + 10, 0, 0),
+              padding: EdgeInsets.fromLTRB(
+                  10, checkerRepository.statusBarHeight + 10, 0, 0),
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -136,13 +118,13 @@ class _AddSummonerState extends State<AddSummoner> {
         ),
         AnimatedPositioned(
           duration: const Duration(milliseconds: 300),
-          top: widget.vm.showUserNotFound == false
+          top: checkerRepository.showUserNotFound == false
               ? -30
-              : widget.vm.statusBarHeight + 15,
+              : checkerRepository.statusBarHeight + 15,
           curve: Curves.easeOut,
           child: Container(
             height: 30,
-            width: widget.vm.width - 100,
+            width: checkerRepository.width - 100,
             decoration: BoxDecoration(
               color: primaryGoldOpaque,
               borderRadius: BorderRadius.circular(20),
@@ -156,5 +138,26 @@ class _AddSummonerState extends State<AddSummoner> {
         ),
       ],
     );
+  }
+
+  retrieveFavoriteUser() async {
+    setState(() => retrievingUser = true);
+    var response =
+        await checkerRepository.addFavoriteSummoner(addFavoriteController.text);
+    if (response == 200) {
+      setState(() {
+        addedUser = true;
+        retrievingUser = false;
+      });
+      await wait(1300);
+      Navigator.pop(context);
+      setState(() => addedUser = false);
+      addFavoriteController.text = '';
+    } else {
+      setState(() {
+        retrievingUser = false;
+      });
+      checkerRepository.showNotFoundMessage();
+    }
   }
 }
