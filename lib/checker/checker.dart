@@ -26,20 +26,6 @@ class _MyHomePageState extends State<CheckerPage> {
     context.read<CheckerRepository>().updateSummonerList();
   }
 
-  openBackgroundSelector(statusBarHeight) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return BackgroundSelector(
-          statusBarHeight: statusBarHeight,
-          selected: vm.background,
-          vm: vm,
-        );
-      },
-      backgroundColor: primaryDarkblue,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     vm = Provider.of<CheckerRepository>(context);
@@ -138,6 +124,20 @@ class _MyHomePageState extends State<CheckerPage> {
           ],
         ),
       ),
+    );
+  }
+
+  openBackgroundSelector(statusBarHeight) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BackgroundSelector(
+          statusBarHeight: statusBarHeight,
+          selected: vm.background,
+          vm: vm,
+        );
+      },
+      backgroundColor: primaryDarkblue,
     );
   }
 }
