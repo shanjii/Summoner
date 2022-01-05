@@ -10,11 +10,7 @@ class SummonerAPI {
       ),
       headers: {"X-Riot-Token": riotToken},
     );
-    if (response.statusCode != 200) {
-      return response.statusCode;
-    } else {
-      return response;
-    }
+    return response;
   }
 
   Future getChampionMastery(summonerId) async {
@@ -24,10 +20,10 @@ class SummonerAPI {
       ),
       headers: {"X-Riot-Token": riotToken},
     );
-    if (response.statusCode != 200) {
-      return response.statusCode;
-    } else {
+    if (response.statusCode == 200) {
       return response.body;
+    } else {
+      throw Exception('Error retrieving champion mastery');
     }
   }
 
@@ -38,10 +34,10 @@ class SummonerAPI {
       ),
       headers: {"X-Riot-Token": riotToken},
     );
-    if (response.statusCode != 200) {
-      return response.statusCode;
-    } else {
+    if (response.statusCode == 200) {
       return response.body;
+    } else {
+      throw Exception('Error retrieving summoner rank');
     }
   }
 
@@ -51,10 +47,10 @@ class SummonerAPI {
         'http://ddragon.leagueoflegends.com/cdn/11.24.1/data/en_US/champion.json',
       ),
     );
-    if (response.statusCode != 200) {
-      return response.statusCode;
-    } else {
+    if (response.statusCode == 200) {
       return response.body;
+    } else {
+      throw Exception('Error retrieving champion data');
     }
   }
 
@@ -65,10 +61,10 @@ class SummonerAPI {
       ),
       headers: {"X-Riot-Token": riotToken},
     );
-    if (response.statusCode != 200) {
-      return response.statusCode;
-    } else {
+    if (response.statusCode == 200) {
       return response.body;
+    } else {
+      throw Exception('Error retrieving match data');
     }
   }
 
@@ -79,10 +75,10 @@ class SummonerAPI {
       ),
       headers: {"X-Riot-Token": riotToken},
     );
-    if (response.statusCode != 200) {
-      return response.statusCode;
-    } else {
+    if (response.statusCode == 200) {
       return response.body;
+    } else {
+      throw Exception('Error retrieving matches');
     }
   }
 }

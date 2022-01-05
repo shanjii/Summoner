@@ -34,27 +34,20 @@ class CheckerRepository extends ChangeNotifier {
       isLoadingSummoner = true;
       var response = await summonerAPI.getSummonerData(summonerName);
 
-      if (response == 403) {
-        isLoadingSummoner = false;
-        return 403;
-      }
-      if (response == 404) {
-        isLoadingSummoner = false;
-        return 404;
-      }
+      if (response.statusCode == 200) {
+        var decodedJsonData = convert.jsonDecode(response.body);
+        summonerData = SummonerModel.fromJson(decodedJsonData);
 
-      var decodedJsonData = convert.jsonDecode(response.body);
-      summonerData = SummonerModel.fromJson(decodedJsonData);
-
-      await Future.wait([
-        getChampionMastery(summonerData.id),
-        getSummonerRank(summonerData.id),
-        getChampionData(),
-        getMatchList()
-      ]);
+        await Future.wait([
+          getChampionMastery(summonerData.id),
+          getSummonerRank(summonerData.id),
+          getChampionData(),
+          getMatchList()
+        ]);
+      }
 
       isLoadingSummoner = false;
-      return 200;
+      return response.statusCode;
     } catch (error) {
       throw Exception(error);
     }
