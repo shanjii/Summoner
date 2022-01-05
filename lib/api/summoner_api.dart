@@ -23,7 +23,7 @@ class SummonerAPI {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Error retrieving champion mastery');
+      throw 'Error retrieving champion mastery';
     }
   }
 
@@ -37,7 +37,7 @@ class SummonerAPI {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Error retrieving summoner rank');
+      throw 'Error retrieving summoner rank';
     }
   }
 
@@ -50,7 +50,7 @@ class SummonerAPI {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Error retrieving champion data');
+      throw 'Error retrieving champion data';
     }
   }
 
@@ -64,7 +64,7 @@ class SummonerAPI {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Error retrieving match data');
+      throw 'Error retrieving match data';
     }
   }
 
@@ -78,7 +78,7 @@ class SummonerAPI {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Error retrieving matches');
+      throw 'Error retrieving matches';
     }
   }
 }
