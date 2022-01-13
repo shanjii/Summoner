@@ -82,22 +82,16 @@ class _MyHomePageState extends State<CheckerPage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 8.0),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => openBackgroundSelector(),
-                              child: checkerRepository.updatingDevice
-                                  ? const Icon(
-                                      Icons.connect_without_contact_rounded,
-                                      color: primaryGold,
-                                      size: 30,
-                                    )
-                                  : Text(
-                                      checkerRepository.apiVersion,
-                                      style: level,
-                                    ),
-                            ),
-                          ),
+                          child: checkerRepository.updatingDevice
+                              ? const Icon(
+                                  Icons.connect_without_contact_rounded,
+                                  color: primaryGold,
+                                  size: 30,
+                                )
+                              : Text(
+                                  checkerRepository.apiVersion,
+                                  style: level,
+                                ),
                         ),
                       ],
                     ),
