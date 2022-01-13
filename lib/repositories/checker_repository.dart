@@ -13,6 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 var summonerAPI = SummonerAPI();
 
 class CheckerRepository extends ChangeNotifier {
+  String apiVersion = '';
+  bool updatingDevice = false;
   bool showUserNotFound = false;
   double statusBarHeight = 0;
   double height = 0;
@@ -121,7 +123,7 @@ class CheckerRepository extends ChangeNotifier {
   //Load all champion data into a list
   Future getChampionData() async {
     if (championList.isEmpty) {
-      var response = await summonerAPI.getChampionData();
+      var response = await summonerAPI.getChampionData(apiVersion);
       var decodedJsonData = convert.jsonDecode(response)['data'];
 
       decodedJsonData.values.forEach((value) {
@@ -214,5 +216,39 @@ class CheckerRepository extends ChangeNotifier {
       }
     }
     return 'Undefined';
+  }
+
+  checkApiVersion() async {
+    final prefs = await SharedPreferences.getInstance();
+    var devicePatch = prefs.getString('patch');
+
+    if (devicePatch == null) {
+      await updateDevice();
+    } else {
+      apiVersion = devicePatch;
+      notifyListeners();
+      
+      var response = await summonerAPI.getCurrentPatch();
+      var decodedJsonData = convert.jsonDecode(response);
+
+      if (devicePatch != decodedJsonData[0]) {
+        await updateDevice();
+      } else {
+        apiVersion = devicePatch;
+        notifyListeners();
+      }
+    }
+  }
+
+  updateDevice() async {
+    updatingDevice = true;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    var response = await summonerAPI.getCurrentPatch();
+    var decodedJsonData = convert.jsonDecode(response);
+    apiVersion = decodedJsonData[0];
+    prefs.setString('patch', apiVersion);
+    updatingDevice = false;
+    notifyListeners();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:league_checker/api/summoner_api.dart';
 import 'package:league_checker/checker/widgets/modals/background_selector.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
@@ -18,12 +19,21 @@ class CheckerPage extends StatefulWidget {
 
 class _MyHomePageState extends State<CheckerPage> {
   late CheckerRepository checkerRepository;
+  late List<Image> backgrounds = [];
 
   @override
   void initState() {
     super.initState();
-    context.read<CheckerRepository>().updateBackground();
-    context.read<CheckerRepository>().updateSummonerList();
+    verifyLocalFiles();
+    loadBackgrounds();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    for (var background in backgrounds) {
+      precacheImage(background.image, context);
+    }
   }
 
   @override
@@ -53,22 +63,43 @@ class _MyHomePageState extends State<CheckerPage> {
                 child: Column(
                   children: [
                     verticalSpacer(checkerRepository.statusBarHeight + 20),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => openBackgroundSelector(),
-                            child: const Icon(
-                              Icons.wallpaper,
-                              color: primaryGold,
-                              size: 30,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => openBackgroundSelector(),
+                              child: const Icon(
+                                Icons.wallpaper,
+                                color: primaryGold,
+                                size: 30,
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => openBackgroundSelector(),
+                              child: checkerRepository.updatingDevice
+                                  ? const Icon(
+                                      Icons.connect_without_contact_rounded,
+                                      color: primaryGold,
+                                      size: 30,
+                                    )
+                                  : Text(
+                                      checkerRepository.apiVersion,
+                                      style: level,
+                                    ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     verticalSpacer(10),
                     titleLogo(),
@@ -131,10 +162,23 @@ class _MyHomePageState extends State<CheckerPage> {
   openBackgroundSelector() {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (BuildContext context) {
         return const BackgroundSelector();
       },
-      backgroundColor: primaryDarkblue,
+      backgroundColor: Colors.transparent,
     );
+  }
+
+  verifyLocalFiles() {
+    context.read<CheckerRepository>().updateBackground();
+    context.read<CheckerRepository>().checkApiVersion();
+    context.read<CheckerRepository>().updateSummonerList();
+  }
+
+  loadBackgrounds() {
+    backgrounds.add(Image.asset("assets/images/backgrounds/rengar.jpg"));
+    backgrounds.add(Image.asset("assets/images/backgrounds/aatrox.jpg"));
+    backgrounds.add(Image.asset("assets/images/backgrounds/mordekaiser.jpg"));
   }
 }

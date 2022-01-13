@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
 String riotToken = "RGAPI-c25fb5bc-2008-4a8c-b193-faa5d6292f7f";
 
@@ -41,10 +42,10 @@ class SummonerAPI {
     }
   }
 
-  Future getChampionData() async {
+  Future getChampionData(patch) async {
     var response = await http.get(
       Uri.parse(
-        'http://ddragon.leagueoflegends.com/cdn/11.24.1/data/en_US/champion.json',
+        'http://ddragon.leagueoflegends.com/cdn/$patch/data/en_US/champion.json',
       ),
     );
     if (response.statusCode == 200) {
@@ -80,5 +81,15 @@ class SummonerAPI {
     } else {
       throw 'Error retrieving matches';
     }
+  }
+
+  Future getCurrentPatch() async {
+    var response = await http.get(
+      Uri.parse(
+        'https://ddragon.leagueoflegends.com/api/versions.json',
+      ),
+      headers: {"X-Riot-Token": riotToken},
+    );
+    return response.body;
   }
 }
