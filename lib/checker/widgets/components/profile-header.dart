@@ -104,7 +104,7 @@ class ProfileHeader extends StatelessWidget {
                           child: Text(
                             checkerRepository.summonerData.summonerLevel
                                 .toString(),
-                            style: level,
+                            style: textSmall,
                           ),
                         ),
                       ),

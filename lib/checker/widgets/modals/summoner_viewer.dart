@@ -25,7 +25,7 @@ class SummonerViewer extends StatelessWidget {
             const Center(
               child: Text(
                 "Top Masteries",
-                style: titleSmall,
+                style: textSmall,
               ),
             ),
             verticalSpacer(10),
@@ -72,7 +72,7 @@ class SummonerViewer extends StatelessWidget {
                                     padding: EdgeInsets.only(bottom: 3),
                                     child: Text(
                                       "2",
-                                      style: level,
+                                      style: textSmall,
                                     ),
                                   ),
                                 ),
@@ -122,7 +122,7 @@ class SummonerViewer extends StatelessWidget {
                                     padding: EdgeInsets.only(bottom: 3),
                                     child: Text(
                                       "1",
-                                      style: level,
+                                      style: textSmall,
                                     ),
                                   ),
                                 ),
@@ -172,7 +172,7 @@ class SummonerViewer extends StatelessWidget {
                                     padding: EdgeInsets.only(bottom: 3),
                                     child: Text(
                                       "3",
-                                      style: level,
+                                      style: textSmall,
                                     ),
                                   ),
                                 ),
@@ -188,7 +188,7 @@ class SummonerViewer extends StatelessWidget {
             const Center(
               child: Text(
                 "Ranked Info",
-                style: titleSmall,
+                style: textSmall,
               ),
             ),
             verticalSpacer(10),
@@ -220,7 +220,7 @@ class SummonerViewer extends StatelessWidget {
             const Center(
               child: Text(
                 "Last 3 matches",
-                style: titleSmall,
+                style: textSmall,
               ),
             ),
             verticalSpacer(10),

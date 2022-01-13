@@ -166,13 +166,13 @@ class _CardSummonerState extends State<CardSummoner> {
                       children: [
                         Text(
                           widget.summoner.name,
-                          style: cardName,
+                          style: textSmall,
                         ),
                         verticalSpacer(5),
                         Text(
                             "Level: " +
                                 widget.summoner.summonerLevel.toString(),
-                            style: cardLevel)
+                            style: label)
                       ],
                     ),
                     const Spacer(),

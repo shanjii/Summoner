@@ -80,18 +80,29 @@ class _MyHomePageState extends State<CheckerPage> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: checkerRepository.updatingDevice
-                              ? const Icon(
-                                  Icons.connect_without_contact_rounded,
-                                  color: primaryGold,
-                                  size: 30,
-                                )
-                              : Text(
-                                  checkerRepository.apiVersion,
-                                  style: level,
-                                ),
+                        SizedBox(
+                          height: 30,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: checkerRepository.updatingDevice
+                                ? const Icon(
+                                    Icons.connect_without_contact_rounded,
+                                    color: primaryGold,
+                                    size: 30,
+                                  )
+                                : Column(
+                                    children: [
+                                      const Text(
+                                        "Patch",
+                                        style: textTiny,
+                                      ),
+                                      Text(
+                                        checkerRepository.apiVersion,
+                                        style: label,
+                                      ),
+                                    ],
+                                  ),
+                          ),
                         ),
                       ],
                     ),
