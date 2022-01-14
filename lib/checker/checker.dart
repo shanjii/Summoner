@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/api/summoner_api.dart';
 import 'package:league_checker/checker/widgets/modals/background_selector.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
@@ -19,21 +18,11 @@ class CheckerPage extends StatefulWidget {
 
 class _MyHomePageState extends State<CheckerPage> {
   late CheckerRepository checkerRepository;
-  late List<Image> backgrounds = [];
 
   @override
   void initState() {
     super.initState();
     verifyLocalFiles();
-    loadBackgrounds();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    for (var background in backgrounds) {
-      precacheImage(background.image, context);
-    }
   }
 
   @override
@@ -176,14 +165,7 @@ class _MyHomePageState extends State<CheckerPage> {
   }
 
   verifyLocalFiles() {
-    context.read<CheckerRepository>().updateBackground();
     context.read<CheckerRepository>().checkApiVersion();
     context.read<CheckerRepository>().updateSummonerList();
-  }
-
-  loadBackgrounds() {
-    backgrounds.add(Image.asset("assets/images/backgrounds/rengar.jpg"));
-    backgrounds.add(Image.asset("assets/images/backgrounds/aatrox.jpg"));
-    backgrounds.add(Image.asset("assets/images/backgrounds/mordekaiser.jpg"));
   }
 }

@@ -30,6 +30,8 @@ class CheckerRepository extends ChangeNotifier {
   List<MatchData> matchList = [];
   List myMatchStats = [];
 
+  CheckerRepository(this.background);
+
   //Return summoner data from specified summoner name
   getSummonerData(String summonerName) async {
     try {
@@ -227,7 +229,7 @@ class CheckerRepository extends ChangeNotifier {
     } else {
       apiVersion = devicePatch;
       notifyListeners();
-      
+
       var response = await summonerAPI.getCurrentPatch();
       var decodedJsonData = convert.jsonDecode(response);
 
