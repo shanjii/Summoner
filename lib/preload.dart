@@ -36,12 +36,13 @@ Future<void> loadImage(ImageProvider provider) {
 }
 
 Future<String> verifySelectedImage() async {
+  String background;
+  
   await loadImage(const AssetImage('assets/images/backgrounds/rengar.jpg'));
   await loadImage(const AssetImage('assets/images/backgrounds/aatrox.jpg'));
   await loadImage(
       const AssetImage('assets/images/backgrounds/mordekaiser.jpg'));
 
-  var background;
   final prefs = await SharedPreferences.getInstance();
   var selectedBackground = prefs.getString('background');
   if (selectedBackground != null) {
