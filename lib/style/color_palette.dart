@@ -11,5 +11,5 @@ const Color secondaryDarkblue = Color(0xff07001C);
 
 const Color primaryGold = Color(0xffc29702);
 
-const Color primaryGoldOpaque = Color.fromARGB(120, 194, 151, 2);
+const Color primaryGoldOpacity = Color.fromARGB(230, 194, 151, 2);
 

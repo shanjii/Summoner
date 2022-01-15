@@ -120,7 +120,7 @@ class ProfileHeader extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 30),
               child: Text(
                 checkerRepository.summonerData.name,
-                style: title,
+                style: textMedium,
               ),
             ),
           ),

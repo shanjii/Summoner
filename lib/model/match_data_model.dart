@@ -47,7 +47,6 @@ class Metadata {
 class Info {
   late int gameCreation;
   late int gameDuration;
-  late int gameEndTimestamp;
   late int gameId;
   late String gameMode;
   late String gameName;
@@ -64,7 +63,6 @@ class Info {
   Info(
       {required this.gameCreation,
       required this.gameDuration,
-      required this.gameEndTimestamp,
       required this.gameId,
       required this.gameMode,
       required this.gameName,
@@ -81,7 +79,6 @@ class Info {
   Info.fromJson(Map<String, dynamic> json) {
     gameCreation = json['gameCreation'];
     gameDuration = json['gameDuration'];
-    gameEndTimestamp = json['gameEndTimestamp'];
     gameId = json['gameId'];
     gameMode = json['gameMode'];
     gameName = json['gameName'];
@@ -110,7 +107,6 @@ class Info {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['gameCreation'] = gameCreation;
     data['gameDuration'] = gameDuration;
-    data['gameEndTimestamp'] = gameEndTimestamp;
     data['gameId'] = gameId;
     data['gameMode'] = gameMode;
     data['gameName'] = gameName;

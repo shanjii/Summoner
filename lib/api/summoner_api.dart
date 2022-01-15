@@ -1,13 +1,17 @@
 import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
-
-String riotToken = "RGAPI-c25fb5bc-2008-4a8c-b193-faa5d6292f7f";
+import 'package:league_checker/utils/misc.dart';
 
 class SummonerAPI {
+  String riotToken = "RGAPI-c25fb5bc-2008-4a8c-b193-faa5d6292f7f";
+  String region = "br1";
+  String regionType = "americas";
+
+  SummonerAPI(this.region, this.regionType);
+
   Future getSummonerData(summonerName) async {
     var response = await http.get(
       Uri.parse(
-        'https://br1.api.riotgames.com/lol/summoner/v4/summoners/by-name/$summonerName',
+        'https://$region.api.riotgames.com/lol/summoner/v4/summoners/by-name/$summonerName',
       ),
       headers: {"X-Riot-Token": riotToken},
     );
@@ -17,7 +21,7 @@ class SummonerAPI {
   Future getChampionMastery(summonerId) async {
     var response = await http.get(
       Uri.parse(
-        'https://br1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/$summonerId',
+        'https://$region.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/$summonerId',
       ),
       headers: {"X-Riot-Token": riotToken},
     );
@@ -31,7 +35,7 @@ class SummonerAPI {
   Future getSummonerRank(summonerId) async {
     var response = await http.get(
       Uri.parse(
-        'https://br1.api.riotgames.com/lol/league/v4/entries/by-summoner/$summonerId',
+        'https://$region.api.riotgames.com/lol/league/v4/entries/by-summoner/$summonerId',
       ),
       headers: {"X-Riot-Token": riotToken},
     );
@@ -58,7 +62,7 @@ class SummonerAPI {
   Future getMatchData(matchId) async {
     var response = await http.get(
       Uri.parse(
-        'https://americas.api.riotgames.com/lol/match/v5/matches/$matchId',
+        'https://$regionType.api.riotgames.com/lol/match/v5/matches/$matchId',
       ),
       headers: {"X-Riot-Token": riotToken},
     );
@@ -72,7 +76,7 @@ class SummonerAPI {
   Future getMatchId(puuid) async {
     var response = await http.get(
       Uri.parse(
-        'https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/$puuid/ids?start=0&count=10',
+        'https://$regionType.api.riotgames.com/lol/match/v5/matches/by-puuid/$puuid/ids?start=0&count=10',
       ),
       headers: {"X-Riot-Token": riotToken},
     );

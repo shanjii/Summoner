@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:league_checker/checker/widgets/modals/background_selector.dart';
+import 'package:league_checker/checker/widgets/modals/region_selector.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/spacer.dart';
@@ -53,7 +54,6 @@ class _MyHomePageState extends State<CheckerPage> {
                   children: [
                     verticalSpacer(checkerRepository.statusBarHeight + 20),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
@@ -69,10 +69,36 @@ class _MyHomePageState extends State<CheckerPage> {
                             ),
                           ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => openRegionSelector(),
+                              child: const Icon(
+                                Icons.public,
+                                color: primaryGold,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const Spacer(
+                          flex: 1,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Image(
+                            height: 20,
+                            width: 20,
+                            image: AssetImage(
+                                "assets/images/regions/regionFlag-${checkerRepository.region}.png"),
+                          ),
+                        ),
                         SizedBox(
                           height: 30,
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
+                            padding: const EdgeInsets.only(right: 12.0),
                             child: checkerRepository.updatingDevice
                                 ? const Icon(
                                     Icons.connect_without_contact_rounded,
@@ -137,12 +163,12 @@ class _MyHomePageState extends State<CheckerPage> {
                 height: 30,
                 width: checkerRepository.width - 100,
                 decoration: BoxDecoration(
-                  color: primaryGold,
+                  color: primaryGoldOpacity,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Center(
+                child: Center(
                     child: Text(
-                  'Summoner not found.',
+                  checkerRepository.errorMessage,
                   style: label,
                 )),
               ),
@@ -161,6 +187,17 @@ class _MyHomePageState extends State<CheckerPage> {
         return const BackgroundSelector();
       },
       backgroundColor: Colors.transparent,
+    );
+  }
+
+  openRegionSelector() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return const RegionSelector();
+      },
+      backgroundColor: primaryDarkblue,
     );
   }
 

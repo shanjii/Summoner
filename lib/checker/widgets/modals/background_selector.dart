@@ -60,7 +60,6 @@ class BackgroundSelector extends StatelessWidget {
               child: InkWell(
                 onTap: () async {
                   checkerRepository.selectBackground('aatrox');
-                  await wait(200);
                   Navigator.pop(context);
                 },
                 splashColor: Colors.brown.withOpacity(0.5),

@@ -212,6 +212,8 @@ class _CardSummonerState extends State<CardSummoner> {
           isScrollControlled: true,
         );
         await wait(200);
+      } else {
+        checkerRepository.setError("Summoner from different region");
       }
       setState(() => retrievingCardUser = false);
     }

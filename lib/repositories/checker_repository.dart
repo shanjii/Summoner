@@ -7,12 +7,13 @@ import 'package:league_checker/model/champion_mastery_model.dart';
 import 'package:league_checker/model/match_data_model.dart';
 import 'package:league_checker/model/rank_model.dart';
 import 'package:league_checker/model/summoner_model.dart';
+import 'package:league_checker/utils/misc.dart';
 import 'package:league_checker/utils/waiter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-var summonerAPI = SummonerAPI();
-
 class CheckerRepository extends ChangeNotifier {
+  var summonerAPI = SummonerAPI("na1", "americas");
+  String region = '';
   String apiVersion = '';
   bool updatingDevice = false;
   bool showUserNotFound = false;
@@ -21,6 +22,7 @@ class CheckerRepository extends ChangeNotifier {
   double width = 0;
   String background = 'rengar';
   bool isLoadingSummoner = false;
+  String errorMessage = 'Summoner not found.';
 
   List<SummonerModel> summonerList = [];
   List<ChampionMasteryModel> masteryList = [];
@@ -30,7 +32,7 @@ class CheckerRepository extends ChangeNotifier {
   List<MatchData> matchList = [];
   List myMatchStats = [];
 
-  CheckerRepository(this.background);
+  CheckerRepository(this.background, this.region, this.summonerAPI);
 
   //Return summoner data from specified summoner name
   getSummonerData(String summonerName) async {
@@ -75,6 +77,7 @@ class CheckerRepository extends ChangeNotifier {
   //Return all recent matches from the selected summoner
   Future getMatchList() async {
     matchList.clear();
+    myMatchStats.clear();
 
     var response = await summonerAPI.getMatchId(summonerData.puuid);
     var decodedJsonData = convert.jsonDecode(response);
@@ -107,18 +110,25 @@ class CheckerRepository extends ChangeNotifier {
   Future getMatchData(id) async {
     var response = await summonerAPI.getMatchData(id);
     var decodedJsonData = convert.jsonDecode(response);
-
-    matchList.add(MatchData.fromJson(decodedJsonData));
+    try {
+      matchList.add(MatchData.fromJson(decodedJsonData));
+    } catch (error) {
+      log("A match had an unknown error");
+      return;
+    }
   }
 
   //Return all the ranks of the specified summoner ID
   Future getSummonerRank(summonerId) async {
     rankList.clear();
     var response = await summonerAPI.getSummonerRank(summonerId);
-    var decodedJsonData = convert.jsonDecode(response);
-
-    for (var i = 0; i < decodedJsonData.length; i++) {
-      rankList.add(RankModel.fromJson(decodedJsonData[i]));
+    List decodedJsonData = convert.jsonDecode(response);
+    if (decodedJsonData.isNotEmpty) {
+      for (var i = 0; i < decodedJsonData.length; i++) {
+        if (decodedJsonData[i]['queueType'] != "RANKED_TFT_PAIRS") {
+          rankList.add(RankModel.fromJson(decodedJsonData[i]));
+        }
+      }
     }
   }
 
@@ -201,15 +211,6 @@ class CheckerRepository extends ChangeNotifier {
     width = MediaQuery.of(context).size.width;
   }
 
-  //Activate user not found warning
-  showNotFoundMessage() async {
-    showUserNotFound = true;
-    notifyListeners();
-    await wait(3000);
-    showUserNotFound = false;
-    notifyListeners();
-  }
-
   //Return the champion image url from a champion ID
   getChampionImage(championId) {
     for (var element in championList) {
@@ -251,6 +252,24 @@ class CheckerRepository extends ChangeNotifier {
     apiVersion = decodedJsonData[0];
     prefs.setString('patch', apiVersion);
     updatingDevice = false;
+    notifyListeners();
+  }
+
+  selectRegion(String flag) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("region", flag);
+    region = flag;
+    List<String> regionData = regionIndex(region);
+    summonerAPI = SummonerAPI(regionData[0], regionData[1]);
+    notifyListeners();
+  }
+
+  setError(error) async {
+    showUserNotFound = true;
+    errorMessage = error;
+    notifyListeners();
+    await wait(3000);
+    showUserNotFound = false;
     notifyListeners();
   }
 }

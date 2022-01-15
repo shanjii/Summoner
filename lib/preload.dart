@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:league_checker/utils/misc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> loadImage(ImageProvider provider) {
@@ -37,11 +38,12 @@ Future<void> loadImage(ImageProvider provider) {
 
 Future<String> verifySelectedImage() async {
   String background;
-  
+
   await loadImage(const AssetImage('assets/images/backgrounds/rengar.jpg'));
   await loadImage(const AssetImage('assets/images/backgrounds/aatrox.jpg'));
   await loadImage(
       const AssetImage('assets/images/backgrounds/mordekaiser.jpg'));
+  await loadImage(const AssetImage('assets/images/regions/regionFlag-na.png'));
 
   final prefs = await SharedPreferences.getInstance();
   var selectedBackground = prefs.getString('background');
@@ -51,4 +53,11 @@ Future<String> verifySelectedImage() async {
     background = 'rengar';
   }
   return background;
+}
+
+Future<List<String>> checkRegion() async {
+  final prefs = await SharedPreferences.getInstance();
+  var region = prefs.getString('region');
+
+  return regionIndex(region);
 }

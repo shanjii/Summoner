@@ -37,7 +37,7 @@ class _AddSummonerState extends State<AddSummoner> {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    Navigator.pop(context);
+                    retrievingUser == false ? Navigator.pop(context) : null;
                   },
                   child: const RotatedBox(
                     quarterTurns: 1,
@@ -54,7 +54,7 @@ class _AddSummonerState extends State<AddSummoner> {
             const Center(
               child: Text(
                 'Highlight a Summoner:',
-                style: title,
+                style: textMedium,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -129,7 +129,7 @@ class _AddSummonerState extends State<AddSummoner> {
             height: 30,
             width: checkerRepository.width - 100,
             decoration: BoxDecoration(
-              color: primaryGoldOpaque,
+              color: primaryGoldOpacity,
               borderRadius: BorderRadius.circular(20),
             ),
             child: const Center(
@@ -160,7 +160,7 @@ class _AddSummonerState extends State<AddSummoner> {
       setState(() {
         retrievingUser = false;
       });
-      checkerRepository.showNotFoundMessage();
+      checkerRepository.setError("Summoner not found");
     }
   }
 }

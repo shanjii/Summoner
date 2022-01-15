@@ -22,13 +22,6 @@ class SummonerViewer extends StatelessWidget {
           children: [
             const ProfileHeader(),
             verticalSpacer(20),
-            const Center(
-              child: Text(
-                "Top Masteries",
-                style: textSmall,
-              ),
-            ),
-            verticalSpacer(10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -224,83 +217,96 @@ class SummonerViewer extends StatelessWidget {
               ),
             ),
             verticalSpacer(10),
-            Center(
-              child: Text(
-                checkerRepository.myMatchStats[0].championName,
-                style: label,
-              ),
-            ),
-            Center(
-              child: Text(
-                "${checkerRepository.myMatchStats[0].kills}/${checkerRepository.myMatchStats[0].deaths}/${checkerRepository.myMatchStats[0].assists}",
-                style: label,
-              ),
-            ),
-            Center(
-              child: CachedNetworkImage(
-                width: 20,
-                height: 20,
-                imageUrl:
-                    "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${checkerRepository.myMatchStats[0].item0}.png",
-                placeholder: (context, url) => const CircularProgressIndicator(
-                  color: primaryGold,
-                  strokeWidth: 3,
-                ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-              ),
-            ),
-            verticalSpacer(10),
-            Center(
-              child: Text(
-                checkerRepository.myMatchStats[1].championName,
-                style: label,
-              ),
-            ),
-            Center(
-              child: Text(
-                "${checkerRepository.myMatchStats[1].kills}/${checkerRepository.myMatchStats[1].deaths}/${checkerRepository.myMatchStats[1].assists}",
-                style: label,
-              ),
-            ),
-            Center(
-              child: CachedNetworkImage(
-                width: 20,
-                height: 20,
-                imageUrl:
-                    "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${checkerRepository.myMatchStats[1].item0}.png",
-                placeholder: (context, url) => const CircularProgressIndicator(
-                  color: primaryGold,
-                  strokeWidth: 3,
-                ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-              ),
-            ),
-            verticalSpacer(10),
-            Center(
-              child: Text(
-                checkerRepository.myMatchStats[2].championName,
-                style: label,
-              ),
-            ),
-            Center(
-              child: Text(
-                "${checkerRepository.myMatchStats[2].kills}/${checkerRepository.myMatchStats[2].deaths}/${checkerRepository.myMatchStats[2].assists}",
-                style: label,
-              ),
-            ),
-            Center(
-              child: CachedNetworkImage(
-                width: 20,
-                height: 20,
-                imageUrl:
-                    "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${checkerRepository.myMatchStats[2].item0}.png",
-                placeholder: (context, url) => const CircularProgressIndicator(
-                  color: primaryGold,
-                  strokeWidth: 3,
-                ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-              ),
-            ),
+            checkerRepository.myMatchStats.isNotEmpty &&
+                    checkerRepository.myMatchStats.length > 2
+                ? Column(
+                    children: [
+                      Center(
+                        child: Text(
+                          checkerRepository.myMatchStats[0].championName,
+                          style: label,
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          "${checkerRepository.myMatchStats[0].kills}/${checkerRepository.myMatchStats[0].deaths}/${checkerRepository.myMatchStats[0].assists}",
+                          style: label,
+                        ),
+                      ),
+                      Center(
+                        child: CachedNetworkImage(
+                          width: 20,
+                          height: 20,
+                          imageUrl:
+                              "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${checkerRepository.myMatchStats[0].item0}.png",
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(
+                            color: primaryGold,
+                            strokeWidth: 3,
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                      ),
+                      verticalSpacer(10),
+                      Center(
+                        child: Text(
+                          checkerRepository.myMatchStats[1].championName,
+                          style: label,
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          "${checkerRepository.myMatchStats[1].kills}/${checkerRepository.myMatchStats[1].deaths}/${checkerRepository.myMatchStats[1].assists}",
+                          style: label,
+                        ),
+                      ),
+                      Center(
+                        child: CachedNetworkImage(
+                          width: 20,
+                          height: 20,
+                          imageUrl:
+                              "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${checkerRepository.myMatchStats[1].item0}.png",
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(
+                            color: primaryGold,
+                            strokeWidth: 3,
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                      ),
+                      verticalSpacer(10),
+                      Center(
+                        child: Text(
+                          checkerRepository.myMatchStats[2].championName,
+                          style: label,
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          "${checkerRepository.myMatchStats[2].kills}/${checkerRepository.myMatchStats[2].deaths}/${checkerRepository.myMatchStats[2].assists}",
+                          style: label,
+                        ),
+                      ),
+                      Center(
+                        child: CachedNetworkImage(
+                          width: 20,
+                          height: 20,
+                          imageUrl:
+                              "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${checkerRepository.myMatchStats[2].item0}.png",
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(
+                            color: primaryGold,
+                            strokeWidth: 3,
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                      ),
+                    ],
+                  )
+                : const SizedBox(),
           ],
         ),
       ),

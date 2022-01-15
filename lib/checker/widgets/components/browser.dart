@@ -97,7 +97,7 @@ class _BrowserState extends State<Browser> {
       setState(() => retrievingUser = false);
     } else {
       setState(() => retrievingUser = false);
-      await checkerRepository.showNotFoundMessage();
+      await checkerRepository.setError("Summoner not found");
     }
   }
 }

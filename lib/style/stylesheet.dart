@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:league_checker/style/color_palette.dart';
 
 
-const TextStyle title = TextStyle(
+const TextStyle textMedium = TextStyle(
   fontFamily: "FrizQuadrataRegular",
   fontWeight: FontWeight.normal,
   fontSize: 28,
@@ -43,6 +43,13 @@ const TextStyle label = TextStyle(
   fontWeight: FontWeight.normal,
   fontSize: 16,
   color: Colors.white70,
+);
+
+const TextStyle labelBlack = TextStyle(
+  fontFamily: "FrizQuadrataRegular",
+  fontWeight: FontWeight.bold,
+  fontSize: 16,
+  color: Colors.black,
 );
 
 const TextStyle input = TextStyle(
