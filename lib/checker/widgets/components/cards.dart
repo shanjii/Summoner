@@ -65,7 +65,6 @@ class CardEmpty extends StatelessWidget {
   }
 
   showAddSummoner(context) async {
-    await wait(200);
     showModalBottomSheet(
       barrierColor: Colors.transparent,
       isScrollControlled: true,

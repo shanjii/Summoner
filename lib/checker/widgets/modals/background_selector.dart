@@ -36,7 +36,6 @@ class BackgroundSelector extends StatelessWidget {
               child: InkWell(
                 onTap: () async {
                   checkerRepository.selectBackground('rengar');
-                  await wait(200);
                   Navigator.pop(context);
                 },
                 splashColor: Colors.brown.withOpacity(0.5),
@@ -83,7 +82,6 @@ class BackgroundSelector extends StatelessWidget {
               child: InkWell(
                 onTap: () async {
                   checkerRepository.selectBackground('mordekaiser');
-                  await wait(200);
                   Navigator.pop(context);
                 },
                 splashColor: Colors.brown.withOpacity(0.5),

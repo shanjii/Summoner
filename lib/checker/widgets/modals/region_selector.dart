@@ -74,7 +74,6 @@ Widget flagItem(String flag, CheckerRepository checkerRepository, context) {
     child: InkWell(
       onTap: () async {
         checkerRepository.selectRegion(flag);
-        await wait(200);
         Navigator.pop(context);
       },
       child: Padding(
