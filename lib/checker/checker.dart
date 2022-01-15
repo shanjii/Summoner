@@ -96,7 +96,7 @@ class _MyHomePageState extends State<CheckerPage> {
                           ),
                         ),
                         SizedBox(
-                          height: 30,
+                          height: 38,
                           child: Padding(
                             padding: const EdgeInsets.only(right: 12.0),
                             child: checkerRepository.updatingDevice
@@ -132,7 +132,7 @@ class _MyHomePageState extends State<CheckerPage> {
                       child: SizedBox(
                         height: checkerRepository.height -
                             checkerRepository.statusBarHeight -
-                            290,
+                            298,
                         child: ListView.builder(
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {

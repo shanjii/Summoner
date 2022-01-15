@@ -45,20 +45,22 @@ class RegionSelector extends StatelessWidget {
           ),
         ),
         verticalSpacer(30),
-        Wrap(
-          children: [
-            flagItem("br", checkerRepository, context),
-            flagItem("eune", checkerRepository, context),
-            flagItem("euw", checkerRepository, context),
-            flagItem("jp", checkerRepository, context),
-            flagItem("kr", checkerRepository, context),
-            flagItem("lan", checkerRepository, context),
-            flagItem("las", checkerRepository, context),
-            flagItem("na", checkerRepository, context),
-            flagItem("oce", checkerRepository, context),
-            flagItem("ru", checkerRepository, context),
-            flagItem("tr", checkerRepository, context),
-          ],
+        Center(
+          child: Wrap(
+            children: [
+              flagItem("br", checkerRepository, context),
+              flagItem("eune", checkerRepository, context),
+              flagItem("euw", checkerRepository, context),
+              flagItem("jp", checkerRepository, context),
+              flagItem("kr", checkerRepository, context),
+              flagItem("lan", checkerRepository, context),
+              flagItem("las", checkerRepository, context),
+              flagItem("na", checkerRepository, context),
+              flagItem("oce", checkerRepository, context),
+              flagItem("ru", checkerRepository, context),
+              flagItem("tr", checkerRepository, context),
+            ],
+          ),
         ),
       ],
     );
@@ -66,38 +68,33 @@ class RegionSelector extends StatelessWidget {
 }
 
 Widget flagItem(String flag, CheckerRepository checkerRepository, context) {
-  return Padding(
-    padding: const EdgeInsets.only(top: 15, bottom: 15),
-    child: Container(
-      color: checkerRepository.region == flag
-          ? Colors.white24
-          : Colors.transparent,
-      child: InkWell(
-        onTap: () async {
-          checkerRepository.selectRegion(flag);
-          await wait(200);
-          Navigator.pop(context);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 50,
-            width: 80,
-            child: Column(
-              children: [
-                Image(
-                  image:
-                      AssetImage("assets/images/regions/regionFlag-$flag.png"),
-                ),
-                const Spacer(
-                  flex: 1,
-                ),
-                Text(
-                  flag.toUpperCase(),
-                  style: textTiny,
-                )
-              ],
-            ),
+  return Container(
+    color:
+        checkerRepository.region == flag ? Colors.white24 : Colors.transparent,
+    child: InkWell(
+      onTap: () async {
+        checkerRepository.selectRegion(flag);
+        await wait(200);
+        Navigator.pop(context);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SizedBox(
+          height: 50,
+          width: 80,
+          child: Column(
+            children: [
+              Image(
+                image: AssetImage("assets/images/regions/regionFlag-$flag.png"),
+              ),
+              const Spacer(
+                flex: 1,
+              ),
+              Text(
+                flag.toUpperCase(),
+                style: textTiny,
+              )
+            ],
           ),
         ),
       ),
