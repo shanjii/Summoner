@@ -43,6 +43,7 @@ class CheckerRepository extends ChangeNotifier {
       if (response.statusCode == 200) {
         var decodedJsonData = convert.jsonDecode(response.body);
         summonerData = SummonerModel.fromJson(decodedJsonData);
+        summonerData.region = region;
 
         await Future.wait([
           getChampionMastery(summonerData.id),
@@ -153,7 +154,10 @@ class CheckerRepository extends ChangeNotifier {
       if (response == 404) return 404;
 
       var decodedJsonData = convert.jsonDecode(response.body);
-      summonerList.add(SummonerModel.fromJson(decodedJsonData));
+      var summoner = SummonerModel.fromJson(decodedJsonData);
+      summoner.region = region;
+
+      summonerList.add(summoner);
 
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('summoners', convert.jsonEncode(summonerList));

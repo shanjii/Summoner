@@ -6,6 +6,7 @@ class SummonerModel {
   late int profileIconId;
   late int revisionDate;
   late int summonerLevel;
+  late String region;
 
   SummonerModel(
       {required this.id,
@@ -14,7 +15,8 @@ class SummonerModel {
       required this.name,
       required this.profileIconId,
       required this.revisionDate,
-      required this.summonerLevel});
+      required this.summonerLevel,
+      required this.region});
 
   SummonerModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -24,6 +26,7 @@ class SummonerModel {
     profileIconId = json['profileIconId'];
     revisionDate = json['revisionDate'];
     summonerLevel = json['summonerLevel'];
+    region = json['region'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +38,7 @@ class SummonerModel {
     data['profileIconId'] = profileIconId;
     data['revisionDate'] = revisionDate;
     data['summonerLevel'] = summonerLevel;
+    data['region'] = region;
     return data;
   }
 }

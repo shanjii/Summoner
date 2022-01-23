@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:league_checker/checker/widgets/components/header.dart';
 import 'package:league_checker/checker/widgets/modals/background_selector.dart';
 import 'package:league_checker/checker/widgets/modals/region_selector.dart';
 import 'package:league_checker/style/color_palette.dart';
@@ -53,74 +54,7 @@ class _MyHomePageState extends State<CheckerPage> {
                 child: Column(
                   children: [
                     verticalSpacer(checkerRepository.statusBarHeight + 20),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => openBackgroundSelector(),
-                              child: const Icon(
-                                Icons.wallpaper,
-                                color: primaryGold,
-                                size: 30,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => openRegionSelector(),
-                              child: const Icon(
-                                Icons.public,
-                                color: primaryGold,
-                                size: 30,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Spacer(
-                          flex: 1,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Image(
-                            height: 20,
-                            width: 20,
-                            image: AssetImage(
-                                "assets/images/regions/regionFlag-${checkerRepository.region}.png"),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 38,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 12.0),
-                            child: checkerRepository.updatingDevice
-                                ? const Icon(
-                                    Icons.connect_without_contact_rounded,
-                                    color: primaryGold,
-                                    size: 30,
-                                  )
-                                : Column(
-                                    children: [
-                                      const Text(
-                                        "Patch",
-                                        style: textTiny,
-                                      ),
-                                      Text(
-                                        checkerRepository.apiVersion,
-                                        style: label,
-                                      ),
-                                    ],
-                                  ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    const Header(),
                     verticalSpacer(10),
                     titleLogo(),
                     verticalSpacer(20),
@@ -132,7 +66,7 @@ class _MyHomePageState extends State<CheckerPage> {
                       child: SizedBox(
                         height: checkerRepository.height -
                             checkerRepository.statusBarHeight -
-                            298,
+                            293,
                         child: ListView.builder(
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
@@ -179,27 +113,7 @@ class _MyHomePageState extends State<CheckerPage> {
     );
   }
 
-  openBackgroundSelector() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return const BackgroundSelector();
-      },
-      backgroundColor: Colors.transparent,
-    );
-  }
-
-  openRegionSelector() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return const RegionSelector();
-      },
-      backgroundColor: primaryDarkblue,
-    );
-  }
+ 
 
   verifyLocalFiles() {
     context.read<CheckerRepository>().checkApiVersion();

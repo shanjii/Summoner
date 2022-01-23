@@ -126,7 +126,8 @@ class _CardSummonerState extends State<CardSummoner> {
       child: Material(
         color: primaryDarkblue,
         child: InkWell(
-          onTap: () => openSummonerCard(widget.summoner.name),
+          onTap: () =>
+              openSummonerCard(widget.summoner.name, widget.summoner.region),
           child: Column(
             children: [
               SizedBox(
@@ -163,9 +164,20 @@ class _CardSummonerState extends State<CardSummoner> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          widget.summoner.name,
-                          style: textSmall,
+                        Row(
+                          children: [
+                            Text(
+                              widget.summoner.name,
+                              style: textSmall,
+                            ),
+                            horizontalSpacer(7),
+                            Image(
+                              image: AssetImage(
+                                  "assets/images/regions/regionFlag-${widget.summoner.region}.png"),
+                              width: 20,
+                              height: 20,
+                            ),
+                          ],
                         ),
                         verticalSpacer(5),
                         Text(
@@ -197,9 +209,10 @@ class _CardSummonerState extends State<CardSummoner> {
     );
   }
 
-  openSummonerCard(summonerName) async {
+  openSummonerCard(summonerName, region) async {
     if (!checkerRepository.isLoadingSummoner) {
       setState(() => retrievingCardUser = true);
+      await checkerRepository.selectRegion(region);
       var response = await checkerRepository.getSummonerData(summonerName);
       if (response == 200) {
         showModalBottomSheet(
@@ -210,10 +223,10 @@ class _CardSummonerState extends State<CardSummoner> {
           backgroundColor: primaryDarkblue,
           isScrollControlled: true,
         );
-        await wait(200);
       } else {
         checkerRepository.setError("Summoner from different region");
       }
+      await wait(200);
       setState(() => retrievingCardUser = false);
     }
   }

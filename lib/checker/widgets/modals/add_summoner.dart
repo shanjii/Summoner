@@ -32,22 +32,33 @@ class _AddSummonerState extends State<AddSummoner> {
           children: [
             Padding(
               padding: EdgeInsets.fromLTRB(
-                  10, checkerRepository.statusBarHeight + 10, 0, 0),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    retrievingUser == false ? Navigator.pop(context) : null;
-                  },
-                  child: const RotatedBox(
-                    quarterTurns: 1,
-                    child: Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: primaryGold,
-                      size: 40,
+                  10, checkerRepository.statusBarHeight + 10, 15, 0),
+              child: Row(
+                children: [
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        retrievingUser == false ? Navigator.pop(context) : null;
+                      },
+                      child: const RotatedBox(
+                        quarterTurns: 1,
+                        child: Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: primaryGold,
+                          size: 40,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  const Spacer(),
+                  Image(
+                    image: AssetImage(
+                        "assets/images/regions/regionFlag-${checkerRepository.region}.png"),
+                    width: 30,
+                    height: 30,
+                  ),
+                ],
               ),
             ),
             verticalSpacer(30),
