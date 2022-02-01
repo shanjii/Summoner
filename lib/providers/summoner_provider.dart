@@ -8,11 +8,11 @@ import 'package:league_checker/models/match_data_model.dart';
 import 'package:league_checker/models/rank_model.dart';
 import 'package:league_checker/models/summoner_model.dart';
 import 'package:league_checker/utils/indexer.dart';
+import 'package:league_checker/utils/local_storage.dart';
 import 'package:league_checker/utils/misc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SummonerProvider extends ChangeNotifier {
-  var summonerAPI = SummonerAPI("na1", "americas");
+  SummonerAPI summonerAPI = SummonerAPI("na1", "americas");
   String region = '';
   String apiVersion = '';
   bool updatingDevice = false;
@@ -23,7 +23,6 @@ class SummonerProvider extends ChangeNotifier {
   String background = 'rengar';
   bool isLoadingSummoner = false;
   String errorMessage = 'Summoner not found.';
-
   List<SummonerModel> summonerList = [];
   List<ChampionMasteryModel> masteryList = [];
   List<RankModel> rankList = [];
@@ -153,6 +152,7 @@ class SummonerProvider extends ChangeNotifier {
       List<ChampionMasteryModel> masteryList = [];
       var response = await summonerAPI.getSummonerData(summonerName);
       var summoner = SummonerModel.fromJson(convert.jsonDecode(response.body));
+
       response = await summonerAPI.getChampionMastery(summoner.id);
       var decodedJsonData = convert.jsonDecode(response);
 
@@ -165,8 +165,7 @@ class SummonerProvider extends ChangeNotifier {
       summoner.region = region;
       summonerList.add(summoner);
 
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('summoners', convert.jsonEncode(summonerList));
+      await LocalStorage.writeEncoded("summoners", summonerList);
 
       notifyListeners();
       return 200;
@@ -177,23 +176,18 @@ class SummonerProvider extends ChangeNotifier {
 
   //Return any stored summoners in the memory
   updateSummonerList() async {
-    final prefs = await SharedPreferences.getInstance();
-    var summonerString = prefs.getString('summoners');
-    if (summonerString != null) {
-      List decodedJsonData = convert.jsonDecode(summonerString);
-      for (var i = 0; i < decodedJsonData.length; i++) {
-        summonerList.add(SummonerModel.fromJson(decodedJsonData[i]));
-      }
-      prefs.setString('summoners', convert.jsonEncode(summonerList));
+    List decodedJsonData = await LocalStorage.readDecoded("summoners");
+    for (var i = 0; i < decodedJsonData.length; i++) {
+      summonerList.add(SummonerModel.fromJson(decodedJsonData[i]));
     }
+    await LocalStorage.writeEncoded("summoners", summonerList);
     notifyListeners();
   }
 
   //Clear summoner list variable and the data stored in the device
   removeSummonerList() async {
     summonerList.clear();
-    final prefs = await SharedPreferences.getInstance();
-    prefs.remove('summoners');
+    await LocalStorage.clear("summoners");
     notifyListeners();
   }
 
@@ -214,8 +208,7 @@ class SummonerProvider extends ChangeNotifier {
   }
 
   checkApiVersion() async {
-    final prefs = await SharedPreferences.getInstance();
-    var devicePatch = prefs.getString('patch');
+    var devicePatch = await LocalStorage.readString("patch");
 
     if (devicePatch == null) {
       await updateDevice();
@@ -238,18 +231,16 @@ class SummonerProvider extends ChangeNotifier {
   updateDevice() async {
     updatingDevice = true;
     notifyListeners();
-    final prefs = await SharedPreferences.getInstance();
     var response = await summonerAPI.getCurrentPatch();
     var decodedJsonData = convert.jsonDecode(response);
     apiVersion = decodedJsonData[0];
-    prefs.setString('patch', apiVersion);
+    await LocalStorage.writeString("patch", apiVersion);
     updatingDevice = false;
     notifyListeners();
   }
 
   selectRegion(String flag) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString("region", flag);
+    await LocalStorage.writeString("region", flag);
     region = flag;
     List<String> regionData = regionIndex(region);
     summonerAPI = SummonerAPI(regionData[0], regionData[1]);
