@@ -7,13 +7,13 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  var background = await verifySelectedImage();
+  // var background = await verifySelectedImage();
   List<String> regionData = await checkRegion();
 
   runApp(
     ChangeNotifierProvider(
       create: (context) => CheckerRepository(
-        background,
+        // background,
         regionData[2],
         SummonerAPI(regionData[0], regionData[1]),
       ),

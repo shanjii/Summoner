@@ -32,7 +32,7 @@ class CheckerRepository extends ChangeNotifier {
   List<MatchData> matchList = [];
   List myMatchStats = [];
 
-  CheckerRepository(this.background, this.region, this.summonerAPI);
+  CheckerRepository(this.region, this.summonerAPI);
 
   //Return summoner data from specified summoner name
   getSummonerData(String summonerName) async {

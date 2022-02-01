@@ -35,22 +35,13 @@ class _MyHomePageState extends State<CheckerPage> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        backgroundColor: primaryDarkblue,
+        backgroundColor: Colors.black,
         resizeToAvoidBottomInset: false,
         body: Stack(
           alignment: Alignment.center,
           children: [
             SizedBox.expand(
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    colorFilter: const ColorFilter.mode(
-                        primaryDarkblueOpacity, BlendMode.srcOver),
-                    image: AssetImage(
-                        "assets/images/backgrounds/${checkerRepository.background}.jpg"),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+              child: SizedBox(
                 child: Column(
                   children: [
                     verticalSpacer(checkerRepository.statusBarHeight + 20),
@@ -112,8 +103,6 @@ class _MyHomePageState extends State<CheckerPage> {
       ),
     );
   }
-
- 
 
   verifyLocalFiles() {
     context.read<CheckerRepository>().checkApiVersion();
