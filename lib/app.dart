@@ -13,10 +13,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: primaryGold,
-          secondary: primaryDarkblue,
+          primary: darkGrayTone1,
+          secondary: darkGrayTone2,
         ),
-        backgroundColor: primaryDarkblue
+        backgroundColor: darkGrayTone1
       ),
       home: const CheckerPage(),
     );

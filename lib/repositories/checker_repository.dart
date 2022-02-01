@@ -51,6 +51,8 @@ class CheckerRepository extends ChangeNotifier {
           getChampionData(),
           getMatchList()
         ]);
+
+        summonerData.background = getChampionImage(masteryList[0].championId);
       }
 
       isLoadingSummoner = false;
@@ -148,14 +150,21 @@ class CheckerRepository extends ChangeNotifier {
   //Add a favorited summoner to the summoner list and save them in the memory
   addFavoriteSummoner(String summonerName) async {
     try {
+      List<ChampionMasteryModel> masteryList = [];
       var response = await summonerAPI.getSummonerData(summonerName);
+      var summoner = SummonerModel.fromJson(convert.jsonDecode(response.body));
+      response = await summonerAPI.getChampionMastery(summoner.id);
+      var decodedJsonData = convert.jsonDecode(response);
 
-      if (response == 403) return 403;
-      if (response == 404) return 404;
+      if (decodedJsonData.length == 0) {
+        //empty image
+      } else {
+        masteryList.add(ChampionMasteryModel.fromJson(decodedJsonData[0]));
+      }
 
-      var decodedJsonData = convert.jsonDecode(response.body);
-      var summoner = SummonerModel.fromJson(decodedJsonData);
       summoner.region = region;
+      await getChampionData();
+      summoner.background = getChampionImage(masteryList[0].championId);
 
       summonerList.add(summoner);
 

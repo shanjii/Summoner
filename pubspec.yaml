@@ -73,9 +73,10 @@ flutter:
     - assets/images/
 
   fonts:
-  - family: FrizQuadrataRegular
+  - family: MarkPro
     fonts:
-      - asset: assets/fonts/Friz_Quadrata_Regular.ttf
+      - asset: assets/fonts/MarkPro-Regular.otf
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

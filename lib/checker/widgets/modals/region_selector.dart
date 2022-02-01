@@ -17,26 +17,6 @@ class RegionSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(
-              10, checkerRepository.statusBarHeight + 10, 0, 0),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: const RotatedBox(
-                quarterTurns: 1,
-                child: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: primaryGold,
-                  size: 40,
-                ),
-              ),
-            ),
-          ),
-        ),
         verticalSpacer(30),
         const Center(
           child: Text(
@@ -68,32 +48,41 @@ class RegionSelector extends StatelessWidget {
 }
 
 Widget flagItem(String flag, CheckerRepository checkerRepository, context) {
-  return Container(
-    color:
-        checkerRepository.region == flag ? Colors.white24 : Colors.transparent,
-    child: InkWell(
-      onTap: () async {
-        checkerRepository.selectRegion(flag);
-        Navigator.pop(context);
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SizedBox(
-          height: 50,
-          width: 80,
-          child: Column(
-            children: [
-              Image(
-                image: AssetImage("assets/images/regions/regionFlag-$flag.png"),
+  return Padding(
+    padding: const EdgeInsets.all(1),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        color: checkerRepository.region == flag
+            ? Colors.white24
+            : Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () async {
+            checkerRepository.selectRegion(flag);
+            Navigator.pop(context);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SizedBox(
+              height: 50,
+              width: 80,
+              child: Column(
+                children: [
+                  Image(
+                    image:
+                        AssetImage("assets/images/regions/regionFlag-$flag.png"),
+                  ),
+                  const Spacer(
+                    flex: 1,
+                  ),
+                  Text(
+                    flag.toUpperCase(),
+                    style: textTiny,
+                  )
+                ],
               ),
-              const Spacer(
-                flex: 1,
-              ),
-              Text(
-                flag.toUpperCase(),
-                style: textTiny,
-              )
-            ],
+            ),
           ),
         ),
       ),

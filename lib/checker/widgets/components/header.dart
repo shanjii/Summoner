@@ -4,6 +4,7 @@ import 'package:league_checker/checker/widgets/modals/region_selector.dart';
 import 'package:league_checker/repositories/checker_repository.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
+import 'package:league_checker/utils/spacer.dart';
 import 'package:provider/provider.dart';
 
 class Header extends StatelessWidget {
@@ -13,96 +14,57 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     var checkerRepository = Provider.of<CheckerRepository>(context);
 
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => openBackgroundSelector(context),
-              child: const Icon(
-                Icons.wallpaper,
-                color: primaryGold,
-                size: 30,
-              ),
+    return Container(
+      height: checkerRepository.statusBarHeight + 80,
+      color: darkGrayTone1,
+      child: Padding(
+        padding: EdgeInsets.only(left: 30, top: checkerRepository.statusBarHeight),
+        child: Row(
+          children: [
+            const Image(
+              width: 60,
+              height: 60,
+              image: AssetImage('assets/images/league_icon.png'),
             ),
-          ),
+            horizontalSpacer(20),
+            const Text(
+              "Summoners",
+              style: textMediumBold,
+            )
+            // const Spacer(),
+            // Padding(
+            //   padding: const EdgeInsets.only(right: 30),
+            //   child: ClipRRect(
+            //     borderRadius: BorderRadius.circular(20),
+            //     child: Material(
+            //       color: Colors.transparent,
+            //       child: InkWell(
+            //         onTap: () {
+            //           openRegionSelector(context);
+            //         },
+            //         child: const Icon(
+            //           Icons.public_rounded,
+            //           color: grayTone1,
+            //           size: 50,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // )
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => openRegionSelector(context),
-              child: const Icon(
-                Icons.public,
-                color: primaryGold,
-                size: 30,
-              ),
-            ),
-          ),
-        ),
-        const Spacer(
-          flex: 1,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: Image(
-            height: 30,
-            width: 30,
-            image: AssetImage(
-                "assets/images/regions/regionFlag-${checkerRepository.region}.png"),
-          ),
-        ),
-        SizedBox(
-          height: 33,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: checkerRepository.updatingDevice
-                ? const Icon(
-                    Icons.connect_without_contact_rounded,
-                    color: primaryGold,
-                    size: 30,
-                  )
-                : Column(
-                    children: [
-                      const Text(
-                        "Patch",
-                        style: textTiny,
-                      ),
-                      const Spacer(),
-                      Text(
-                        checkerRepository.apiVersion,
-                        style: label,
-                      ),
-                    ],
-                  ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  openBackgroundSelector(context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return const BackgroundSelector();
-      },
-      backgroundColor: Colors.transparent,
+      ),
     );
   }
 
   openRegionSelector(context) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true,
+      isScrollControlled: false,
       builder: (BuildContext context) {
         return const RegionSelector();
       },
-      backgroundColor: primaryDarkblue,
+      backgroundColor: darkGrayTone2,
     );
   }
 }

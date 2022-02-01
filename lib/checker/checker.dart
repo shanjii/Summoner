@@ -35,7 +35,7 @@ class _MyHomePageState extends State<CheckerPage> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: darkGrayTone1,
         resizeToAvoidBottomInset: false,
         body: Stack(
           alignment: Alignment.center,
@@ -44,20 +44,14 @@ class _MyHomePageState extends State<CheckerPage> {
               child: SizedBox(
                 child: Column(
                   children: [
-                    verticalSpacer(checkerRepository.statusBarHeight + 20),
                     const Header(),
-                    verticalSpacer(10),
-                    titleLogo(),
-                    verticalSpacer(20),
-                    const Browser(),
-                    verticalSpacer(20),
                     MediaQuery.removePadding(
                       removeTop: true,
                       context: context,
                       child: SizedBox(
                         height: checkerRepository.height -
                             checkerRepository.statusBarHeight -
-                            293,
+                            80,
                         child: ListView.builder(
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
