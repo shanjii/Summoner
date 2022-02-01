@@ -20,6 +20,12 @@ const Color grayTone2 = Color.fromRGBO(60, 60, 60, 1);
 
 const Color darkGrayTone1 = Color.fromRGBO(12, 12, 12, 1);
 
-const Color darkGrayTone2 = Color.fromRGBO(16, 16, 16, 1);
+const Color darkGrayTone2 = Color.fromRGBO(15, 15, 15, 1);
+
+const Color darkGrayTone3 = Color.fromRGBO(35, 35, 35, 1);
+
+const Color darkGrayTone4 = Color.fromRGBO(18, 18, 18, 1);
+
+
 
 

@@ -14,35 +14,45 @@ class RegionSelector extends StatelessWidget {
     late CheckerRepository checkerRepository;
     checkerRepository = Provider.of<CheckerRepository>(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        verticalSpacer(30),
-        const Center(
-          child: Text(
-            "Select a region",
-            style: textMedium,
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        color: darkGrayTone4,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
         ),
-        verticalSpacer(30),
-        Center(
-          child: Wrap(
-            children: [
-              flagItem("br", checkerRepository, context),
-              flagItem("eune", checkerRepository, context),
-              flagItem("euw", checkerRepository, context),
-              flagItem("jp", checkerRepository, context),
-              flagItem("kr", checkerRepository, context),
-              flagItem("lan", checkerRepository, context),
-              flagItem("las", checkerRepository, context),
-              flagItem("na", checkerRepository, context),
-              flagItem("oce", checkerRepository, context),
-              flagItem("ru", checkerRepository, context),
-              flagItem("tr", checkerRepository, context),
-            ],
+      ),
+      height: 470,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          verticalSpacer(30),
+          const Center(
+            child: Text(
+              "Select a region",
+              style: textMedium,
+            ),
           ),
-        ),
-      ],
+          verticalSpacer(30),
+          Center(
+            child: Wrap(
+              children: [
+                flagItem("br", checkerRepository, context),
+                flagItem("eune", checkerRepository, context),
+                flagItem("euw", checkerRepository, context),
+                flagItem("jp", checkerRepository, context),
+                flagItem("kr", checkerRepository, context),
+                flagItem("lan", checkerRepository, context),
+                flagItem("las", checkerRepository, context),
+                flagItem("na", checkerRepository, context),
+                flagItem("oce", checkerRepository, context),
+                flagItem("ru", checkerRepository, context),
+                flagItem("tr", checkerRepository, context),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -70,8 +80,8 @@ Widget flagItem(String flag, CheckerRepository checkerRepository, context) {
               child: Column(
                 children: [
                   Image(
-                    image:
-                        AssetImage("assets/images/regions/regionFlag-$flag.png"),
+                    image: AssetImage(
+                        "assets/images/regions/regionFlag-$flag.png"),
                   ),
                   const Spacer(
                     flex: 1,

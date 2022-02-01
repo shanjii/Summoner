@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:league_checker/checker/widgets/components/header.dart';
 import 'package:league_checker/checker/widgets/modals/background_selector.dart';
 import 'package:league_checker/checker/widgets/modals/region_selector.dart';
@@ -35,7 +36,7 @@ class _MyHomePageState extends State<CheckerPage> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        backgroundColor: darkGrayTone1,
+        backgroundColor: darkGrayTone2,
         resizeToAvoidBottomInset: false,
         body: Stack(
           alignment: Alignment.center,
@@ -45,27 +46,55 @@ class _MyHomePageState extends State<CheckerPage> {
                 child: Column(
                   children: [
                     const Header(),
+                    const Browser(),
                     MediaQuery.removePadding(
                       removeTop: true,
                       context: context,
                       child: SizedBox(
                         height: checkerRepository.height -
                             checkerRepository.statusBarHeight -
-                            80,
-                        child: ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            if (index ==
-                                checkerRepository.summonerList.length) {
-                              return const CardEmpty();
-                            } else {
-                              return CardSummoner(
-                                summoner: checkerRepository.summonerList[index],
-                              );
-                            }
-                          },
-                          itemCount: checkerRepository.summonerList.length + 1,
-                        ),
+                            164,
+                        child: checkerRepository.summonerList.isEmpty
+                            ? Column(
+                                children: [
+                                  SizedBox(
+                                    height: 200,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                            Icons.sentiment_neutral_outlined,
+                                            size: 80,
+                                            color: Colors.white),
+                                        verticalSpacer(10),
+                                        const Text(
+                                          "You have no Summoners",
+                                          style: textSmall,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const CardEmpty(),
+                                ],
+                              )
+                            : ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  if (index ==
+                                      checkerRepository.summonerList.length) {
+                                    return const CardEmpty();
+                                  } else {
+                                    return CardSummoner(
+                                      summoner:
+                                          checkerRepository.summonerList[index],
+                                    );
+                                  }
+                                },
+                                itemCount:
+                                    checkerRepository.summonerList.length + 1,
+                              ),
                       ),
                     ),
                   ],

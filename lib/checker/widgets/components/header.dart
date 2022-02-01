@@ -15,10 +15,11 @@ class Header extends StatelessWidget {
     var checkerRepository = Provider.of<CheckerRepository>(context);
 
     return Container(
-      height: checkerRepository.statusBarHeight + 80,
-      color: darkGrayTone1,
+      height: checkerRepository.statusBarHeight + 100,
+      color: darkGrayTone2,
       child: Padding(
-        padding: EdgeInsets.only(left: 30, top: checkerRepository.statusBarHeight),
+        padding:
+            EdgeInsets.only(left: 30, top: checkerRepository.statusBarHeight + 10),
         child: Row(
           children: [
             const Image(
@@ -30,27 +31,27 @@ class Header extends StatelessWidget {
             const Text(
               "Summoners",
               style: textMediumBold,
+            ),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(right: 30),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      openRegionSelector(context);
+                    },
+                    child: const Icon(
+                      Icons.public_rounded,
+                      color: Colors.white,
+                      size: 35,
+                    ),
+                  ),
+                ),
+              ),
             )
-            // const Spacer(),
-            // Padding(
-            //   padding: const EdgeInsets.only(right: 30),
-            //   child: ClipRRect(
-            //     borderRadius: BorderRadius.circular(20),
-            //     child: Material(
-            //       color: Colors.transparent,
-            //       child: InkWell(
-            //         onTap: () {
-            //           openRegionSelector(context);
-            //         },
-            //         child: const Icon(
-            //           Icons.public_rounded,
-            //           color: grayTone1,
-            //           size: 50,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // )
           ],
         ),
       ),
@@ -60,11 +61,11 @@ class Header extends StatelessWidget {
   openRegionSelector(context) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: false,
+      isScrollControlled: true,
       builder: (BuildContext context) {
         return const RegionSelector();
       },
-      backgroundColor: darkGrayTone2,
+      backgroundColor: Colors.transparent
     );
   }
 }

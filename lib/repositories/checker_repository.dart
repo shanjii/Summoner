@@ -156,16 +156,13 @@ class CheckerRepository extends ChangeNotifier {
       response = await summonerAPI.getChampionMastery(summoner.id);
       var decodedJsonData = convert.jsonDecode(response);
 
-      if (decodedJsonData.length == 0) {
-        //empty image
-      } else {
+      if (decodedJsonData.length != 0) {
         masteryList.add(ChampionMasteryModel.fromJson(decodedJsonData[0]));
+        await getChampionData();
+        summoner.background = getChampionImage(masteryList[0].championId);
       }
 
       summoner.region = region;
-      await getChampionData();
-      summoner.background = getChampionImage(masteryList[0].championId);
-
       summonerList.add(summoner);
 
       final prefs = await SharedPreferences.getInstance();

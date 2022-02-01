@@ -24,58 +24,55 @@ class _BrowserState extends State<Browser> {
   Widget build(BuildContext context) {
     checkerRepository = Provider.of<CheckerRepository>(context);
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 0, left: 60, right: 60),
-          child: SizedBox(
-            height: 50,
-            child: TextField(
-              controller: searchController,
-              style: input,
-              cursorColor: primaryGold,
-              cursorHeight: 20,
-              decoration: const InputDecoration(
-                contentPadding: EdgeInsets.all(0),
-                labelText: 'Search for a Summoner',
-                labelStyle: label,
-                alignLabelWithHint: true,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: primaryGold),
+    return Container(
+      color: darkGrayTone2,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 30, right: 30, bottom: 8),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.white24,
+              ),
+              height: 40,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 30,
+                  right: 30,
                 ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: primaryGold),
+                child: TextField(
+                  controller: searchController,
+                  style: input,
+                  cursorColor: Colors.white,
+                  onSubmitted: (value) {
+                    retrieveUser();
+                  },
+                  textInputAction: TextInputAction.search,
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.only(bottom: 8),
+                    hintText: 'Search for a Summoner...',
+                    hintStyle: label,
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-        verticalSpacer(20),
-        SizedBox(
-          height: 40,
-          width: 40,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                splashColor: primaryGold,
-                highlightColor: Colors.transparent,
-                onTap: () {
-                  retrievingUser == false ? retrieveUser() : {};
-                },
-                child: retrievingUser == false
-                    ? const Icon(
-                        Icons.search,
-                        size: 40,
-                        color: primaryGold,
-                      )
-                    : const CircularProgressIndicator(),
+            Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: LinearProgressIndicator(
+                  color: Colors.white,
+                  backgroundColor: Colors.transparent,
+                  value: retrievingUser ? null : 0,
+                  minHeight: 2,
+                ),
               ),
-            ),
-          ),
+            )
+          ],
         ),
-      ],
+      ),
     );
   }
 
