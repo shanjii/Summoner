@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/repositories/checker_repository.dart';
+import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/spacer.dart';
-import 'package:league_checker/utils/waiter.dart';
+import 'package:league_checker/utils/widgetTools.dart';
+import 'package:league_checker/utils/misc.dart';
 import 'package:provider/provider.dart';
 
 class RegionSelector extends StatelessWidget {
@@ -11,8 +11,8 @@ class RegionSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late CheckerRepository checkerRepository;
-    checkerRepository = Provider.of<CheckerRepository>(context);
+    late SummonerProvider summonerProvider;
+    summonerProvider = Provider.of<SummonerProvider>(context);
 
     return Container(
       decoration: const BoxDecoration(
@@ -37,17 +37,17 @@ class RegionSelector extends StatelessWidget {
           Center(
             child: Wrap(
               children: [
-                flagItem("br", checkerRepository, context),
-                flagItem("eune", checkerRepository, context),
-                flagItem("euw", checkerRepository, context),
-                flagItem("jp", checkerRepository, context),
-                flagItem("kr", checkerRepository, context),
-                flagItem("lan", checkerRepository, context),
-                flagItem("las", checkerRepository, context),
-                flagItem("na", checkerRepository, context),
-                flagItem("oce", checkerRepository, context),
-                flagItem("ru", checkerRepository, context),
-                flagItem("tr", checkerRepository, context),
+                flagItem("br", summonerProvider, context),
+                flagItem("eune", summonerProvider, context),
+                flagItem("euw", summonerProvider, context),
+                flagItem("jp", summonerProvider, context),
+                flagItem("kr", summonerProvider, context),
+                flagItem("lan", summonerProvider, context),
+                flagItem("las", summonerProvider, context),
+                flagItem("na", summonerProvider, context),
+                flagItem("oce", summonerProvider, context),
+                flagItem("ru", summonerProvider, context),
+                flagItem("tr", summonerProvider, context),
               ],
             ),
           ),
@@ -57,19 +57,19 @@ class RegionSelector extends StatelessWidget {
   }
 }
 
-Widget flagItem(String flag, CheckerRepository checkerRepository, context) {
+Widget flagItem(String flag, SummonerProvider summonerProvider, context) {
   return Padding(
     padding: const EdgeInsets.all(1),
     child: ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: Container(
-        color: checkerRepository.region == flag
+        color: summonerProvider.region == flag
             ? Colors.white24
             : Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () async {
-            checkerRepository.selectRegion(flag);
+            summonerProvider.selectRegion(flag);
             Navigator.pop(context);
           },
           child: Padding(

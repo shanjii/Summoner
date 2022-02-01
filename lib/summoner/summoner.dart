@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/checker/widgets/components/header.dart';
+import 'package:league_checker/summoner/widgets/components/header.dart';
+import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/spacer.dart';
+import 'package:league_checker/utils/widgetTools.dart';
 import 'package:provider/provider.dart';
-import '../repositories/checker_repository.dart';
 import 'widgets/components/browser.dart';
 import 'widgets/components/cards.dart';
 
-class CheckerPage extends StatefulWidget {
-  const CheckerPage({Key? key}) : super(key: key);
+class SummonerPage extends StatefulWidget {
+  const SummonerPage({Key? key}) : super(key: key);
 
   @override
-  State<CheckerPage> createState() => _MyHomePageState();
+  State<SummonerPage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<CheckerPage> {
-  late CheckerRepository checkerRepository;
+class _MyHomePageState extends State<SummonerPage> {
+  late SummonerProvider summonerProvider;
 
   @override
   void initState() {
@@ -26,8 +26,8 @@ class _MyHomePageState extends State<CheckerPage> {
 
   @override
   Widget build(BuildContext context) {
-    checkerRepository = Provider.of<CheckerRepository>(context);
-    checkerRepository.getDeviceDimensions(context);
+    summonerProvider = Provider.of<SummonerProvider>(context);
+    summonerProvider.getDeviceDimensions(context);
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -47,10 +47,10 @@ class _MyHomePageState extends State<CheckerPage> {
                       removeTop: true,
                       context: context,
                       child: SizedBox(
-                        height: checkerRepository.height -
-                            checkerRepository.statusBarHeight -
+                        height: summonerProvider.height -
+                            summonerProvider.statusBarHeight -
                             170,
-                        child: checkerRepository.summonerList.isEmpty
+                        child: summonerProvider.summonerList.isEmpty
                             ? Column(
                                 children: [
                                   SizedBox(
@@ -79,17 +79,17 @@ class _MyHomePageState extends State<CheckerPage> {
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   if (index ==
-                                      checkerRepository.summonerList.length) {
+                                      summonerProvider.summonerList.length) {
                                     return const CardEmpty();
                                   } else {
                                     return CardSummoner(
                                       summoner:
-                                          checkerRepository.summonerList[index],
+                                          summonerProvider.summonerList[index],
                                     );
                                   }
                                 },
                                 itemCount:
-                                    checkerRepository.summonerList.length + 1,
+                                    summonerProvider.summonerList.length + 1,
                               ),
                       ),
                     ),
@@ -99,20 +99,20 @@ class _MyHomePageState extends State<CheckerPage> {
             ),
             AnimatedPositioned(
               duration: const Duration(milliseconds: 300),
-              top: checkerRepository.showUserNotFound == false
+              top: summonerProvider.showUserNotFound == false
                   ? -30
-                  : checkerRepository.statusBarHeight + 15,
+                  : summonerProvider.statusBarHeight + 15,
               curve: Curves.easeOut,
               child: Container(
                 height: 30,
-                width: checkerRepository.width - 100,
+                width: summonerProvider.width - 100,
                 decoration: BoxDecoration(
                   color: primaryGoldOpacity,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Center(
                     child: Text(
-                  checkerRepository.errorMessage,
+                  summonerProvider.errorMessage,
                   style: label,
                 )),
               ),
@@ -124,7 +124,7 @@ class _MyHomePageState extends State<CheckerPage> {
   }
 
   verifyLocalFiles() {
-    context.read<CheckerRepository>().checkApiVersion();
-    context.read<CheckerRepository>().updateSummonerList();
+    context.read<SummonerProvider>().checkApiVersion();
+    context.read<SummonerProvider>().updateSummonerList();
   }
 }

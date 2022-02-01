@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/checker/widgets/modals/summoner_viewer.dart';
-import 'package:league_checker/repositories/checker_repository.dart';
+import 'package:league_checker/summoner/widgets/modals/summoner_viewer.dart';
+import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/spacer.dart';
-import 'package:league_checker/utils/waiter.dart';
+import 'package:league_checker/utils/widgetTools.dart';
+import 'package:league_checker/utils/misc.dart';
 import 'package:provider/provider.dart';
 
 class Browser extends StatefulWidget {
@@ -15,14 +15,14 @@ class Browser extends StatefulWidget {
 }
 
 class _BrowserState extends State<Browser> {
-  late CheckerRepository checkerRepository;
+  late SummonerProvider summonerProvider;
 
   TextEditingController searchController = TextEditingController();
   bool retrievingUser = false;
 
   @override
   Widget build(BuildContext context) {
-    checkerRepository = Provider.of<CheckerRepository>(context);
+    summonerProvider = Provider.of<SummonerProvider>(context);
 
     return Container(
       color: darkGrayTone2,
@@ -79,7 +79,7 @@ class _BrowserState extends State<Browser> {
     FocusManager.instance.primaryFocus?.unfocus();
     setState(() => retrievingUser = true);
     var response =
-        await checkerRepository.getSummonerData(searchController.text);
+        await summonerProvider.getSummonerData(searchController.text);
     if (response == 200) {
       showModalBottomSheet(
         context: context,
@@ -93,7 +93,7 @@ class _BrowserState extends State<Browser> {
       setState(() => retrievingUser = false);
     } else {
       setState(() => retrievingUser = false);
-      await checkerRepository.setError("Summoner not found");
+      await summonerProvider.setError("Summoner not found");
     }
   }
 }

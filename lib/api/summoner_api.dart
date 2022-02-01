@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'package:league_checker/utils/misc.dart';
+import 'package:league_checker/utils/indexer.dart';
 
 class SummonerAPI {
   String riotToken = "RGAPI-c25fb5bc-2008-4a8c-b193-faa5d6292f7f";

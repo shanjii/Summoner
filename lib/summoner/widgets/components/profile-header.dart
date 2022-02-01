@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:league_checker/repositories/checker_repository.dart';
+import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:provider/provider.dart';
@@ -10,8 +10,8 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late CheckerRepository checkerRepository;
-    checkerRepository = Provider.of<CheckerRepository>(context);
+    late SummonerProvider summonerProvider;
+    summonerProvider = Provider.of<SummonerProvider>(context);
 
     return Container(
       decoration: const BoxDecoration(
@@ -24,12 +24,12 @@ class ProfileHeader extends StatelessWidget {
         children: [
           SizedBox(
             height: 300,
-            width: checkerRepository.width,
-            child: checkerRepository.masteryList.isNotEmpty
+            width: summonerProvider.width,
+            child: summonerProvider.masteryList.isNotEmpty
                 ? CachedNetworkImage(
                     fit: BoxFit.cover,
                     imageUrl:
-                        "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${checkerRepository.getChampionImage(checkerRepository.masteryList[0].championId)}_0.jpg",
+                        "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${summonerProvider.getChampionImage(summonerProvider.masteryList[0].championId)}_0.jpg",
                     placeholder: (context, url) => Container(
                       color: Colors.white10,
                     ),
@@ -40,7 +40,7 @@ class ProfileHeader extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(
-                10, checkerRepository.statusBarHeight + 10, 0, 0),
+                10, summonerProvider.statusBarHeight + 10, 0, 0),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
@@ -77,7 +77,7 @@ class ProfileHeader extends StatelessWidget {
                         width: 100,
                         height: 100,
                         imageUrl:
-                            "http://ddragon.leagueoflegends.com/cdn/11.23.1/img/profileicon/${checkerRepository.summonerData.profileIconId}.png",
+                            "http://ddragon.leagueoflegends.com/cdn/11.23.1/img/profileicon/${summonerProvider.summonerData.profileIconId}.png",
                         placeholder: (context, url) =>
                             const CircularProgressIndicator(
                           color: primaryGold,
@@ -102,7 +102,7 @@ class ProfileHeader extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 3),
                           child: Text(
-                            checkerRepository.summonerData.summonerLevel
+                            summonerProvider.summonerData.summonerLevel
                                 .toString(),
                             style: textSmall,
                           ),
@@ -119,7 +119,7 @@ class ProfileHeader extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 30),
               child: Text(
-                checkerRepository.summonerData.name,
+                summonerProvider.summonerData.name,
                 style: textMedium,
               ),
             ),

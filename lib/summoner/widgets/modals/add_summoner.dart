@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/repositories/checker_repository.dart';
+import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/spacer.dart';
-import 'package:league_checker/utils/waiter.dart';
+import 'package:league_checker/utils/widgetTools.dart';
+import 'package:league_checker/utils/misc.dart';
 import 'package:provider/provider.dart';
 
 class AddSummoner extends StatefulWidget {
@@ -14,7 +14,7 @@ class AddSummoner extends StatefulWidget {
 }
 
 class _AddSummonerState extends State<AddSummoner> {
-  late CheckerRepository checkerRepository;
+  late SummonerProvider summonerProvider;
 
   TextEditingController addFavoriteController = TextEditingController();
   bool retrievingUser = false;
@@ -22,7 +22,7 @@ class _AddSummonerState extends State<AddSummoner> {
 
   @override
   Widget build(BuildContext context) {
-    checkerRepository = Provider.of<CheckerRepository>(context);
+    summonerProvider = Provider.of<SummonerProvider>(context);
 
     return Stack(
       alignment: Alignment.center,
@@ -32,7 +32,7 @@ class _AddSummonerState extends State<AddSummoner> {
           children: [
             Padding(
               padding: EdgeInsets.fromLTRB(
-                  10, checkerRepository.statusBarHeight + 10, 15, 0),
+                  10, summonerProvider.statusBarHeight + 10, 15, 0),
               child: Row(
                 children: [
                   Material(
@@ -54,7 +54,7 @@ class _AddSummonerState extends State<AddSummoner> {
                   const Spacer(),
                   Image(
                     image: AssetImage(
-                        "assets/images/regions/regionFlag-${checkerRepository.region}.png"),
+                        "assets/images/regions/regionFlag-${summonerProvider.region}.png"),
                     width: 30,
                     height: 30,
                   ),
@@ -132,13 +132,13 @@ class _AddSummonerState extends State<AddSummoner> {
         ),
         AnimatedPositioned(
           duration: const Duration(milliseconds: 300),
-          top: checkerRepository.showUserNotFound == false
+          top: summonerProvider.showUserNotFound == false
               ? -30
-              : checkerRepository.statusBarHeight + 15,
+              : summonerProvider.statusBarHeight + 15,
           curve: Curves.easeOut,
           child: Container(
             height: 30,
-            width: checkerRepository.width - 100,
+            width: summonerProvider.width - 100,
             decoration: BoxDecoration(
               color: primaryGoldOpacity,
               borderRadius: BorderRadius.circular(20),
@@ -157,7 +157,7 @@ class _AddSummonerState extends State<AddSummoner> {
   retrieveFavoriteUser() async {
     setState(() => retrievingUser = true);
     var response =
-        await checkerRepository.addFavoriteSummoner(addFavoriteController.text);
+        await summonerProvider.addFavoriteSummoner(addFavoriteController.text);
     if (response == 200) {
       setState(() {
         addedUser = true;
@@ -171,7 +171,7 @@ class _AddSummonerState extends State<AddSummoner> {
       setState(() {
         retrievingUser = false;
       });
-      checkerRepository.setError("Summoner not found");
+      summonerProvider.setError("Summoner not found");
     }
   }
 }

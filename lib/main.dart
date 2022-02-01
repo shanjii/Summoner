@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:league_checker/api/summoner_api.dart';
 import 'package:league_checker/app.dart';
 import 'package:league_checker/preload.dart';
-import 'package:league_checker/repositories/checker_repository.dart';
+import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -12,7 +12,7 @@ void main() async {
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => CheckerRepository(
+      create: (context) => SummonerProvider(
         // background,
         regionData[2],
         SummonerAPI(regionData[0], regionData[1]),

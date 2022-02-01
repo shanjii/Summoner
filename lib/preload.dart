@@ -4,8 +4,8 @@ import 'dart:convert' as convert;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
-import 'package:league_checker/model/summoner_model.dart';
-import 'package:league_checker/utils/misc.dart';
+import 'package:league_checker/models/summoner_model.dart';
+import 'package:league_checker/utils/indexer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> loadImage(ImageProvider provider) {

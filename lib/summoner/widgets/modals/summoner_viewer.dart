@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:league_checker/checker/widgets/components/profile-header.dart';
-import 'package:league_checker/repositories/checker_repository.dart';
+import 'package:league_checker/summoner/widgets/components/profile-header.dart';
+import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/spacer.dart';
+import 'package:league_checker/utils/widgetTools.dart';
 import 'package:provider/provider.dart';
 
 class SummonerViewer extends StatelessWidget {
@@ -12,8 +12,8 @@ class SummonerViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late CheckerRepository checkerRepository;
-    checkerRepository = Provider.of<CheckerRepository>(context);
+    late SummonerProvider summonerProvider;
+    summonerProvider = Provider.of<SummonerProvider>(context);
 
     return SizedBox.expand(
       child: SingleChildScrollView(
@@ -25,7 +25,7 @@ class SummonerViewer extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                checkerRepository.masteryList.isNotEmpty
+                summonerProvider.masteryList.isNotEmpty
                     ? SizedBox(
                         height: 90,
                         child: Stack(
@@ -38,7 +38,7 @@ class SummonerViewer extends StatelessWidget {
                                   width: 70,
                                   height: 70,
                                   imageUrl:
-                                      "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${checkerRepository.getChampionImage(checkerRepository.masteryList[1].championId)}.png",
+                                      "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${summonerProvider.getChampionImage(summonerProvider.masteryList[1].championId)}.png",
                                   placeholder: (context, url) =>
                                       const CircularProgressIndicator(
                                     color: primaryGold,
@@ -75,7 +75,7 @@ class SummonerViewer extends StatelessWidget {
                         ),
                       )
                     : const SizedBox(),
-                checkerRepository.masteryList.isNotEmpty
+                summonerProvider.masteryList.isNotEmpty
                     ? SizedBox(
                         height: 100,
                         child: Stack(
@@ -88,7 +88,7 @@ class SummonerViewer extends StatelessWidget {
                                   width: 90,
                                   height: 90,
                                   imageUrl:
-                                      "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${checkerRepository.getChampionImage(checkerRepository.masteryList[0].championId)}.png",
+                                      "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${summonerProvider.getChampionImage(summonerProvider.masteryList[0].championId)}.png",
                                   placeholder: (context, url) =>
                                       const CircularProgressIndicator(
                                     color: primaryGold,
@@ -125,7 +125,7 @@ class SummonerViewer extends StatelessWidget {
                         ),
                       )
                     : const SizedBox(),
-                checkerRepository.masteryList.isNotEmpty
+                summonerProvider.masteryList.isNotEmpty
                     ? SizedBox(
                         height: 90,
                         child: Stack(
@@ -138,7 +138,7 @@ class SummonerViewer extends StatelessWidget {
                                   width: 70,
                                   height: 70,
                                   imageUrl:
-                                      "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${checkerRepository.getChampionImage(checkerRepository.masteryList[2].championId)}.png",
+                                      "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${summonerProvider.getChampionImage(summonerProvider.masteryList[2].championId)}.png",
                                   placeholder: (context, url) =>
                                       const CircularProgressIndicator(
                                     color: primaryGold,
@@ -185,24 +185,24 @@ class SummonerViewer extends StatelessWidget {
               ),
             ),
             verticalSpacer(10),
-            checkerRepository.rankList.isNotEmpty
+            summonerProvider.rankList.isNotEmpty
                 ? Column(
                     children: [
                       Center(
                         child: Text(
-                          'Queue: ${checkerRepository.rankList[0].queueType}',
+                          'Queue: ${summonerProvider.rankList[0].queueType}',
                           style: label,
                         ),
                       ),
                       Center(
                         child: Text(
-                          'Tier: ${checkerRepository.rankList[0].tier}',
+                          'Tier: ${summonerProvider.rankList[0].tier}',
                           style: label,
                         ),
                       ),
                       Center(
                         child: Text(
-                          'Rank: ${checkerRepository.rankList[0].rank}',
+                          'Rank: ${summonerProvider.rankList[0].rank}',
                           style: label,
                         ),
                       ),
@@ -217,19 +217,19 @@ class SummonerViewer extends StatelessWidget {
               ),
             ),
             verticalSpacer(10),
-            checkerRepository.myMatchStats.isNotEmpty &&
-                    checkerRepository.myMatchStats.length > 2
+            summonerProvider.myMatchStats.isNotEmpty &&
+                    summonerProvider.myMatchStats.length > 2
                 ? Column(
                     children: [
                       Center(
                         child: Text(
-                          checkerRepository.myMatchStats[0].championName,
+                          summonerProvider.myMatchStats[0].championName,
                           style: label,
                         ),
                       ),
                       Center(
                         child: Text(
-                          "${checkerRepository.myMatchStats[0].kills}/${checkerRepository.myMatchStats[0].deaths}/${checkerRepository.myMatchStats[0].assists}",
+                          "${summonerProvider.myMatchStats[0].kills}/${summonerProvider.myMatchStats[0].deaths}/${summonerProvider.myMatchStats[0].assists}",
                           style: label,
                         ),
                       ),
@@ -238,7 +238,7 @@ class SummonerViewer extends StatelessWidget {
                           width: 20,
                           height: 20,
                           imageUrl:
-                              "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${checkerRepository.myMatchStats[0].item0}.png",
+                              "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${summonerProvider.myMatchStats[0].item0}.png",
                           placeholder: (context, url) =>
                               const CircularProgressIndicator(
                             color: primaryGold,
@@ -251,13 +251,13 @@ class SummonerViewer extends StatelessWidget {
                       verticalSpacer(10),
                       Center(
                         child: Text(
-                          checkerRepository.myMatchStats[1].championName,
+                          summonerProvider.myMatchStats[1].championName,
                           style: label,
                         ),
                       ),
                       Center(
                         child: Text(
-                          "${checkerRepository.myMatchStats[1].kills}/${checkerRepository.myMatchStats[1].deaths}/${checkerRepository.myMatchStats[1].assists}",
+                          "${summonerProvider.myMatchStats[1].kills}/${summonerProvider.myMatchStats[1].deaths}/${summonerProvider.myMatchStats[1].assists}",
                           style: label,
                         ),
                       ),
@@ -266,7 +266,7 @@ class SummonerViewer extends StatelessWidget {
                           width: 20,
                           height: 20,
                           imageUrl:
-                              "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${checkerRepository.myMatchStats[1].item0}.png",
+                              "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${summonerProvider.myMatchStats[1].item0}.png",
                           placeholder: (context, url) =>
                               const CircularProgressIndicator(
                             color: primaryGold,
@@ -279,13 +279,13 @@ class SummonerViewer extends StatelessWidget {
                       verticalSpacer(10),
                       Center(
                         child: Text(
-                          checkerRepository.myMatchStats[2].championName,
+                          summonerProvider.myMatchStats[2].championName,
                           style: label,
                         ),
                       ),
                       Center(
                         child: Text(
-                          "${checkerRepository.myMatchStats[2].kills}/${checkerRepository.myMatchStats[2].deaths}/${checkerRepository.myMatchStats[2].assists}",
+                          "${summonerProvider.myMatchStats[2].kills}/${summonerProvider.myMatchStats[2].deaths}/${summonerProvider.myMatchStats[2].assists}",
                           style: label,
                         ),
                       ),
@@ -294,7 +294,7 @@ class SummonerViewer extends StatelessWidget {
                           width: 20,
                           height: 20,
                           imageUrl:
-                              "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${checkerRepository.myMatchStats[2].item0}.png",
+                              "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${summonerProvider.myMatchStats[2].item0}.png",
                           placeholder: (context, url) =>
                               const CircularProgressIndicator(
                             color: primaryGold,

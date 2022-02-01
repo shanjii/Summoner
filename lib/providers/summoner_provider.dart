@@ -2,16 +2,16 @@ import 'dart:convert' as convert;
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:league_checker/api/summoner_api.dart';
-import 'package:league_checker/model/champion_data_model.dart';
-import 'package:league_checker/model/champion_mastery_model.dart';
-import 'package:league_checker/model/match_data_model.dart';
-import 'package:league_checker/model/rank_model.dart';
-import 'package:league_checker/model/summoner_model.dart';
+import 'package:league_checker/models/champion_data_model.dart';
+import 'package:league_checker/models/champion_mastery_model.dart';
+import 'package:league_checker/models/match_data_model.dart';
+import 'package:league_checker/models/rank_model.dart';
+import 'package:league_checker/models/summoner_model.dart';
+import 'package:league_checker/utils/indexer.dart';
 import 'package:league_checker/utils/misc.dart';
-import 'package:league_checker/utils/waiter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CheckerRepository extends ChangeNotifier {
+class SummonerProvider extends ChangeNotifier {
   var summonerAPI = SummonerAPI("na1", "americas");
   String region = '';
   String apiVersion = '';
@@ -32,7 +32,7 @@ class CheckerRepository extends ChangeNotifier {
   List<MatchData> matchList = [];
   List myMatchStats = [];
 
-  CheckerRepository(this.region, this.summonerAPI);
+  SummonerProvider(this.region, this.summonerAPI);
 
   //Return summoner data from specified summoner name
   getSummonerData(String summonerName) async {

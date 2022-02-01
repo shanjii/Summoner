@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/checker/widgets/modals/region_selector.dart';
-import 'package:league_checker/repositories/checker_repository.dart';
+import 'package:league_checker/summoner/widgets/modals/region_selector.dart';
+import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/spacer.dart';
+import 'package:league_checker/utils/widgetTools.dart';
 import 'package:provider/provider.dart';
 
 class Header extends StatelessWidget {
@@ -11,14 +11,14 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var checkerRepository = Provider.of<CheckerRepository>(context);
+    var summonerProvider = Provider.of<SummonerProvider>(context);
 
     return Container(
-      height: checkerRepository.statusBarHeight + 100,
+      height: summonerProvider.statusBarHeight + 100,
       color: darkGrayTone2,
       child: Padding(
-        padding:
-            EdgeInsets.only(left: 30, top: checkerRepository.statusBarHeight + 10),
+        padding: EdgeInsets.only(
+            left: 30, top: summonerProvider.statusBarHeight + 10),
         child: Row(
           children: [
             const Image(
@@ -56,12 +56,11 @@ class Header extends StatelessWidget {
 
   openRegionSelector(context) {
     showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return const RegionSelector();
-      },
-      backgroundColor: Colors.transparent
-    );
+        context: context,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return const RegionSelector();
+        },
+        backgroundColor: Colors.transparent);
   }
 }

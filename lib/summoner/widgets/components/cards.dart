@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:league_checker/checker/widgets/modals/add_summoner.dart';
-import 'package:league_checker/checker/widgets/modals/summoner_viewer.dart';
-import 'package:league_checker/repositories/checker_repository.dart';
-import 'package:league_checker/model/summoner_model.dart';
+import 'package:league_checker/summoner/widgets/modals/add_summoner.dart';
+import 'package:league_checker/summoner/widgets/modals/summoner_viewer.dart';
+import 'package:league_checker/providers/summoner_provider.dart';
+import 'package:league_checker/models/summoner_model.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/spacer.dart';
-import 'package:league_checker/utils/waiter.dart';
+import 'package:league_checker/utils/widgetTools.dart';
+import 'package:league_checker/utils/misc.dart';
 import 'package:provider/provider.dart';
 
 class CardEmpty extends StatelessWidget {
@@ -15,8 +15,8 @@ class CardEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late CheckerRepository checkerRepository;
-    checkerRepository = Provider.of<CheckerRepository>(context);
+    late SummonerProvider summonerProvider;
+    summonerProvider = Provider.of<SummonerProvider>(context);
 
     return Column(
       children: [
@@ -30,10 +30,10 @@ class CardEmpty extends StatelessWidget {
                   color: darkGrayTone3,
                   child: InkWell(
                     onTap: () {
-                      showRemoveSummoner(context, checkerRepository);
+                      showRemoveSummoner(context, summonerProvider);
                     },
                     child: SizedBox(
-                      width: (checkerRepository.width / 2) - 80,
+                      width: (summonerProvider.width / 2) - 80,
                       height: 102,
                       child: const Icon(
                         Icons.delete_outline,
@@ -56,7 +56,7 @@ class CardEmpty extends StatelessWidget {
                       showAddSummoner(context);
                     },
                     child: SizedBox(
-                      width: (checkerRepository.width / 2),
+                      width: (summonerProvider.width / 2),
                       height: 102,
                       child: const Icon(
                         Icons.add,
@@ -87,7 +87,7 @@ class CardEmpty extends StatelessWidget {
     );
   }
 
-  showRemoveSummoner(context, checkerRepository) {
+  showRemoveSummoner(context, summonerProvider) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -102,7 +102,7 @@ class CardEmpty extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                checkerRepository.removeSummonerList();
+                summonerProvider.removeSummonerList();
                 Navigator.pop(context);
               },
               child: const Text('REMOVE'),
@@ -124,13 +124,13 @@ class CardSummoner extends StatefulWidget {
 }
 
 class _CardSummonerState extends State<CardSummoner> {
-  late CheckerRepository checkerRepository;
+  late SummonerProvider summonerProvider;
 
   bool retrievingCardUser = false;
 
   @override
   Widget build(BuildContext context) {
-    checkerRepository = Provider.of<CheckerRepository>(context);
+    summonerProvider = Provider.of<SummonerProvider>(context);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 20, left: 30, right: 30),
@@ -244,10 +244,10 @@ class _CardSummonerState extends State<CardSummoner> {
   }
 
   openSummonerCard(summonerName, region) async {
-    if (!checkerRepository.isLoadingSummoner) {
+    if (!summonerProvider.isLoadingSummoner) {
       setState(() => retrievingCardUser = true);
-      await checkerRepository.selectRegion(region);
-      var response = await checkerRepository.getSummonerData(summonerName);
+      await summonerProvider.selectRegion(region);
+      var response = await summonerProvider.getSummonerData(summonerName);
       if (response == 200) {
         showModalBottomSheet(
           context: context,
@@ -258,7 +258,7 @@ class _CardSummonerState extends State<CardSummoner> {
           isScrollControlled: true,
         );
       } else {
-        checkerRepository.setError("Summoner from different region");
+        summonerProvider.setError("Summoner from different region");
       }
       await wait(200);
       setState(() => retrievingCardUser = false);
