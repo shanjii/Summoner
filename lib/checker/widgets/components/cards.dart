@@ -23,7 +23,7 @@ class CardEmpty extends StatelessWidget {
         Row(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 30, right: 5),
+              padding: const EdgeInsets.only(left: 30, right: 10),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Material(
@@ -46,7 +46,7 @@ class CardEmpty extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 30, left: 5),
+              padding: const EdgeInsets.only(right: 30, left: 10),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Material(
@@ -56,7 +56,7 @@ class CardEmpty extends StatelessWidget {
                       showAddSummoner(context);
                     },
                     child: SizedBox(
-                      width: (checkerRepository.width / 2) + 10,
+                      width: (checkerRepository.width / 2),
                       height: 102,
                       child: const Icon(
                         Icons.add,
@@ -133,7 +133,7 @@ class _CardSummonerState extends State<CardSummoner> {
     checkerRepository = Provider.of<CheckerRepository>(context);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10, left: 30, right: 30),
+      padding: const EdgeInsets.only(bottom: 20, left: 30, right: 30),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: InkWell(
@@ -167,28 +167,32 @@ class _CardSummonerState extends State<CardSummoner> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CachedNetworkImage(
-                          width: 60,
-                          height: 60,
-                          imageUrl:
-                              "http://ddragon.leagueoflegends.com/cdn/11.23.1/img/profileicon/${widget.summoner.profileIconId}.png",
-                          imageBuilder: (context, imageProvider) => Ink(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              border:
-                                  Border.all(color: darkGrayTone1, width: 2),
-                              image: DecorationImage(
-                                image: imageProvider,
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: darkGrayTone1, width: 2),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: CachedNetworkImage(
+                            width: 60,
+                            height: 60,
+                            imageUrl:
+                                "http://ddragon.leagueoflegends.com/cdn/11.23.1/img/profileicon/${widget.summoner.profileIconId}.png",
+                            imageBuilder: (context, imageProvider) => Ink(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                ),
                               ),
                             ),
+                            placeholder: (context, url) =>
+                                const CircularProgressIndicator(
+                              color: grayTone1,
+                              strokeWidth: 2,
+                            ),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
                           ),
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(
-                            color: grayTone1,
-                            strokeWidth: 10,
-                          ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
                         ),
                         const Spacer(),
                         Ink(

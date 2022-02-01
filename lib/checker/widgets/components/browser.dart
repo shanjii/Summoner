@@ -27,7 +27,7 @@ class _BrowserState extends State<Browser> {
     return Container(
       color: darkGrayTone2,
       child: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 30, bottom: 8),
+        padding: const EdgeInsets.only(left: 30, right: 30, bottom: 18),
         child: Column(
           children: [
             Container(
@@ -35,7 +35,7 @@ class _BrowserState extends State<Browser> {
                 borderRadius: BorderRadius.circular(15),
                 color: Colors.white24,
               ),
-              height: 40,
+              height: 50,
               child: Padding(
                 padding: const EdgeInsets.only(
                   left: 30,
@@ -50,7 +50,6 @@ class _BrowserState extends State<Browser> {
                   },
                   textInputAction: TextInputAction.search,
                   decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.only(bottom: 8),
                     hintText: 'Search for a Summoner...',
                     hintStyle: label,
                     border: InputBorder.none,

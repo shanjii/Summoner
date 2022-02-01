@@ -197,24 +197,6 @@ class CheckerRepository extends ChangeNotifier {
     notifyListeners();
   }
 
-  //Return any selected background stored in the memory
-  updateBackground() async {
-    final prefs = await SharedPreferences.getInstance();
-    var selectedBackground = prefs.getString('background');
-    if (selectedBackground != null) {
-      background = selectedBackground;
-    }
-    notifyListeners();
-  }
-
-  //Register the selected background into memory
-  selectBackground(background) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('background', background);
-    await updateBackground();
-    notifyListeners();
-  }
-
   getDeviceDimensions(context) {
     statusBarHeight = MediaQuery.of(context).padding.top;
     height = MediaQuery.of(context).size.height;

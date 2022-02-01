@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/checker/widgets/modals/background_selector.dart';
 import 'package:league_checker/checker/widgets/modals/region_selector.dart';
 import 'package:league_checker/repositories/checker_repository.dart';
 import 'package:league_checker/style/color_palette.dart';
@@ -35,19 +34,16 @@ class Header extends StatelessWidget {
             const Spacer(),
             Padding(
               padding: const EdgeInsets.only(right: 30),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      openRegionSelector(context);
-                    },
-                    child: const Icon(
-                      Icons.public_rounded,
-                      color: Colors.white,
-                      size: 35,
-                    ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    openRegionSelector(context);
+                  },
+                  child: const Icon(
+                    Icons.public_rounded,
+                    color: Colors.white,
+                    size: 35,
                   ),
                 ),
               ),

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // var background = await verifySelectedImage();
+  await preloadImages();
   List<String> regionData = await checkRegion();
 
   runApp(

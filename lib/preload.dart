@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert' as convert;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:league_checker/model/summoner_model.dart';
 import 'package:league_checker/utils/misc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,23 +38,22 @@ Future<void> loadImage(ImageProvider provider) {
   return completer.future;
 }
 
-Future<String> verifySelectedImage() async {
-  String background;
-
-  await loadImage(const AssetImage('assets/images/backgrounds/rengar.jpg'));
-  await loadImage(const AssetImage('assets/images/backgrounds/aatrox.jpg'));
-  await loadImage(
-      const AssetImage('assets/images/backgrounds/mordekaiser.jpg'));
-  await loadImage(const AssetImage('assets/images/regions/regionFlag-na.png'));
-
+Future preloadImages() async {
   final prefs = await SharedPreferences.getInstance();
-  var selectedBackground = prefs.getString('background');
-  if (selectedBackground != null) {
-    background = selectedBackground;
-  } else {
-    background = 'rengar';
+  var summonerString = prefs.getString('summoners');
+  List<SummonerModel> summonerList = [];
+  if (summonerString != null) {
+    List decodedJsonData = convert.jsonDecode(summonerString);
+    for (var i = 0; i < decodedJsonData.length; i++) {
+      summonerList.add(SummonerModel.fromJson(decodedJsonData[i]));
+    }
   }
-  return background;
+  for (var summoner in summonerList) {
+    await loadImage(
+      NetworkImage(
+          'http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${summoner.background}_0.jpg'),
+    );
+  }
 }
 
 Future<List<String>> checkRegion() async {
