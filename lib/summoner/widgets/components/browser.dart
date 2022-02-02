@@ -90,10 +90,13 @@ class _BrowserState extends State<Browser> {
         isScrollControlled: true,
       );
       await wait(200);
-      setState(() => retrievingUser = false);
-    } else {
-      setState(() => retrievingUser = false);
+    } else if (response == 404) {
       await summonerProvider.setError("Summoner not found");
+    } else if (response == 500) {
+      await summonerProvider.setError("Network error");
+    } else {
+      await summonerProvider.setError("Unknown error");
     }
+    setState(() => retrievingUser = false);
   }
 }

@@ -6,6 +6,7 @@ import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/models/summoner_model.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
+import 'package:league_checker/utils/indexer.dart';
 import 'package:league_checker/utils/widgetTools.dart';
 import 'package:league_checker/utils/misc.dart';
 import 'package:provider/provider.dart';
@@ -246,8 +247,9 @@ class _CardSummonerState extends State<CardSummoner> {
   openSummonerCard(summonerName, region) async {
     if (!summonerProvider.isLoadingSummoner) {
       setState(() => retrievingCardUser = true);
-      await summonerProvider.selectRegion(region);
-      var response = await summonerProvider.getSummonerData(summonerName);
+      // await summonerProvider.selectRegion(region);
+      var response = await summonerProvider
+          .getSummonerData(summonerName, regionIndex(region));
       if (response == 200) {
         showModalBottomSheet(
           context: context,
@@ -258,7 +260,7 @@ class _CardSummonerState extends State<CardSummoner> {
           isScrollControlled: true,
         );
       } else {
-        summonerProvider.setError("Summoner from different region");
+        summonerProvider.setError("Failed to retrieve Summoner");
       }
       await wait(200);
       setState(() => retrievingCardUser = false);

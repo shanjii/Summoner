@@ -34,42 +34,38 @@ class SummonerProvider extends ChangeNotifier {
   SummonerProvider(this.region, this.summonerAPI);
 
   //Return summoner data from specified summoner name
-  getSummonerData(String summonerName) async {
+  getSummonerData(String summonerName, [argument]) async {
     try {
+      List<String> regionData = regionIndex(region);
+      summonerAPI = SummonerAPI(regionData[0], regionData[1]);
       isLoadingSummoner = true;
-      var response = await summonerAPI.getSummonerData(summonerName);
-
-      if (response.statusCode == 200) {
-        var decodedJsonData = convert.jsonDecode(response.body);
-        summonerData = SummonerModel.fromJson(decodedJsonData);
-        summonerData.region = region;
-
-        await Future.wait([
-          getChampionMastery(summonerData.id),
-          getSummonerRank(summonerData.id),
-          getChampionData(),
-          getMatchList()
-        ]);
-
+      var response =
+          await summonerAPI.getSummonerData(summonerName, [argument]);
+      summonerData = SummonerModel.fromJson(response);
+      summonerData.region = region;
+      await Future.wait([
+        getChampionMastery(summonerData.id),
+        getSummonerRank(summonerData.id),
+        getChampionData(),
+        getMatchList()
+      ]);
+      if (masteryList.isNotEmpty) {
         summonerData.background = getChampionImage(masteryList[0].championId);
       }
-
       isLoadingSummoner = false;
-      return response.statusCode;
+      return 200;
     } catch (error) {
-      throw Exception(error);
+      isLoadingSummoner = false;
+      return error;
     }
   }
 
   //Return the top 3 champion masteries from specified summoner ID
   Future getChampionMastery(summonerId) async {
     masteryList.clear();
-
-    var response = await summonerAPI.getChampionMastery(summonerId);
-    var decodedJsonData = convert.jsonDecode(response);
-
-    for (var i = 0; i < decodedJsonData.length; i++) {
-      masteryList.add(ChampionMasteryModel.fromJson(decodedJsonData[i]));
+    var championMasteries = await summonerAPI.getChampionMastery(summonerId);
+    for (var i = 0; i < championMasteries.length; i++) {
+      masteryList.add(ChampionMasteryModel.fromJson(championMasteries[i]));
       if (i >= 2) {
         break;
       }
@@ -80,23 +76,18 @@ class SummonerProvider extends ChangeNotifier {
   Future getMatchList() async {
     matchList.clear();
     myMatchStats.clear();
-
-    var response = await summonerAPI.getMatchId(summonerData.puuid);
-    var decodedJsonData = convert.jsonDecode(response);
-
+    var matchIds = await summonerAPI.getMatchId(summonerData.puuid);
     List<Future> promises = [];
-
-    for (var id in decodedJsonData) {
+    for (var id in matchIds) {
       promises.add(getMatchData(id));
     }
-
     if (promises.isNotEmpty) {
       await Future.wait(promises);
     }
-
-    matchList.sort((b, a) => a.info.gameCreation.compareTo(b.info
-        .gameCreation)); //Needed for match order based on most the recent match
-
+    //Needed for match order based on most the recent match
+    matchList.sort(
+      (b, a) => a.info.gameCreation.compareTo(b.info.gameCreation),
+    );
     if (matchList.isNotEmpty) {
       for (var match in matchList) {
         for (var participant in match.info.participants) {
@@ -110,10 +101,9 @@ class SummonerProvider extends ChangeNotifier {
 
   //Return the match data from specified match ID
   Future getMatchData(id) async {
-    var response = await summonerAPI.getMatchData(id);
-    var decodedJsonData = convert.jsonDecode(response);
+    var summonerMatches = await summonerAPI.getMatchData(id);
     try {
-      matchList.add(MatchData.fromJson(decodedJsonData));
+      matchList.add(MatchData.fromJson(summonerMatches));
     } catch (error) {
       log("A match had an unknown error");
       return;
@@ -123,12 +113,11 @@ class SummonerProvider extends ChangeNotifier {
   //Return all the ranks of the specified summoner ID
   Future getSummonerRank(summonerId) async {
     rankList.clear();
-    var response = await summonerAPI.getSummonerRank(summonerId);
-    List decodedJsonData = convert.jsonDecode(response);
-    if (decodedJsonData.isNotEmpty) {
-      for (var i = 0; i < decodedJsonData.length; i++) {
-        if (decodedJsonData[i]['queueType'] != "RANKED_TFT_PAIRS") {
-          rankList.add(RankModel.fromJson(decodedJsonData[i]));
+    var summonerRanks = await summonerAPI.getSummonerRank(summonerId);
+    if (summonerRanks.isNotEmpty) {
+      for (var i = 0; i < summonerRanks.length; i++) {
+        if (summonerRanks[i]['queueType'] != "RANKED_TFT_PAIRS") {
+          rankList.add(RankModel.fromJson(summonerRanks[i]));
         }
       }
     }
@@ -137,10 +126,8 @@ class SummonerProvider extends ChangeNotifier {
   //Load all champion data into a list
   Future getChampionData() async {
     if (championList.isEmpty) {
-      var response = await summonerAPI.getChampionData(apiVersion);
-      var decodedJsonData = convert.jsonDecode(response)['data'];
-
-      decodedJsonData.values.forEach((value) {
+      var championData = await summonerAPI.getChampionData(apiVersion);
+      championData.values.forEach((value) {
         championList.add(ChampionData.fromJson(value));
       });
     }
@@ -149,24 +136,17 @@ class SummonerProvider extends ChangeNotifier {
   //Add a favorited summoner to the summoner list and save them in the memory
   addFavoriteSummoner(String summonerName) async {
     try {
-      List<ChampionMasteryModel> masteryList = [];
-      var response = await summonerAPI.getSummonerData(summonerName);
-      var summoner = SummonerModel.fromJson(convert.jsonDecode(response.body));
-
-      response = await summonerAPI.getChampionMastery(summoner.id);
-      var decodedJsonData = convert.jsonDecode(response);
-
-      if (decodedJsonData.length != 0) {
-        masteryList.add(ChampionMasteryModel.fromJson(decodedJsonData[0]));
-        await getChampionData();
-        summoner.background = getChampionImage(masteryList[0].championId);
-      }
-
+      var summoner = SummonerModel.fromJson(
+        await summonerAPI.getSummonerData(summonerName),
+      );
       summoner.region = region;
+      var masteries = await summonerAPI.getChampionMastery(summoner.id);
+      if (masteries.isNotEmpty) {
+        await getChampionData();
+        summoner.background = getChampionImage(masteries[0]["championId"]);
+      }
       summonerList.add(summoner);
-
       await LocalStorage.writeEncoded("summoners", summonerList);
-
       notifyListeners();
       return 200;
     } catch (error) {
@@ -176,7 +156,7 @@ class SummonerProvider extends ChangeNotifier {
 
   //Return any stored summoners in the memory
   updateSummonerList() async {
-    List decodedJsonData = await LocalStorage.readDecoded("summoners");
+    var decodedJsonData = await LocalStorage.readDecoded("summoners");
     for (var i = 0; i < decodedJsonData.length; i++) {
       summonerList.add(SummonerModel.fromJson(decodedJsonData[i]));
     }
@@ -209,17 +189,13 @@ class SummonerProvider extends ChangeNotifier {
 
   checkApiVersion() async {
     var devicePatch = await LocalStorage.readString("patch");
-
     if (devicePatch == null) {
       await updateDevice();
     } else {
       apiVersion = devicePatch;
       notifyListeners();
-
-      var response = await summonerAPI.getCurrentPatch();
-      var decodedJsonData = convert.jsonDecode(response);
-
-      if (devicePatch != decodedJsonData[0]) {
+      var patchList = await summonerAPI.getPatches();
+      if (devicePatch != patchList[0]) {
         await updateDevice();
       } else {
         apiVersion = devicePatch;
@@ -231,9 +207,8 @@ class SummonerProvider extends ChangeNotifier {
   updateDevice() async {
     updatingDevice = true;
     notifyListeners();
-    var response = await summonerAPI.getCurrentPatch();
-    var decodedJsonData = convert.jsonDecode(response);
-    apiVersion = decodedJsonData[0];
+    var patchList = await summonerAPI.getPatches();
+    apiVersion = patchList[0];
     await LocalStorage.writeString("patch", apiVersion);
     updatingDevice = false;
     notifyListeners();

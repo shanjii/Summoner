@@ -1,21 +1,42 @@
 import 'package:http/http.dart' as http;
-import 'package:league_checker/utils/indexer.dart';
+import 'dart:convert' as convert;
+
+import 'package:league_checker/api/token.dart';
 
 class SummonerAPI {
-  String riotToken = "RGAPI-c25fb5bc-2008-4a8c-b193-faa5d6292f7f";
+  String riotToken = Token.value;
   String region = "br1";
   String regionType = "americas";
 
   SummonerAPI(this.region, this.regionType);
 
-  Future getSummonerData(summonerName) async {
-    var response = await http.get(
-      Uri.parse(
-        'https://$region.api.riotgames.com/lol/summoner/v4/summoners/by-name/$summonerName',
-      ),
-      headers: {"X-Riot-Token": riotToken},
-    );
-    return response;
+  Future getSummonerData(summonerName, [argument]) async {
+    try {
+      if (argument != null) {
+        if (argument[0] != null) {
+          var cardRegion = argument[0];
+          region = cardRegion[0];
+          regionType = cardRegion[1];
+        }
+      }
+      var response = await http.get(
+        Uri.parse(
+          'https://$region.api.riotgames.com/lol/summoner/v4/summoners/by-name/$summonerName',
+        ),
+        headers: {"X-Riot-Token": riotToken},
+      ).timeout(const Duration(seconds: 15));
+      if (response.statusCode == 200) {
+        return convert.jsonDecode(response.body);
+      } else {
+        throw response.statusCode;
+      }
+    } catch (error) {
+      if (error == 404) {
+        rethrow;
+      } else {
+        throw 500;
+      }
+    }
   }
 
   Future getChampionMastery(summonerId) async {
@@ -26,7 +47,7 @@ class SummonerAPI {
       headers: {"X-Riot-Token": riotToken},
     );
     if (response.statusCode == 200) {
-      return response.body;
+      return convert.jsonDecode(response.body);
     } else {
       throw 'Error retrieving champion mastery';
     }
@@ -40,7 +61,7 @@ class SummonerAPI {
       headers: {"X-Riot-Token": riotToken},
     );
     if (response.statusCode == 200) {
-      return response.body;
+      return convert.jsonDecode(response.body);
     } else {
       throw 'Error retrieving summoner rank';
     }
@@ -53,7 +74,7 @@ class SummonerAPI {
       ),
     );
     if (response.statusCode == 200) {
-      return response.body;
+      return convert.jsonDecode(response.body)['data'];
     } else {
       throw 'Error retrieving champion data';
     }
@@ -67,7 +88,7 @@ class SummonerAPI {
       headers: {"X-Riot-Token": riotToken},
     );
     if (response.statusCode == 200) {
-      return response.body;
+      return convert.jsonDecode(response.body);
     } else {
       throw 'Error retrieving match data';
     }
@@ -81,19 +102,19 @@ class SummonerAPI {
       headers: {"X-Riot-Token": riotToken},
     );
     if (response.statusCode == 200) {
-      return response.body;
+      return convert.jsonDecode(response.body);
     } else {
       throw 'Error retrieving matches';
     }
   }
 
-  Future getCurrentPatch() async {
+  Future getPatches() async {
     var response = await http.get(
       Uri.parse(
         'https://ddragon.leagueoflegends.com/api/versions.json',
       ),
       headers: {"X-Riot-Token": riotToken},
     );
-    return response.body;
+    return convert.jsonDecode(response.body);
   }
 }

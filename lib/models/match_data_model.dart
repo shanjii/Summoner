@@ -100,7 +100,7 @@ class Info {
         teams.add(Teams.fromJson(v));
       });
     }
-    tournamentCode = json['tournamentCode'];
+    tournamentCode = json['tournamentCode'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -347,7 +347,7 @@ class Participants {
     championName = json['championName'];
     championTransform = json['championTransform'];
     consumablesPurchased = json['consumablesPurchased'];
-    damageDealtToBuildings = json['damageDealtToBuildings'];
+    damageDealtToBuildings = json['damageDealtToBuildings'] ?? 0;
     damageDealtToObjectives = json['damageDealtToObjectives'];
     damageDealtToTurrets = json['damageDealtToTurrets'];
     damageSelfMitigated = json['damageSelfMitigated'];
@@ -365,8 +365,8 @@ class Participants {
     goldSpent = json['goldSpent'];
     individualPosition = json['individualPosition'];
     inhibitorKills = json['inhibitorKills'];
-    inhibitorTakedowns = json['inhibitorTakedowns'];
-    inhibitorsLost = json['inhibitorsLost'];
+    inhibitorTakedowns = json['inhibitorTakedowns'] ?? 0;
+    inhibitorsLost = json['inhibitorsLost'] ?? 0;
     item0 = json['item0'];
     item1 = json['item1'];
     item2 = json['item2'];
@@ -387,8 +387,8 @@ class Participants {
     magicDamageTaken = json['magicDamageTaken'];
     neutralMinionsKilled = json['neutralMinionsKilled'];
     nexusKills = json['nexusKills'];
-    nexusLost = json['nexusLost'];
-    nexusTakedowns = json['nexusTakedowns'];
+    nexusLost = json['nexusLost'] ?? 0;
+    nexusTakedowns = json['nexusTakedowns'] ?? 0;
     objectivesStolen = json['objectivesStolen'];
     objectivesStolenAssists = json['objectivesStolenAssists'];
     participantId = json['participantId'];
@@ -435,8 +435,8 @@ class Participants {
     trueDamageDealtToChampions = json['trueDamageDealtToChampions'];
     trueDamageTaken = json['trueDamageTaken'];
     turretKills = json['turretKills'];
-    turretTakedowns = json['turretTakedowns'];
-    turretsLost = json['turretsLost'];
+    turretTakedowns = json['turretTakedowns'] ?? 0;
+    turretsLost = json['turretsLost'] ?? 0;
     unrealKills = json['unrealKills'];
     visionScore = json['visionScore'];
     visionWardsBoughtInGame = json['visionWardsBoughtInGame'];
