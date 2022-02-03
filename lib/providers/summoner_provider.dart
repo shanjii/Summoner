@@ -31,6 +31,7 @@ class SummonerProvider extends ChangeNotifier {
   List<MatchData> matchList = [];
   List myMatchStats = [];
   FocusNode addSummonerKeyboardFocus = FocusNode();
+  
 
   SummonerProvider(this.region, this.summonerAPI);
 

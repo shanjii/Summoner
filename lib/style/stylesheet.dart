@@ -9,6 +9,13 @@ const TextStyle textMedium = TextStyle(
   color: Colors.white,
 );
 
+const TextStyle textMediumBlack = TextStyle(
+  fontFamily: "MarkPro",
+  fontWeight: FontWeight.normal,
+  fontSize: 28,
+  color: Colors.black,
+);
+
 const TextStyle textMediumBold = TextStyle(
   fontFamily: "MarkPro",
   fontWeight: FontWeight.bold,

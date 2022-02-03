@@ -43,7 +43,8 @@ class _MyHomePageState extends State<SummonerPage> {
             surprise = 0;
           }
         }
-        return summonerProvider.activateAddSummonerScreen(false, context);
+        summonerProvider.activateAddSummonerScreen(false, context);
+        return Future.value(false);
       },
       child: Scaffold(
         backgroundColor: darkGrayTone2,
