@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/widgetTools.dart';
+import 'package:league_checker/summoner/widgets/components/error_dropdown.dart';
+import 'package:league_checker/utils/widget.dart';
 import 'package:league_checker/utils/misc.dart';
 import 'package:provider/provider.dart';
 
@@ -20,14 +23,20 @@ class _AddSummonerState extends State<AddSummoner> {
   bool retrievingUser = false;
   bool addedUser = false;
 
+  double keyboardHeight = 0;
   @override
   Widget build(BuildContext context) {
     summonerProvider = Provider.of<SummonerProvider>(context);
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Column(
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+      right: summonerProvider.showAddSummoner ? 0 : -summonerProvider.width,
+      child: Container(
+        color: darkGrayTone4,
+        height: summonerProvider.height,
+        width: summonerProvider.width,
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
@@ -35,28 +44,24 @@ class _AddSummonerState extends State<AddSummoner> {
                   10, summonerProvider.statusBarHeight + 10, 15, 0),
               child: Row(
                 children: [
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        retrievingUser == false ? Navigator.pop(context) : null;
-                      },
-                      child: const RotatedBox(
-                        quarterTurns: 1,
-                        child: Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: primaryGold,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          retrievingUser == false
+                              ? summonerProvider.activateAddSummonerScreen(
+                                  false, context)
+                              : null;
+                        },
+                        child: const Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: Colors.white,
                           size: 40,
                         ),
                       ),
                     ),
-                  ),
-                  const Spacer(),
-                  Image(
-                    image: AssetImage(
-                        "assets/images/regions/regionFlag-${summonerProvider.region}.png"),
-                    width: 30,
-                    height: 30,
                   ),
                 ],
               ),
@@ -70,27 +75,31 @@ class _AddSummonerState extends State<AddSummoner> {
               ),
             ),
             verticalSpacer(30),
-            Padding(
-              padding: const EdgeInsets.only(left: 60, right: 60),
-              child: SizedBox(
-                height: 50,
+            Container(
+              margin: const EdgeInsets.only(left: 30, right: 30),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.white24,
+              ),
+              height: 50,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 30,
+                  right: 30,
+                ),
                 child: TextField(
-                  autofocus: true,
                   controller: addFavoriteController,
                   style: input,
-                  cursorColor: primaryGold,
-                  cursorHeight: 20,
+                  focusNode: summonerProvider.addSummonerKeyboardFocus,
+                  cursorColor: Colors.white,
+                  onSubmitted: (value) {
+                    retrieveFavoriteUser();
+                  },
+                  textInputAction: TextInputAction.search,
                   decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.all(0),
-                    labelText: 'Summoner name',
-                    labelStyle: label,
-                    alignLabelWithHint: true,
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: primaryGold),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: primaryGold),
-                    ),
+                    hintText: 'Summoner name',
+                    hintStyle: label,
+                    border: InputBorder.none,
                   ),
                 ),
               ),
@@ -110,7 +119,7 @@ class _AddSummonerState extends State<AddSummoner> {
                       },
                       child: retrievingUser == true
                           ? const CircularProgressIndicator(
-                              color: primaryGold,
+                              color: Colors.white,
                             )
                           : addedUser == true
                               ? const Icon(
@@ -121,7 +130,7 @@ class _AddSummonerState extends State<AddSummoner> {
                               : const Icon(
                                   Icons.add_circle_outline,
                                   size: 50,
-                                  color: primaryGold,
+                                  color: Colors.white,
                                 ),
                     ),
                   ),
@@ -130,27 +139,7 @@ class _AddSummonerState extends State<AddSummoner> {
             ),
           ],
         ),
-        AnimatedPositioned(
-          duration: const Duration(milliseconds: 300),
-          top: summonerProvider.showUserNotFound == false
-              ? -30
-              : summonerProvider.statusBarHeight + 15,
-          curve: Curves.easeOut,
-          child: Container(
-            height: 30,
-            width: summonerProvider.width - 100,
-            decoration: BoxDecoration(
-              color: primaryGoldOpacity,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Center(
-                child: Text(
-              'Summoner not found.',
-              style: label,
-            )),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -164,14 +153,21 @@ class _AddSummonerState extends State<AddSummoner> {
         retrievingUser = false;
       });
       await wait(1300);
-      Navigator.pop(context);
+      summonerProvider.activateAddSummonerScreen(false, context);
       setState(() => addedUser = false);
       addFavoriteController.text = '';
+    } else if (response == 404) {
+      setState(() => retrievingUser = false);
+      await summonerProvider.setError("Summoner not found");
+    } else if (response == 403) {
+      setState(() => retrievingUser = false);
+      await summonerProvider.setError("Type in a Summoner");
+    } else if (response == 500) {
+      setState(() => retrievingUser = false);
+      await summonerProvider.setError("Network error");
     } else {
-      setState(() {
-        retrievingUser = false;
-      });
-      summonerProvider.setError("Summoner not found");
+      setState(() => retrievingUser = false);
+      await summonerProvider.setError("Unknown error");
     }
   }
 }

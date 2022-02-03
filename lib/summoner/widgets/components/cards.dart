@@ -7,7 +7,7 @@ import 'package:league_checker/models/summoner_model.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/indexer.dart';
-import 'package:league_checker/utils/widgetTools.dart';
+import 'package:league_checker/utils/widget.dart';
 import 'package:league_checker/utils/misc.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +54,7 @@ class CardEmpty extends StatelessWidget {
                   color: grayTone2,
                   child: InkWell(
                     onTap: () {
-                      showAddSummoner(context);
+                      showAddSummoner(summonerProvider, context);
                     },
                     child: SizedBox(
                       width: (summonerProvider.width / 2),
@@ -76,19 +76,19 @@ class CardEmpty extends StatelessWidget {
     );
   }
 
-  showAddSummoner(context) async {
-    showModalBottomSheet(
-      barrierColor: Colors.transparent,
-      isScrollControlled: true,
-      context: context,
-      backgroundColor: darkGrayTone4,
-      builder: (BuildContext context) {
-        return const AddSummoner();
-      },
-    );
+  showAddSummoner(SummonerProvider summonerProvider, context) async {
+    // showBottomSheet(
+    //   context: context,
+    //   constraints: BoxConstraints(minHeight: 100),
+    //   backgroundColor: darkGrayTone4,
+    //   builder: (BuildContext context) {
+    //     return const AddSummoner();
+    //   },
+    // );
+    summonerProvider.activateAddSummonerScreen(true, context);
   }
 
-  showRemoveSummoner(context, summonerProvider) {
+  showRemoveSummoner(context, SummonerProvider summonerProvider) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -168,32 +168,26 @@ class _CardSummonerState extends State<CardSummoner> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: darkGrayTone1, width: 2),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: CachedNetworkImage(
-                            width: 60,
-                            height: 60,
-                            imageUrl:
-                                "http://ddragon.leagueoflegends.com/cdn/11.23.1/img/profileicon/${widget.summoner.profileIconId}.png",
-                            imageBuilder: (context, imageProvider) => Ink(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                ),
+                        CachedNetworkImage(
+                          width: 60,
+                          height: 60,
+                          imageUrl:
+                              "http://ddragon.leagueoflegends.com/cdn/11.23.1/img/profileicon/${widget.summoner.profileIconId}.png",
+                          imageBuilder: (context, imageProvider) => Ink(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              image: DecorationImage(
+                                image: imageProvider,
                               ),
                             ),
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator(
-                              color: grayTone1,
-                              strokeWidth: 2,
-                            ),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
                           ),
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(
+                            color: grayTone1,
+                            strokeWidth: 2,
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
                         ),
                         const Spacer(),
                         Ink(
@@ -248,8 +242,8 @@ class _CardSummonerState extends State<CardSummoner> {
     if (!summonerProvider.isLoadingSummoner) {
       setState(() => retrievingCardUser = true);
       // await summonerProvider.selectRegion(region);
-      var response = await summonerProvider
-          .getSummonerData(summonerName, regionIndex(region));
+      var response = await summonerProvider.getSummonerData(
+          summonerName, regionIndex(region));
       if (response == 200) {
         showModalBottomSheet(
           context: context,

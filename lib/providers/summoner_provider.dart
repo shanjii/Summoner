@@ -16,11 +16,11 @@ class SummonerProvider extends ChangeNotifier {
   String region = '';
   String apiVersion = '';
   bool updatingDevice = false;
-  bool showUserNotFound = false;
+  bool showError = false;
+  bool showAddSummoner = false;
   double statusBarHeight = 0;
   double height = 0;
   double width = 0;
-  String background = 'rengar';
   bool isLoadingSummoner = false;
   String errorMessage = 'Summoner not found.';
   List<SummonerModel> summonerList = [];
@@ -30,6 +30,7 @@ class SummonerProvider extends ChangeNotifier {
   late SummonerModel summonerData;
   List<MatchData> matchList = [];
   List myMatchStats = [];
+  FocusNode addSummonerKeyboardFocus = FocusNode();
 
   SummonerProvider(this.region, this.summonerAPI);
 
@@ -150,7 +151,8 @@ class SummonerProvider extends ChangeNotifier {
       notifyListeners();
       return 200;
     } catch (error) {
-      return 400;
+      isLoadingSummoner = false;
+      return error;
     }
   }
 
@@ -223,11 +225,26 @@ class SummonerProvider extends ChangeNotifier {
   }
 
   setError(error) async {
-    showUserNotFound = true;
+    showError = true;
     errorMessage = error;
     notifyListeners();
-    await wait(3000);
-    showUserNotFound = false;
+    await wait(4000);
+    showError = false;
+    notifyListeners();
+  }
+
+  clearError() async {
+    showError = false;
+    notifyListeners();
+  }
+
+  activateAddSummonerScreen(value, context) {
+    showAddSummoner = value;
+    if (value) {
+      FocusScope.of(context).requestFocus(addSummonerKeyboardFocus);
+    } else {
+      FocusScope.of(context).unfocus();
+    }
     notifyListeners();
   }
 }

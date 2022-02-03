@@ -3,7 +3,7 @@ import 'package:league_checker/summoner/widgets/modals/region_selector.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/widgetTools.dart';
+import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 
 class Header extends StatelessWidget {
@@ -34,16 +34,19 @@ class Header extends StatelessWidget {
             const Spacer(),
             Padding(
               padding: const EdgeInsets.only(right: 30),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    openRegionSelector(context);
-                  },
-                  child: const Icon(
-                    Icons.public_rounded,
-                    color: Colors.white,
-                    size: 35,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      openRegionSelector(context);
+                    },
+                    child: const Icon(
+                      Icons.public_rounded,
+                      color: Colors.white,
+                      size: 35,
+                    ),
                   ),
                 ),
               ),

@@ -31,7 +31,7 @@ class SummonerAPI {
         throw response.statusCode;
       }
     } catch (error) {
-      if (error == 404) {
+      if (error == 404 || error == 403) {
         rethrow;
       } else {
         throw 500;

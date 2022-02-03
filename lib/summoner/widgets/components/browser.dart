@@ -3,7 +3,7 @@ import 'package:league_checker/summoner/widgets/modals/summoner_viewer.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/widgetTools.dart';
+import 'package:league_checker/utils/widget.dart';
 import 'package:league_checker/utils/misc.dart';
 import 'package:provider/provider.dart';
 
@@ -91,10 +91,16 @@ class _BrowserState extends State<Browser> {
       );
       await wait(200);
     } else if (response == 404) {
+      setState(() => retrievingUser = false);
       await summonerProvider.setError("Summoner not found");
+    } else if (response == 403) {
+      setState(() => retrievingUser = false);
+      await summonerProvider.setError("Type in a Summoner");
     } else if (response == 500) {
+      setState(() => retrievingUser = false);
       await summonerProvider.setError("Network error");
     } else {
+      setState(() => retrievingUser = false);
       await summonerProvider.setError("Unknown error");
     }
     setState(() => retrievingUser = false);

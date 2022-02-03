@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:league_checker/summoner/widgets/components/error_dropdown.dart';
 import 'package:league_checker/summoner/widgets/components/header.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/widgetTools.dart';
+import 'package:league_checker/summoner/widgets/modals/add_summoner.dart';
+import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 import 'widgets/components/browser.dart';
 import 'widgets/components/cards.dart';
@@ -24,21 +26,34 @@ class _MyHomePageState extends State<SummonerPage> {
     verifyLocalFiles();
   }
 
+  double surprise = 0;
+
   @override
   Widget build(BuildContext context) {
     summonerProvider = Provider.of<SummonerProvider>(context);
     summonerProvider.getDeviceDimensions(context);
 
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+    return WillPopScope(
+      onWillPop: () {
+        if (!summonerProvider.showAddSummoner) {
+          surprise++;
+          if (surprise > 20) {
+            summonerProvider.setError("Why are you running?");
+            surprise = 0;
+          }
+        }
+        return summonerProvider.activateAddSummonerScreen(false, context);
+      },
       child: Scaffold(
         backgroundColor: darkGrayTone2,
         resizeToAvoidBottomInset: false,
         body: Stack(
           alignment: Alignment.center,
           children: [
-            SizedBox.expand(
-              child: SizedBox(
+            GestureDetector(
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: Container(
+                color: Colors.transparent,
                 child: Column(
                   children: [
                     const Header(),
@@ -97,26 +112,8 @@ class _MyHomePageState extends State<SummonerPage> {
                 ),
               ),
             ),
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 300),
-              top: summonerProvider.showUserNotFound == false
-                  ? -30
-                  : summonerProvider.statusBarHeight + 15,
-              curve: Curves.easeOut,
-              child: Container(
-                height: 30,
-                width: summonerProvider.width - 100,
-                decoration: BoxDecoration(
-                  color: primaryGoldOpacity,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Center(
-                    child: Text(
-                  summonerProvider.errorMessage,
-                  style: label,
-                )),
-              ),
-            ),
+            const AddSummoner(),
+            const ErrorDropdown(),
           ],
         ),
       ),

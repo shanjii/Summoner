@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/widgetTools.dart';
+import 'package:league_checker/utils/widget.dart';
 import 'package:league_checker/utils/misc.dart';
 import 'package:provider/provider.dart';
 
@@ -62,7 +62,7 @@ Widget flagItem(String flag, SummonerProvider summonerProvider, context) {
     padding: const EdgeInsets.all(1),
     child: ClipRRect(
       borderRadius: BorderRadius.circular(20),
-      child: Container(
+      child: Material(
         color: summonerProvider.region == flag
             ? Colors.white24
             : Colors.transparent,
