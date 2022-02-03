@@ -5,6 +5,7 @@ import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/summoner/widgets/modals/add_summoner.dart';
+import 'package:league_checker/utils/misc.dart';
 import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 import 'widgets/components/browser.dart';
@@ -51,7 +52,11 @@ class _MyHomePageState extends State<SummonerPage> {
           alignment: Alignment.center,
           children: [
             GestureDetector(
-              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              onTap: () async {
+                FocusManager.instance.primaryFocus?.unfocus();
+                await wait(100);
+                summonerProvider.activateAddSummonerScreen(false, context);
+              },
               child: Container(
                 color: Colors.transparent,
                 child: Column(

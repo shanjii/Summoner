@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
@@ -28,119 +29,79 @@ class _AddSummonerState extends State<AddSummoner> {
   Widget build(BuildContext context) {
     summonerProvider = Provider.of<SummonerProvider>(context);
 
-    return AnimatedPositioned(
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-      right: summonerProvider.showAddSummoner ? 0 : -summonerProvider.width,
-      child: Container(
-        color: darkGrayTone4,
-        height: summonerProvider.height,
-        width: summonerProvider.width,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                  10, summonerProvider.statusBarHeight + 10, 15, 0),
-              child: Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          retrievingUser == false
-                              ? summonerProvider.activateAddSummonerScreen(
-                                  false, context)
-                              : null;
-                        },
-                        child: const Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: Colors.white,
-                          size: 40,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            verticalSpacer(30),
-            const Center(
-              child: Text(
-                'Highlight a Summoner:',
-                style: textMedium,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            verticalSpacer(30),
-            Container(
-              margin: const EdgeInsets.only(left: 30, right: 30),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.white24,
-              ),
-              height: 50,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 30,
-                  right: 30,
-                ),
-                child: TextField(
-                  controller: addFavoriteController,
-                  style: input,
-                  focusNode: summonerProvider.addSummonerKeyboardFocus,
-                  cursorColor: Colors.white,
-                  onSubmitted: (value) {
-                    retrieveFavoriteUser();
-                  },
-                  textInputAction: TextInputAction.search,
-                  decoration: const InputDecoration(
-                    hintText: 'Summoner name',
-                    hintStyle: label,
-                    border: InputBorder.none,
-                  ),
+    return KeyboardVisibilityBuilder(builder: (context, visible) {
+      return AnimatedPositioned(
+        duration: visible ? const Duration(milliseconds: 0) : const Duration(milliseconds: 500) ,
+        curve: Curves.easeInBack,
+        bottom: summonerProvider.showAddSummoner
+            ? visible
+                ? -summonerProvider.height +
+                    MediaQuery.of(context).viewInsets.bottom +
+                    180
+                : -summonerProvider.height + 180
+            : -summonerProvider.height,
+        child: Container(
+          color: darkGrayTone4,
+          height: summonerProvider.height,
+          width: summonerProvider.width,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              verticalSpacer(30),
+              const Center(
+                child: Text(
+                  'Highlight a Summoner:',
+                  style: textMedium,
+                  textAlign: TextAlign.center,
                 ),
               ),
-            ),
-            verticalSpacer(40),
-            Center(
-              child: SizedBox(
+              verticalSpacer(30),
+              Container(
+                margin: const EdgeInsets.only(left: 30, right: 30),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.white24,
+                ),
                 height: 50,
-                width: 50,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        retrievingUser == false ? retrieveFavoriteUser() : {};
-                      },
-                      child: retrievingUser == true
-                          ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                          : addedUser == true
-                              ? const Icon(
-                                  Icons.task_alt_rounded,
-                                  color: Colors.green,
-                                  size: 50,
-                                )
-                              : const Icon(
-                                  Icons.add_circle_outline,
-                                  size: 50,
-                                  color: Colors.white,
-                                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 30,
+                    right: 30,
+                  ),
+                  child: TextField(
+                    controller: addFavoriteController,
+                    style: input,
+                    focusNode: summonerProvider.addSummonerKeyboardFocus,
+                    cursorColor: Colors.white,
+                    onSubmitted: (value) {
+                      retrieveFavoriteUser();
+                    },
+                    textInputAction: TextInputAction.search,
+                    decoration: const InputDecoration(
+                      hintText: 'Summoner name',
+                      hintStyle: label,
+                      border: InputBorder.none,
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.only(left: 45, right: 45),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: LinearProgressIndicator(
+                    color: Colors.white,
+                    backgroundColor: Colors.transparent,
+                    value: retrievingUser ? null : 0,
+                    minHeight: 2,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   retrieveFavoriteUser() async {
@@ -152,7 +113,6 @@ class _AddSummonerState extends State<AddSummoner> {
         addedUser = true;
         retrievingUser = false;
       });
-      await wait(1300);
       summonerProvider.activateAddSummonerScreen(false, context);
       setState(() => addedUser = false);
       addFavoriteController.text = '';
