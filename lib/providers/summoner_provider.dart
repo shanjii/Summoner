@@ -31,7 +31,6 @@ class SummonerProvider extends ChangeNotifier {
   List<MatchData> matchList = [];
   List myMatchStats = [];
   FocusNode addSummonerKeyboardFocus = FocusNode();
-  
 
   SummonerProvider(this.region, this.summonerAPI);
 
@@ -172,6 +171,12 @@ class SummonerProvider extends ChangeNotifier {
     summonerList.clear();
     await LocalStorage.clear("summoners");
     notifyListeners();
+  }
+
+  removeSingleSummoner(index) async {
+    summonerList.removeAt(index);
+    await LocalStorage.clear("summoners");
+    updateSummonerList();
   }
 
   getDeviceDimensions(context) {

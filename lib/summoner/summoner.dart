@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:league_checker/summoner/widgets/components/error_dropdown.dart';
 import 'package:league_checker/summoner/widgets/components/header.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
@@ -71,11 +72,12 @@ class _MyHomePageState extends State<SummonerPage> {
                         height: summonerProvider.height -
                             summonerProvider.statusBarHeight -
                             170,
+                        width: summonerProvider.width,
                         child: summonerProvider.summonerList.isEmpty
                             ? Column(
                                 children: [
                                   SizedBox(
-                                    height: 200,
+                                    height: 190,
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -103,9 +105,20 @@ class _MyHomePageState extends State<SummonerPage> {
                                       summonerProvider.summonerList.length) {
                                     return const CardEmpty();
                                   } else {
-                                    return CardSummoner(
-                                      summoner:
-                                          summonerProvider.summonerList[index],
+                                    return AnimationConfiguration.staggeredList(
+                                      delay: const Duration(milliseconds: 200),
+                                      position: index,
+                                      duration:
+                                          const Duration(milliseconds: 900),
+                                      child: SlideAnimation(
+                                        horizontalOffset:
+                                            -summonerProvider.width,
+                                        child: CardSummoner(
+                                          summoner: summonerProvider
+                                              .summonerList[index],
+                                          index: index,
+                                        ),
+                                      ),
                                     );
                                   }
                                 },

@@ -36,7 +36,7 @@ class CardEmpty extends StatelessWidget {
                       width: (summonerProvider.width / 2) - 80,
                       height: 102,
                       child: const Icon(
-                        Icons.delete_outline,
+                        Icons.clear_all_rounded,
                         size: 40,
                         color: Colors.white,
                       ),
@@ -115,9 +115,11 @@ class CardEmpty extends StatelessWidget {
 }
 
 class CardSummoner extends StatefulWidget {
-  const CardSummoner({Key? key, required this.summoner}) : super(key: key);
+  const CardSummoner({Key? key, required this.summoner, required this.index})
+      : super(key: key);
 
   final SummonerModel summoner;
+  final index;
 
   @override
   _CardSummonerState createState() => _CardSummonerState();
@@ -127,115 +129,194 @@ class _CardSummonerState extends State<CardSummoner> {
   late SummonerProvider summonerProvider;
 
   bool retrievingCardUser = false;
+  bool showDeleteButton = false;
+  bool deleteAction = false;
 
   @override
   Widget build(BuildContext context) {
     summonerProvider = Provider.of<SummonerProvider>(context);
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20, left: 30, right: 30),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () {
-              openSummonerCard(widget.summoner.name, widget.summoner.region);
-            },
-            child: CachedNetworkImage(
-              imageUrl:
-                  "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${widget.summoner.background}_0.jpg",
-              imageBuilder: (context, imageProvider) => Ink(
-                height: 170,
-                decoration: BoxDecoration(
+    return SizedBox(
+      height: 190,
+      width: summonerProvider.width,
+      child: AnimatedOpacity(
+        opacity: deleteAction ? 0 : 1,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.linear,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 31, right: 31, top: 1),
+              child: Material(
+                borderRadius: BorderRadius.circular(20),
+                color: darkGrayTone3,
+                child: InkWell(
                   borderRadius: BorderRadius.circular(20),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: imageProvider,
+                  onTap: () async {
+                    setState(() => showDeleteButton = false);
+                    await wait(100);
+                    setState(() => deleteAction = true);
+                    await wait(900);
+                    deleteAction = false;
+                    await summonerProvider.removeSingleSummoner(widget.index);
+                  },
+                  child: SizedBox(
+                    width: summonerProvider.width - 62,
+                    height: 168,
+                    child: const Padding(
+                      padding: EdgeInsets.only(right: 31),
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Icon(
+                          Icons.delete_outline_rounded,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20, top: 20),
+              ),
+            ),
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.decelerate,
+              left: showDeleteButton ? -100 : 0,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox(
+                    height: 170,
+                    width: summonerProvider.width - 60,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: GestureDetector(
+                        onLongPress: () {
+                          setState(() {
+                            showDeleteButton = showDeleteButton ? false : true;
+                          });
+                        },
+                        child: InkWell(
+                          onTap: () {
+                            openSummonerCard(
+                                widget.summoner.name, widget.summoner.region);
+                          },
                           child: CachedNetworkImage(
                             imageUrl:
-                                "http://ddragon.leagueoflegends.com/cdn/${summonerProvider.apiVersion}/img/profileicon/${widget.summoner.profileIconId}.png",
+                                "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${widget.summoner.background}_0.jpg",
                             imageBuilder: (context, imageProvider) => Ink(
-                              height: 60,
-                              width: 60,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
+                                borderRadius: BorderRadius.circular(20),
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: imageProvider,
                                 ),
                               ),
-                            ),
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator(
-                              color: grayTone1,
-                            ),
-                          ),
-                        ),
-                        const Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20, right: 20),
-                          child: Ink(
-                            decoration: BoxDecoration(
-                              color: Colors.black87,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Center(
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, top: 20),
+                                        child: CachedNetworkImage(
+                                            imageUrl:
+                                                "http://ddragon.leagueoflegends.com/cdn/${summonerProvider.apiVersion}/img/profileicon/${widget.summoner.profileIconId}.png",
+                                            imageBuilder: (context,
+                                                    imageProvider) =>
+                                                Ink(
+                                                  height: 60,
+                                                  width: 60,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100),
+                                                    image: DecorationImage(
+                                                      fit: BoxFit.cover,
+                                                      image: imageProvider,
+                                                    ),
+                                                  ),
+                                                ),
+                                            placeholder: (context, url) =>
+                                                Container(
+                                                  width: 60,
+                                                  height: 60,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              100),
+                                                      color: Colors.black38),
+                                                )),
+                                      ),
+                                      const Spacer(),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 20, right: 20),
+                                        child: Ink(
+                                          decoration: BoxDecoration(
+                                            color: Colors.black87,
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              children: [
+                                                Center(
+                                                  child: Text(
+                                                    widget
+                                                        .summoner.summonerLevel
+                                                        .toString(),
+                                                    style: textSmallBold,
+                                                  ),
+                                                ),
+                                                horizontalSpacer(10),
+                                                Image.asset(
+                                                  "assets/images/regions/regionFlag-${widget.summoner.region}.png",
+                                                  width: 20,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 20),
                                     child: Text(
-                                      widget.summoner.summonerLevel.toString(),
-                                      style: textSmallBold,
+                                      widget.summoner.name,
+                                      style: textMediumBold,
                                     ),
                                   ),
-                                  horizontalSpacer(10),
-                                  Image.asset(
-                                    "assets/images/regions/regionFlag-${widget.summoner.region}.png",
-                                    width: 20,
+                                  verticalSpacer(10),
+                                  LinearProgressIndicator(
+                                    color: Colors.white,
+                                    backgroundColor: Colors.transparent,
+                                    value: retrievingCardUser ? null : 0,
+                                    minHeight: 2,
                                   )
                                 ],
                               ),
                             ),
+                            placeholder: (context, url) => Container(
+                              height: 170,
+                              color: grayTone2,
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Text(
-                        widget.summoner.name,
-                        style: textMediumBold,
                       ),
                     ),
-                    verticalSpacer(10),
-                    LinearProgressIndicator(
-                      color: Colors.white,
-                      backgroundColor: Colors.transparent,
-                      value: retrievingCardUser ? null : 0,
-                      minHeight: 2,
-                    )
-                  ],
+                  ),
                 ),
               ),
-              placeholder: (context, url) => Container(
-                height: 170,
-                color: darkGrayTone2,
-              ),
             ),
-          ),
+          ],
         ),
       ),
     );
