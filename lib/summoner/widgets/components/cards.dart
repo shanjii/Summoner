@@ -204,7 +204,7 @@ class _CardSummonerState extends State<CardSummoner> {
                           },
                           child: CachedNetworkImage(
                             imageUrl:
-                                "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${widget.summoner.background}_0.jpg",
+                                "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${widget.summoner.background != "" ? widget.summoner.background : "Teemo"}_0.jpg",
                             imageBuilder: (context, imageProvider) => Ink(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
