@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:league_checker/summoner/widgets/modals/add_summoner.dart';
-import 'package:league_checker/summoner/widgets/modals/summoner_viewer.dart';
+import 'package:league_checker/summoner/widgets/windows/summoner_viewer.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/models/summoner_model.dart';
 import 'package:league_checker/style/color_palette.dart';

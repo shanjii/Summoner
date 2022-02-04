@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/summoner/widgets/modals/region_selector.dart';
+import 'package:league_checker/summoner/widgets/windows/region_selector.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
