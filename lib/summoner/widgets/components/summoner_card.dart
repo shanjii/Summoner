@@ -17,7 +17,7 @@ class SummonerCard extends StatefulWidget {
   const SummonerCard({Key? key, required this.summoner, required this.index}) : super(key: key);
 
   final SummonerModel summoner;
-  final index;
+  final int index;
 
   @override
   _SummonerCardState createState() => _SummonerCardState();
@@ -50,14 +50,7 @@ class _SummonerCardState extends State<SummonerCard> {
                 color: darkGrayTone3,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(20),
-                  onTap: () async {
-                    setState(() => positionX = 0);
-                    await wait(100);
-                    setState(() => deleteAction = true);
-                    await wait(900);
-                    deleteAction = false;
-                    await summonerProvider.removeSingleSummoner(widget.index);
-                  },
+                  onTap: () => tapRemove(),
                   child: SizedBox(
                     width: summonerProvider.width - 62,
                     height: 168,
@@ -90,46 +83,11 @@ class _SummonerCardState extends State<SummonerCard> {
                     child: Material(
                       color: Colors.transparent,
                       child: GestureDetector(
-                        onLongPress: () async {
-                          if (positionX > -30) {
-                            setState(() {
-                              positionX = -30;
-                            });
-                            await wait(1000);
-                            setState(() {
-                              positionX = 0;
-                            });
-                          } else {
-                            setState(() {
-                              positionX = 0;
-                            });
-                          }
-                        },
-                        onHorizontalDragUpdate: (details) {
-                          if (positionX <= 10 && positionX >= -100) {
-                            setState(() {
-                              positionX = positionX + details.delta.dx;
-                            });
-                          }
-                        },
-                        onHorizontalDragEnd: (details) {
-                          if (positionX <= -40) {
-                            setState(() {
-                              positionX = -100;
-                            });
-                          } else {
-                            setState(() {
-                              positionX = 0;
-                            });
-                          }
-                        },
+                        onLongPress: () => longPressCover(),
+                        onHorizontalDragUpdate: (details) => horizontalDragCoverUpdate(details),
+                        onHorizontalDragEnd: (details) => horizontalDragCoverEnd(),
                         child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              positionX = 0;
-                            });
-                            openSummonerCard(widget.summoner.name, widget.summoner.region);
-                          },
+                          onTap: () => tapOpen(),
                           child: CachedNetworkImage(
                             imageUrl:
                                 "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${widget.summoner.background != "" ? widget.summoner.background : "Teemo"}_0.jpg",
@@ -259,6 +217,46 @@ class _SummonerCardState extends State<SummonerCard> {
       }
       await wait(200);
       setState(() => retrievingCardUser = false);
+    }
+  }
+
+  longPressCover() async {
+    if (positionX > -30) {
+      setState(() => positionX = -30);
+      await wait(1000);
+      setState(() => positionX = 0);
+    } else {
+      setState(() => positionX = 0);
+    }
+  }
+
+  tapOpen() {
+    setState(() {
+      positionX = 0;
+    });
+    openSummonerCard(widget.summoner.name, widget.summoner.region);
+  }
+
+  tapRemove() async {
+    setState(() => positionX = 0);
+    await wait(100);
+    setState(() => deleteAction = true);
+    await wait(900);
+    deleteAction = false;
+    await summonerProvider.removeSingleSummoner(widget.index);
+  }
+
+  horizontalDragCoverEnd() async {
+    if (positionX <= -40) {
+      setState(() => positionX = -100);
+    } else {
+      setState(() => positionX = 0);
+    }
+  }
+
+  horizontalDragCoverUpdate(details) async {
+    if (positionX <= 10 && positionX >= -100) {
+      setState(() => positionX = positionX + details.delta.dx);
     }
   }
 }
