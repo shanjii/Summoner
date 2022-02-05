@@ -2,7 +2,7 @@
     package="com.example.league_checker_flutter">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="league_checker_flutter"
+        android:label="Summoner"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -63,9 +63,7 @@ Widget flagItem(String flag, SummonerProvider summonerProvider, context) {
     child: ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: Material(
-        color: summonerProvider.region == flag
-            ? Colors.white24
-            : Colors.transparent,
+        color: summonerProvider.region == flag ? Colors.white24 : Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () async {
@@ -80,8 +78,7 @@ Widget flagItem(String flag, SummonerProvider summonerProvider, context) {
               child: Column(
                 children: [
                   Image(
-                    image: AssetImage(
-                        "assets/images/regions/regionFlag-$flag.png"),
+                    image: AssetImage("assets/images/regions/regionFlag-$flag.png"),
                   ),
                   const Spacer(
                     flex: 1,

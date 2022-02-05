@@ -5,12 +5,13 @@ import 'package:league_checker/summoner/widgets/components/header.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
+import 'package:league_checker/summoner/widgets/components/summoner_card.dart';
 import 'package:league_checker/summoner/widgets/windows/add_summoner.dart';
 import 'package:league_checker/utils/misc.dart';
 import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 import 'widgets/components/browser.dart';
-import 'widgets/components/cards.dart';
+import 'widgets/components/empty_card.dart';
 
 class SummonerPage extends StatefulWidget {
   const SummonerPage({Key? key}) : super(key: key);
@@ -68,24 +69,16 @@ class _MyHomePageState extends State<SummonerPage> {
                     MediaQuery.removePadding(
                       removeTop: true,
                       context: context,
-                      child: SizedBox(
-                        height: summonerProvider.height -
-                            summonerProvider.statusBarHeight -
-                            170,
-                        width: summonerProvider.width,
+                      child: Expanded(
                         child: summonerProvider.summonerList.isEmpty
                             ? Column(
                                 children: [
                                   SizedBox(
                                     height: 190,
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        const Icon(
-                                            Icons.sentiment_neutral_outlined,
-                                            size: 80,
-                                            color: Colors.white),
+                                        const Icon(Icons.sentiment_neutral_outlined, size: 80, color: Colors.white),
                                         verticalSpacer(10),
                                         const Text(
                                           "You have no Summoners",
@@ -95,35 +88,30 @@ class _MyHomePageState extends State<SummonerPage> {
                                       ],
                                     ),
                                   ),
-                                  const CardEmpty(),
+                                  const EmptyCard(),
                                 ],
                               )
                             : ListView.builder(
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  if (index ==
-                                      summonerProvider.summonerList.length) {
-                                    return const CardEmpty();
+                                  if (index == summonerProvider.summonerList.length) {
+                                    return const EmptyCard();
                                   } else {
                                     return AnimationConfiguration.staggeredList(
                                       delay: const Duration(milliseconds: 200),
                                       position: index,
-                                      duration:
-                                          const Duration(milliseconds: 900),
+                                      duration: const Duration(milliseconds: 900),
                                       child: SlideAnimation(
-                                        horizontalOffset:
-                                            -summonerProvider.width,
-                                        child: CardSummoner(
-                                          summoner: summonerProvider
-                                              .summonerList[index],
+                                        horizontalOffset: -summonerProvider.width,
+                                        child: SummonerCard(
+                                          summoner: summonerProvider.summonerList[index],
                                           index: index,
                                         ),
                                       ),
                                     );
                                   }
                                 },
-                                itemCount:
-                                    summonerProvider.summonerList.length + 1,
+                                itemCount: summonerProvider.summonerList.length + 1,
                               ),
                       ),
                     ),

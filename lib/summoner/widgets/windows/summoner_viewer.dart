@@ -39,13 +39,11 @@ class SummonerViewer extends StatelessWidget {
                                   height: 70,
                                   imageUrl:
                                       "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${summonerProvider.getChampionImage(summonerProvider.masteryList[1].championId)}.png",
-                                  placeholder: (context, url) =>
-                                      const CircularProgressIndicator(
+                                  placeholder: (context, url) => const CircularProgressIndicator(
                                     color: primaryGold,
                                     strokeWidth: 3,
                                   ),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
+                                  errorWidget: (context, url, error) => const Icon(Icons.error),
                                 ),
                               ),
                             ),
@@ -57,8 +55,7 @@ class SummonerViewer extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: secondaryDarkblue,
                                   borderRadius: BorderRadius.circular(100),
-                                  border:
-                                      Border.all(color: primaryGold, width: 1),
+                                  border: Border.all(color: primaryGold, width: 1),
                                 ),
                                 child: const Center(
                                   child: Padding(
@@ -89,13 +86,11 @@ class SummonerViewer extends StatelessWidget {
                                   height: 90,
                                   imageUrl:
                                       "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${summonerProvider.getChampionImage(summonerProvider.masteryList[0].championId)}.png",
-                                  placeholder: (context, url) =>
-                                      const CircularProgressIndicator(
+                                  placeholder: (context, url) => const CircularProgressIndicator(
                                     color: primaryGold,
                                     strokeWidth: 3,
                                   ),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
+                                  errorWidget: (context, url, error) => const Icon(Icons.error),
                                 ),
                               ),
                             ),
@@ -107,8 +102,7 @@ class SummonerViewer extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: secondaryDarkblue,
                                   borderRadius: BorderRadius.circular(100),
-                                  border:
-                                      Border.all(color: primaryGold, width: 1),
+                                  border: Border.all(color: primaryGold, width: 1),
                                 ),
                                 child: const Center(
                                   child: Padding(
@@ -125,7 +119,7 @@ class SummonerViewer extends StatelessWidget {
                         ),
                       )
                     : const SizedBox(),
-                summonerProvider.masteryList.isNotEmpty
+                summonerProvider.masteryList.length >= 3
                     ? SizedBox(
                         height: 90,
                         child: Stack(
@@ -139,13 +133,11 @@ class SummonerViewer extends StatelessWidget {
                                   height: 70,
                                   imageUrl:
                                       "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${summonerProvider.getChampionImage(summonerProvider.masteryList[2].championId)}.png",
-                                  placeholder: (context, url) =>
-                                      const CircularProgressIndicator(
+                                  placeholder: (context, url) => const CircularProgressIndicator(
                                     color: primaryGold,
                                     strokeWidth: 3,
                                   ),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
+                                  errorWidget: (context, url, error) => const Icon(Icons.error),
                                 ),
                               ),
                             ),
@@ -157,8 +149,7 @@ class SummonerViewer extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: secondaryDarkblue,
                                   borderRadius: BorderRadius.circular(100),
-                                  border:
-                                      Border.all(color: primaryGold, width: 1),
+                                  border: Border.all(color: primaryGold, width: 1),
                                 ),
                                 child: const Center(
                                   child: Padding(
@@ -217,8 +208,7 @@ class SummonerViewer extends StatelessWidget {
               ),
             ),
             verticalSpacer(10),
-            summonerProvider.myMatchStats.isNotEmpty &&
-                    summonerProvider.myMatchStats.length > 2
+            summonerProvider.myMatchStats.isNotEmpty && summonerProvider.myMatchStats.length > 2
                 ? Column(
                     children: [
                       Center(
@@ -237,15 +227,12 @@ class SummonerViewer extends StatelessWidget {
                         child: CachedNetworkImage(
                           width: 20,
                           height: 20,
-                          imageUrl:
-                              "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${summonerProvider.myMatchStats[0].item0}.png",
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(
+                          imageUrl: "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${summonerProvider.myMatchStats[0].item0}.png",
+                          placeholder: (context, url) => const CircularProgressIndicator(
                             color: primaryGold,
                             strokeWidth: 3,
                           ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
                       ),
                       verticalSpacer(10),
@@ -265,15 +252,12 @@ class SummonerViewer extends StatelessWidget {
                         child: CachedNetworkImage(
                           width: 20,
                           height: 20,
-                          imageUrl:
-                              "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${summonerProvider.myMatchStats[1].item0}.png",
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(
+                          imageUrl: "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${summonerProvider.myMatchStats[1].item0}.png",
+                          placeholder: (context, url) => const CircularProgressIndicator(
                             color: primaryGold,
                             strokeWidth: 3,
                           ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
                       ),
                       verticalSpacer(10),
@@ -293,15 +277,12 @@ class SummonerViewer extends StatelessWidget {
                         child: CachedNetworkImage(
                           width: 20,
                           height: 20,
-                          imageUrl:
-                              "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${summonerProvider.myMatchStats[2].item0}.png",
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(
+                          imageUrl: "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/item/${summonerProvider.myMatchStats[2].item0}.png",
+                          placeholder: (context, url) => const CircularProgressIndicator(
                             color: primaryGold,
                             strokeWidth: 3,
                           ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
                       ),
                     ],

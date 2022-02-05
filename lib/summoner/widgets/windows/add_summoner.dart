@@ -31,15 +31,11 @@ class _AddSummonerState extends State<AddSummoner> {
 
     return KeyboardVisibilityBuilder(builder: (context, visible) {
       return AnimatedPositioned(
-        duration: visible
-            ? const Duration(milliseconds: 100)
-            : const Duration(milliseconds: 500),
+        duration: visible ? const Duration(milliseconds: 100) : const Duration(milliseconds: 500),
         curve: visible ? Curves.linear : Curves.easeInBack,
         bottom: summonerProvider.showAddSummoner
             ? visible
-                ? -summonerProvider.height +
-                    MediaQuery.of(context).viewInsets.bottom +
-                    180
+                ? -summonerProvider.height + MediaQuery.of(context).viewInsets.bottom + 180
                 : -summonerProvider.height + 180
             : -summonerProvider.height,
         child: GestureDetector(
@@ -94,8 +90,8 @@ class _AddSummonerState extends State<AddSummoner> {
                         retrieveFavoriteUser();
                       },
                       textInputAction: TextInputAction.search,
-                      decoration: const InputDecoration(
-                        hintText: 'Summoner name',
+                      decoration: InputDecoration(
+                        hintText: 'Search in ${summonerProvider.region.toUpperCase()} region',
                         hintStyle: label,
                         border: InputBorder.none,
                       ),
@@ -124,8 +120,7 @@ class _AddSummonerState extends State<AddSummoner> {
 
   retrieveFavoriteUser() async {
     setState(() => retrievingUser = true);
-    var response =
-        await summonerProvider.addFavoriteSummoner(addFavoriteController.text);
+    var response = await summonerProvider.addFavoriteSummoner(addFavoriteController.text);
     if (response == 200) {
       setState(() {
         addedUser = true;
@@ -134,18 +129,8 @@ class _AddSummonerState extends State<AddSummoner> {
       summonerProvider.activateAddSummonerScreen(false, context);
       setState(() => addedUser = false);
       addFavoriteController.text = '';
-    } else if (response == 404) {
-      setState(() => retrievingUser = false);
-      await summonerProvider.setError("Summoner not found");
-    } else if (response == 403) {
-      setState(() => retrievingUser = false);
-      await summonerProvider.setError("Type in a Summoner");
-    } else if (response == 500) {
-      setState(() => retrievingUser = false);
-      await summonerProvider.setError("Network error");
     } else {
       setState(() => retrievingUser = false);
-      await summonerProvider.setError("Unknown error");
     }
   }
 }

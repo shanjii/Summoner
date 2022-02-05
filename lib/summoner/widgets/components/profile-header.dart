@@ -33,14 +33,12 @@ class ProfileHeader extends StatelessWidget {
                     placeholder: (context, url) => Container(
                       color: Colors.white10,
                     ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
                   )
                 : const SizedBox(),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(
-                10, summonerProvider.statusBarHeight + 10, 0, 0),
+            padding: EdgeInsets.fromLTRB(10, summonerProvider.statusBarHeight + 10, 0, 0),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
@@ -76,15 +74,12 @@ class ProfileHeader extends StatelessWidget {
                       child: CachedNetworkImage(
                         width: 100,
                         height: 100,
-                        imageUrl:
-                            "http://ddragon.leagueoflegends.com/cdn/11.23.1/img/profileicon/${summonerProvider.summonerData.profileIconId}.png",
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(
+                        imageUrl: "http://ddragon.leagueoflegends.com/cdn/11.23.1/img/profileicon/${summonerProvider.summonerData.profileIconId}.png",
+                        placeholder: (context, url) => const CircularProgressIndicator(
                           color: primaryGold,
                           strokeWidth: 10,
                         ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
                     ),
                   ),
@@ -102,8 +97,7 @@ class ProfileHeader extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 3),
                           child: Text(
-                            summonerProvider.summonerData.summonerLevel
-                                .toString(),
+                            summonerProvider.summonerData.summonerLevel.toString(),
                             style: textSmall,
                           ),
                         ),

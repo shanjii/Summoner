@@ -23,8 +23,7 @@ class _BrowserState extends State<Browser> {
   Widget build(BuildContext context) {
     summonerProvider = Provider.of<SummonerProvider>(context);
 
-    return Container(
-      color: darkGrayTone2,
+    return SizedBox(
       child: Padding(
         padding: const EdgeInsets.only(left: 30, right: 30, bottom: 18),
         child: Column(
@@ -32,24 +31,30 @@ class _BrowserState extends State<Browser> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
-                color: Colors.white24,
+                color: grayTone2,
               ),
               height: 50,
               child: Padding(
                 padding: const EdgeInsets.only(
                   left: 30,
-                  right: 30,
+                  right: 10,
                 ),
                 child: TextField(
                   controller: searchController,
                   style: input,
+                  enabled: summonerProvider.showAddSummoner
+                      ? false
+                      : summonerProvider.updatingDevice
+                          ? false
+                          : true,
                   cursorColor: Colors.white,
                   onSubmitted: (value) {
                     retrieveUser();
                   },
                   textInputAction: TextInputAction.search,
-                  decoration: const InputDecoration(
-                    hintText: 'Search for a Summoner...',
+                  decoration: InputDecoration(
+                    suffixIcon: Image(image: AssetImage("assets/images/regions/regionFlag-${summonerProvider.region}.png")),
+                    hintText: summonerProvider.updatingDevice ? "Retrieving latest patch..." : "Find a Summoner",
                     hintStyle: label,
                     border: InputBorder.none,
                   ),
@@ -77,8 +82,7 @@ class _BrowserState extends State<Browser> {
   retrieveUser() async {
     FocusManager.instance.primaryFocus?.unfocus();
     setState(() => retrievingUser = true);
-    var response =
-        await summonerProvider.getSummonerData(searchController.text);
+    var response = await summonerProvider.getSummonerData(searchController.text);
     if (response == 200) {
       showModalBottomSheet(
         context: context,
@@ -89,18 +93,6 @@ class _BrowserState extends State<Browser> {
         isScrollControlled: true,
       );
       await wait(200);
-    } else if (response == 404) {
-      setState(() => retrievingUser = false);
-      await summonerProvider.setError("Summoner not found");
-    } else if (response == 403) {
-      setState(() => retrievingUser = false);
-      await summonerProvider.setError("Type in a Summoner");
-    } else if (response == 500) {
-      setState(() => retrievingUser = false);
-      await summonerProvider.setError("Network error");
-    } else {
-      setState(() => retrievingUser = false);
-      await summonerProvider.setError("Unknown error");
     }
     setState(() => retrievingUser = false);
   }
