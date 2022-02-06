@@ -18,7 +18,7 @@ class AddSummoner extends StatefulWidget {
 }
 
 class _AddSummonerState extends State<AddSummoner> {
-  late SummonerProvider summonerProvider;
+  late SummonerProvider provider;
   TextEditingController addFavoriteController = TextEditingController();
   bool retrievingUser = false;
   bool addedUser = false;
@@ -27,22 +27,22 @@ class _AddSummonerState extends State<AddSummoner> {
 
   @override
   Widget build(BuildContext context) {
-    summonerProvider = Provider.of<SummonerProvider>(context);
+    provider = Provider.of<SummonerProvider>(context);
 
     return KeyboardVisibilityBuilder(builder: (context, visible) {
       return AnimatedPositioned(
         duration: visible ? const Duration(milliseconds: 100) : const Duration(milliseconds: 500),
         curve: visible ? Curves.linear : Curves.easeInBack,
-        bottom: summonerProvider.showAddSummoner
+        bottom: provider.showAddSummoner
             ? visible
-                ? -summonerProvider.height + MediaQuery.of(context).viewInsets.bottom + 180
-                : -summonerProvider.height + 180
-            : -summonerProvider.height,
+                ? -provider.height + MediaQuery.of(context).viewInsets.bottom + 180
+                : -provider.height + 180
+            : -provider.height,
         child: GestureDetector(
           onVerticalDragUpdate: (details) {
             positionY = positionY + details.delta.dy;
             if (positionY > 30) {
-              summonerProvider.activateAddSummonerScreen(false, context);
+              provider.activateAddSummonerScreen(false, context);
             }
           },
           onVerticalDragEnd: (details) {
@@ -55,8 +55,8 @@ class _AddSummonerState extends State<AddSummoner> {
               borderRadius: BorderRadius.circular(20),
               color: darkGrayTone3,
             ),
-            height: summonerProvider.height,
-            width: summonerProvider.width,
+            height: provider.height,
+            width: provider.width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -84,14 +84,15 @@ class _AddSummonerState extends State<AddSummoner> {
                     child: TextField(
                       controller: addFavoriteController,
                       style: input,
-                      focusNode: summonerProvider.addSummonerKeyboardFocus,
+                      focusNode: provider.addSummonerKeyboardFocus,
+                      enabled: provider.updatingDevice ? false : true,
                       cursorColor: Colors.white,
                       onSubmitted: (value) {
                         retrieveFavoriteUser();
                       },
                       textInputAction: TextInputAction.search,
                       decoration: InputDecoration(
-                        hintText: 'Search in ${summonerProvider.region.toUpperCase()} region',
+                        hintText: 'Search in ${provider.region.toUpperCase()} region',
                         hintStyle: label,
                         border: InputBorder.none,
                       ),
@@ -120,13 +121,13 @@ class _AddSummonerState extends State<AddSummoner> {
 
   retrieveFavoriteUser() async {
     setState(() => retrievingUser = true);
-    var response = await summonerProvider.addFavoriteSummoner(addFavoriteController.text);
+    var response = await provider.addFavoriteSummoner(addFavoriteController.text);
     if (response == 200) {
       setState(() {
         addedUser = true;
         retrievingUser = false;
       });
-      summonerProvider.activateAddSummonerScreen(false, context);
+      provider.activateAddSummonerScreen(false, context);
       setState(() => addedUser = false);
       addFavoriteController.text = '';
     } else {

@@ -6,7 +6,7 @@ import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/summoner/widgets/components/summoner_card.dart';
-import 'package:league_checker/summoner/widgets/windows/add_summoner.dart';
+import 'package:league_checker/summoner/widgets/screens/add_summoner.dart';
 import 'package:league_checker/utils/misc.dart';
 import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
@@ -21,8 +21,6 @@ class SummonerPage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<SummonerPage> {
-  late SummonerProvider summonerProvider;
-
   @override
   void initState() {
     super.initState();
@@ -33,19 +31,19 @@ class _MyHomePageState extends State<SummonerPage> {
 
   @override
   Widget build(BuildContext context) {
-    summonerProvider = Provider.of<SummonerProvider>(context);
-    summonerProvider.getDeviceDimensions(context);
+    SummonerProvider provider = Provider.of<SummonerProvider>(context);
+    provider.getDeviceDimensions(context);
 
     return WillPopScope(
       onWillPop: () {
-        if (!summonerProvider.showAddSummoner) {
+        if (!provider.showAddSummoner) {
           surprise++;
           if (surprise > 20) {
-            summonerProvider.setError("Why are you running?");
+            provider.setError("Why are you running?");
             surprise = 0;
           }
         }
-        summonerProvider.activateAddSummonerScreen(false, context);
+        provider.activateAddSummonerScreen(false, context);
         return Future.value(false);
       },
       child: Scaffold(
@@ -58,7 +56,7 @@ class _MyHomePageState extends State<SummonerPage> {
               onTap: () async {
                 FocusManager.instance.primaryFocus?.unfocus();
                 await wait(100);
-                summonerProvider.activateAddSummonerScreen(false, context);
+                provider.activateAddSummonerScreen(false, context);
               },
               child: Container(
                 color: Colors.transparent,
@@ -70,7 +68,7 @@ class _MyHomePageState extends State<SummonerPage> {
                       removeTop: true,
                       context: context,
                       child: Expanded(
-                        child: summonerProvider.summonerList.isEmpty
+                        child: provider.summonerList.isEmpty
                             ? Column(
                                 children: [
                                   SizedBox(
@@ -94,7 +92,7 @@ class _MyHomePageState extends State<SummonerPage> {
                             : ListView.builder(
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  if (index == summonerProvider.summonerList.length) {
+                                  if (index == provider.summonerList.length) {
                                     return const EmptyCard();
                                   } else {
                                     return AnimationConfiguration.staggeredList(
@@ -102,16 +100,16 @@ class _MyHomePageState extends State<SummonerPage> {
                                       position: index,
                                       duration: const Duration(milliseconds: 900),
                                       child: SlideAnimation(
-                                        horizontalOffset: -summonerProvider.width,
+                                        horizontalOffset: -provider.width,
                                         child: SummonerCard(
-                                          summoner: summonerProvider.summonerList[index],
+                                          summoner: provider.summonerList[index],
                                           index: index,
                                         ),
                                       ),
                                     );
                                   }
                                 },
-                                itemCount: summonerProvider.summonerList.length + 1,
+                                itemCount: provider.summonerList.length + 1,
                               ),
                       ),
                     ),

@@ -15,36 +15,23 @@ class ErrorDropdown extends StatefulWidget {
 }
 
 class _ErrorDropdownState extends State<ErrorDropdown> {
+  late SummonerProvider provider;
   double positionY = 0;
+  
   @override
   Widget build(BuildContext context) {
-    SummonerProvider summonerProvider = Provider.of<SummonerProvider>(context);
+    provider = Provider.of<SummonerProvider>(context);
+
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 800),
-      top: summonerProvider.showError == false ? -summonerProvider.statusBarHeight - 200 : positionY - 140,
+      top: provider.showError == false ? -provider.statusBarHeight - 200 : positionY - 140,
       curve: Curves.elasticOut,
       child: GestureDetector(
-        onVerticalDragUpdate: (details) {
-          if (summonerProvider.showError == true) {
-            if (positionY <= 10) {
-              setState(() {
-                positionY = positionY + details.delta.dy;
-              });
-            }
-            if (positionY <= -30) {
-              summonerProvider.showError = false;
-              summonerProvider.clearError();
-            }
-          }
-        },
-        onVerticalDragEnd: (details) {
-          setState(() {
-            positionY = 0;
-          });
-        },
+        onVerticalDragUpdate: (details) => verticalDrag(details),
+        onVerticalDragEnd: (details) => setState(() => positionY = 0),
         child: Container(
-          height: summonerProvider.statusBarHeight + 200,
-          width: summonerProvider.width,
+          height: provider.statusBarHeight + 200,
+          width: provider.width,
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -76,7 +63,7 @@ class _ErrorDropdownState extends State<ErrorDropdown> {
                       ),
                       horizontalSpacer(10),
                       Text(
-                        summonerProvider.errorMessage,
+                        provider.errorMessage,
                         style: label,
                       ),
                     ],
@@ -88,5 +75,17 @@ class _ErrorDropdownState extends State<ErrorDropdown> {
         ),
       ),
     );
+  }
+
+  verticalDrag(details) {
+    if (provider.showError == true) {
+      if (positionY <= 10) {
+        setState(() => positionY = positionY + details.delta.dy);
+      }
+      if (positionY <= -30) {
+        provider.showError = false;
+        provider.clearError();
+      }
+    }
   }
 }

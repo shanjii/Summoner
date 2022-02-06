@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:convert' as convert;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:league_checker/models/summoner_model.dart';
 import 'package:league_checker/utils/indexer.dart';
 import 'package:league_checker/utils/local_storage.dart';
+import 'package:league_checker/utils/url_builder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> loadImage(ImageProvider provider) {
@@ -48,8 +47,7 @@ Future preloadImages() async {
   for (var summoner in summonerList) {
     if (summoner.background != "") {
       await loadImage(
-        NetworkImage(
-            'http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${summoner.background}_0.jpg'),
+        NetworkImage(UrlBuilder.championWallpaper(summoner.background)),
       );
     }
   }

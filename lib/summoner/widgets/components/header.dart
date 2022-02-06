@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/summoner/widgets/windows/region_selector.dart';
+import 'package:league_checker/summoner/widgets/screens/region_selector.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/widget.dart';
@@ -10,12 +10,12 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var summonerProvider = Provider.of<SummonerProvider>(context);
+    SummonerProvider provider = Provider.of<SummonerProvider>(context);
 
     return SizedBox(
-      height: summonerProvider.statusBarHeight + 100,
+      height: provider.statusBarHeight + 100,
       child: Padding(
-        padding: EdgeInsets.only(left: 30, top: summonerProvider.statusBarHeight + 10),
+        padding: EdgeInsets.only(left: 30, top: provider.statusBarHeight + 10),
         child: Row(
           children: [
             const Image(

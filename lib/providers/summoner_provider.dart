@@ -1,4 +1,3 @@
-import 'dart:convert' as convert;
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:league_checker/api/summoner_api.dart';
@@ -12,7 +11,9 @@ import 'package:league_checker/utils/local_storage.dart';
 import 'package:league_checker/utils/misc.dart';
 
 class SummonerProvider extends ChangeNotifier {
+  SummonerProvider(this.region, this.summonerAPI);
   SummonerAPI summonerAPI = SummonerAPI("na1", "americas");
+
   String region = '';
   String apiVersion = '';
   bool updatingDevice = false;
@@ -22,7 +23,7 @@ class SummonerProvider extends ChangeNotifier {
   double height = 0;
   double width = 0;
   bool isLoadingSummoner = false;
-  String errorMessage = 'Summoner not found.';
+  String errorMessage = '';
   List<SummonerModel> summonerList = [];
   List<ChampionMasteryModel> masteryList = [];
   List<RankModel> rankList = [];
@@ -31,8 +32,6 @@ class SummonerProvider extends ChangeNotifier {
   List<MatchData> matchList = [];
   List myMatchStats = [];
   FocusNode addSummonerKeyboardFocus = FocusNode();
-
-  SummonerProvider(this.region, this.summonerAPI);
 
   //Return summoner data from specified summoner name
   getSummonerData(String summonerName, [argument]) async {

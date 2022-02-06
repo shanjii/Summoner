@@ -1,13 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:league_checker/summoner/widgets/windows/summoner_viewer.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
-import 'package:league_checker/models/summoner_model.dart';
 import 'package:league_checker/style/color_palette.dart';
-import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/indexer.dart';
 import 'package:league_checker/utils/widget.dart';
-import 'package:league_checker/utils/misc.dart';
 import 'package:provider/provider.dart';
 
 class EmptyCard extends StatelessWidget {
@@ -15,8 +9,7 @@ class EmptyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late SummonerProvider summonerProvider;
-    summonerProvider = Provider.of<SummonerProvider>(context);
+    late SummonerProvider provider = Provider.of<SummonerProvider>(context);
 
     return Column(
       children: [
@@ -30,10 +23,10 @@ class EmptyCard extends StatelessWidget {
                   color: darkGrayTone3,
                   child: InkWell(
                     onTap: () {
-                      showRemoveSummoner(context, summonerProvider);
+                      showRemoveSummoner(context, provider);
                     },
                     child: SizedBox(
-                      width: (summonerProvider.width / 2) - 80,
+                      width: (provider.width / 2) - 80,
                       height: 102,
                       child: const Icon(
                         Icons.clear_all_rounded,
@@ -53,10 +46,10 @@ class EmptyCard extends StatelessWidget {
                   color: grayTone2,
                   child: InkWell(
                     onTap: () {
-                      showAddSummoner(summonerProvider, context);
+                      showAddSummoner(provider, context);
                     },
                     child: SizedBox(
-                      width: (summonerProvider.width / 2),
+                      width: (provider.width / 2),
                       height: 102,
                       child: const Icon(
                         Icons.add,
@@ -75,11 +68,11 @@ class EmptyCard extends StatelessWidget {
     );
   }
 
-  showAddSummoner(SummonerProvider summonerProvider, context) async {
-    summonerProvider.activateAddSummonerScreen(true, context);
+  showAddSummoner(SummonerProvider provider, context) async {
+    provider.activateAddSummonerScreen(true, context);
   }
 
-  showRemoveSummoner(context, SummonerProvider summonerProvider) {
+  showRemoveSummoner(context, SummonerProvider provider) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -94,7 +87,7 @@ class EmptyCard extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                summonerProvider.removeSummonerList();
+                provider.removeSummonerList();
                 Navigator.pop(context);
               },
               child: const Text('REMOVE ALL'),

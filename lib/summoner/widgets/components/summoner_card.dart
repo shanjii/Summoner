@@ -6,10 +6,10 @@ import 'package:league_checker/models/summoner_model.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/summoner/widgets/components/error_dropdown.dart';
-import 'package:league_checker/summoner/widgets/windows/summoner_viewer.dart';
+import 'package:league_checker/summoner/widgets/screens/summoner_viewer.dart';
 import 'package:league_checker/utils/indexer.dart';
 import 'package:league_checker/utils/misc.dart';
+import 'package:league_checker/utils/url_builder.dart';
 import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +24,7 @@ class SummonerCard extends StatefulWidget {
 }
 
 class _SummonerCardState extends State<SummonerCard> {
-  late SummonerProvider summonerProvider;
+  late SummonerProvider provider;
 
   bool retrievingCardUser = false;
   bool deleteAction = false;
@@ -32,11 +32,11 @@ class _SummonerCardState extends State<SummonerCard> {
 
   @override
   Widget build(BuildContext context) {
-    summonerProvider = Provider.of<SummonerProvider>(context);
+    provider = Provider.of<SummonerProvider>(context);
 
     return SizedBox(
       height: 190,
-      width: summonerProvider.width,
+      width: provider.width,
       child: AnimatedOpacity(
         opacity: deleteAction ? 0 : 1,
         duration: const Duration(milliseconds: 500),
@@ -52,7 +52,7 @@ class _SummonerCardState extends State<SummonerCard> {
                   borderRadius: BorderRadius.circular(20),
                   onTap: () => tapRemove(),
                   child: SizedBox(
-                    width: summonerProvider.width - 62,
+                    width: provider.width - 62,
                     height: 168,
                     child: const Padding(
                       padding: EdgeInsets.only(right: 31),
@@ -79,7 +79,7 @@ class _SummonerCardState extends State<SummonerCard> {
                   borderRadius: BorderRadius.circular(20),
                   child: SizedBox(
                     height: 170,
-                    width: summonerProvider.width - 60,
+                    width: provider.width - 60,
                     child: Material(
                       color: Colors.transparent,
                       child: GestureDetector(
@@ -89,8 +89,7 @@ class _SummonerCardState extends State<SummonerCard> {
                         child: InkWell(
                           onTap: () => tapOpen(),
                           child: CachedNetworkImage(
-                            imageUrl:
-                                "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${widget.summoner.background != "" ? widget.summoner.background : "Teemo"}_0.jpg",
+                            imageUrl: UrlBuilder.championWallpaper(widget.summoner.background.isNotEmpty ? widget.summoner.background : "Teemo"),
                             imageBuilder: (context, imageProvider) => Ink(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
@@ -108,8 +107,7 @@ class _SummonerCardState extends State<SummonerCard> {
                                       Padding(
                                         padding: const EdgeInsets.only(left: 20, top: 20),
                                         child: CachedNetworkImage(
-                                          imageUrl:
-                                              "http://ddragon.leagueoflegends.com/cdn/${summonerProvider.apiVersion}/img/profileicon/${widget.summoner.profileIconId}.png",
+                                          imageUrl: UrlBuilder.profileIconUrl(widget.summoner.profileIconId, provider.apiVersion),
                                           imageBuilder: (context, imageProvider) => Ink(
                                             height: 60,
                                             width: 60,
@@ -164,7 +162,7 @@ class _SummonerCardState extends State<SummonerCard> {
                                         ),
                                         const Spacer(),
                                         Image.asset(
-                                          "assets/images/regions/regionFlag-${widget.summoner.region}.png",
+                                          UrlBuilder.flags(widget.summoner.region),
                                           width: 30,
                                         )
                                       ],
@@ -199,10 +197,9 @@ class _SummonerCardState extends State<SummonerCard> {
   }
 
   openSummonerCard(summonerName, region) async {
-    if (!summonerProvider.isLoadingSummoner) {
+    if (!provider.isLoadingSummoner) {
       setState(() => retrievingCardUser = true);
-      // await summonerProvider.selectRegion(region);
-      var response = await summonerProvider.getSummonerData(summonerName, regionIndex(region));
+      var response = await provider.getSummonerData(summonerName, regionIndex(region));
       if (response == 200) {
         showModalBottomSheet(
           context: context,
@@ -212,8 +209,6 @@ class _SummonerCardState extends State<SummonerCard> {
           backgroundColor: primaryDarkblue,
           isScrollControlled: true,
         );
-      } else {
-        summonerProvider.setError("Failed to retrieve Summoner");
       }
       await wait(200);
       setState(() => retrievingCardUser = false);
@@ -243,7 +238,7 @@ class _SummonerCardState extends State<SummonerCard> {
     setState(() => deleteAction = true);
     await wait(900);
     deleteAction = false;
-    await summonerProvider.removeSingleSummoner(widget.index);
+    await provider.removeSingleSummoner(widget.index);
   }
 
   horizontalDragCoverEnd() async {
