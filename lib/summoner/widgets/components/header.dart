@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/summoner/widgets/modals/region_selector.dart';
+import 'package:league_checker/summoner/widgets/screens/region_selector.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
-import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/widgetTools.dart';
+import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 
 class Header extends StatelessWidget {
@@ -11,14 +10,12 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var summonerProvider = Provider.of<SummonerProvider>(context);
+    SummonerProvider provider = Provider.of<SummonerProvider>(context);
 
-    return Container(
-      height: summonerProvider.statusBarHeight + 100,
-      color: darkGrayTone2,
+    return SizedBox(
+      height: provider.statusBarHeight + 100,
       child: Padding(
-        padding: EdgeInsets.only(
-            left: 30, top: summonerProvider.statusBarHeight + 10),
+        padding: EdgeInsets.only(left: 30, top: provider.statusBarHeight + 10),
         child: Row(
           children: [
             const Image(
@@ -28,22 +25,25 @@ class Header extends StatelessWidget {
             ),
             horizontalSpacer(20),
             const Text(
-              "Summoners",
+              "Summoner",
               style: textMediumBold,
             ),
             const Spacer(),
             Padding(
               padding: const EdgeInsets.only(right: 30),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    openRegionSelector(context);
-                  },
-                  child: const Icon(
-                    Icons.public_rounded,
-                    color: Colors.white,
-                    size: 35,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      openRegionSelector(context);
+                    },
+                    child: const Icon(
+                      Icons.public_rounded,
+                      color: Colors.white,
+                      size: 35,
+                    ),
                   ),
                 ),
               ),

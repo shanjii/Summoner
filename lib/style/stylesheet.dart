@@ -9,6 +9,13 @@ const TextStyle textMedium = TextStyle(
   color: Colors.white,
 );
 
+const TextStyle textMediumBlack = TextStyle(
+  fontFamily: "MarkPro",
+  fontWeight: FontWeight.normal,
+  fontSize: 28,
+  color: Colors.black,
+);
+
 const TextStyle textMediumBold = TextStyle(
   fontFamily: "MarkPro",
   fontWeight: FontWeight.bold,
@@ -40,8 +47,22 @@ const TextStyle textSmallBoldBlack = TextStyle(
 const TextStyle textTiny = TextStyle(
   fontFamily: "MarkPro",
   fontWeight: FontWeight.normal,
-  fontSize: 16,
+  fontSize: 14,
   color: Colors.white,
+);
+
+const TextStyle textTinyBlack = TextStyle(
+  fontFamily: "MarkPro",
+  fontWeight: FontWeight.normal,
+  fontSize: 14,
+  color: Colors.black,
+);
+
+const TextStyle textTinyBlackBold = TextStyle(
+  fontFamily: "MarkPro",
+  fontWeight: FontWeight.bold,
+  fontSize: 14,
+  color: Colors.black,
 );
 
 const TextStyle textBig = TextStyle(
@@ -61,6 +82,13 @@ const TextStyle levelSmall = TextStyle(
 const TextStyle label = TextStyle(
   fontFamily: "MarkPro",
   fontWeight: FontWeight.normal,
+  fontSize: 16,
+  color: Colors.white,
+);
+
+const TextStyle labelBold = TextStyle(
+  fontFamily: "MarkPro",
+  fontWeight: FontWeight.bold,
   fontSize: 16,
   color: Colors.white,
 );

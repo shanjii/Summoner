@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/summoner/widgets/modals/summoner_viewer.dart';
+import 'package:league_checker/summoner/widgets/screens/summoner_viewer.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/widgetTools.dart';
 import 'package:league_checker/utils/misc.dart';
+import 'package:league_checker/utils/url_builder.dart';
 import 'package:provider/provider.dart';
 
 class Browser extends StatefulWidget {
@@ -15,17 +15,16 @@ class Browser extends StatefulWidget {
 }
 
 class _BrowserState extends State<Browser> {
-  late SummonerProvider summonerProvider;
+  late SummonerProvider provider;
 
   TextEditingController searchController = TextEditingController();
   bool retrievingUser = false;
 
   @override
   Widget build(BuildContext context) {
-    summonerProvider = Provider.of<SummonerProvider>(context);
+    provider = Provider.of<SummonerProvider>(context);
 
-    return Container(
-      color: darkGrayTone2,
+    return SizedBox(
       child: Padding(
         padding: const EdgeInsets.only(left: 30, right: 30, bottom: 18),
         child: Column(
@@ -33,24 +32,30 @@ class _BrowserState extends State<Browser> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
-                color: Colors.white24,
+                color: grayTone2,
               ),
               height: 50,
               child: Padding(
                 padding: const EdgeInsets.only(
                   left: 30,
-                  right: 30,
+                  right: 10,
                 ),
                 child: TextField(
                   controller: searchController,
                   style: input,
+                  enabled: provider.showAddSummoner
+                      ? false
+                      : provider.updatingDevice
+                          ? false
+                          : true,
                   cursorColor: Colors.white,
                   onSubmitted: (value) {
                     retrieveUser();
                   },
                   textInputAction: TextInputAction.search,
-                  decoration: const InputDecoration(
-                    hintText: 'Search for a Summoner...',
+                  decoration: InputDecoration(
+                    suffixIcon: Image(image: AssetImage(UrlBuilder.flags(provider.region))),
+                    hintText: provider.updatingDevice ? "Retrieving latest patch..." : "Find a Summoner",
                     hintStyle: label,
                     border: InputBorder.none,
                   ),
@@ -78,8 +83,7 @@ class _BrowserState extends State<Browser> {
   retrieveUser() async {
     FocusManager.instance.primaryFocus?.unfocus();
     setState(() => retrievingUser = true);
-    var response =
-        await summonerProvider.getSummonerData(searchController.text);
+    var response = await provider.getSummonerData(searchController.text);
     if (response == 200) {
       showModalBottomSheet(
         context: context,
@@ -90,12 +94,6 @@ class _BrowserState extends State<Browser> {
         isScrollControlled: true,
       );
       await wait(200);
-    } else if (response == 404) {
-      await summonerProvider.setError("Summoner not found");
-    } else if (response == 500) {
-      await summonerProvider.setError("Network error");
-    } else {
-      await summonerProvider.setError("Unknown error");
     }
     setState(() => retrievingUser = false);
   }

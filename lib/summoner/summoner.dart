@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:league_checker/summoner/widgets/components/error_dropdown.dart';
 import 'package:league_checker/summoner/widgets/components/header.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/widgetTools.dart';
+import 'package:league_checker/summoner/widgets/components/summoner_card.dart';
+import 'package:league_checker/summoner/widgets/screens/add_summoner.dart';
+import 'package:league_checker/utils/misc.dart';
+import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 import 'widgets/components/browser.dart';
-import 'widgets/components/cards.dart';
+import 'widgets/components/empty_card.dart';
 
 class SummonerPage extends StatefulWidget {
   const SummonerPage({Key? key}) : super(key: key);
@@ -16,29 +21,45 @@ class SummonerPage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<SummonerPage> {
-  late SummonerProvider summonerProvider;
-
   @override
   void initState() {
     super.initState();
     verifyLocalFiles();
   }
 
+  double surprise = 0;
+
   @override
   Widget build(BuildContext context) {
-    summonerProvider = Provider.of<SummonerProvider>(context);
-    summonerProvider.getDeviceDimensions(context);
+    SummonerProvider provider = Provider.of<SummonerProvider>(context);
+    provider.getDeviceDimensions(context);
 
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+    return WillPopScope(
+      onWillPop: () {
+        if (!provider.showAddSummoner) {
+          surprise++;
+          if (surprise > 20) {
+            provider.setError("Why are you running?");
+            surprise = 0;
+          }
+        }
+        provider.activateAddSummonerScreen(false, context);
+        return Future.value(false);
+      },
       child: Scaffold(
         backgroundColor: darkGrayTone2,
         resizeToAvoidBottomInset: false,
         body: Stack(
           alignment: Alignment.center,
           children: [
-            SizedBox.expand(
-              child: SizedBox(
+            GestureDetector(
+              onTap: () async {
+                FocusManager.instance.primaryFocus?.unfocus();
+                await wait(100);
+                provider.activateAddSummonerScreen(false, context);
+              },
+              child: Container(
+                color: Colors.transparent,
                 child: Column(
                   children: [
                     const Header(),
@@ -46,23 +67,16 @@ class _MyHomePageState extends State<SummonerPage> {
                     MediaQuery.removePadding(
                       removeTop: true,
                       context: context,
-                      child: SizedBox(
-                        height: summonerProvider.height -
-                            summonerProvider.statusBarHeight -
-                            170,
-                        child: summonerProvider.summonerList.isEmpty
+                      child: Expanded(
+                        child: provider.summonerList.isEmpty
                             ? Column(
                                 children: [
                                   SizedBox(
-                                    height: 200,
+                                    height: 190,
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        const Icon(
-                                            Icons.sentiment_neutral_outlined,
-                                            size: 80,
-                                            color: Colors.white),
+                                        const Icon(Icons.sentiment_neutral_outlined, size: 80, color: Colors.white),
                                         verticalSpacer(10),
                                         const Text(
                                           "You have no Summoners",
@@ -72,24 +86,30 @@ class _MyHomePageState extends State<SummonerPage> {
                                       ],
                                     ),
                                   ),
-                                  const CardEmpty(),
+                                  const EmptyCard(),
                                 ],
                               )
                             : ListView.builder(
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  if (index ==
-                                      summonerProvider.summonerList.length) {
-                                    return const CardEmpty();
+                                  if (index == provider.summonerList.length) {
+                                    return const EmptyCard();
                                   } else {
-                                    return CardSummoner(
-                                      summoner:
-                                          summonerProvider.summonerList[index],
+                                    return AnimationConfiguration.staggeredList(
+                                      delay: const Duration(milliseconds: 200),
+                                      position: index,
+                                      duration: const Duration(milliseconds: 900),
+                                      child: SlideAnimation(
+                                        horizontalOffset: -provider.width,
+                                        child: SummonerCard(
+                                          summoner: provider.summonerList[index],
+                                          index: index,
+                                        ),
+                                      ),
                                     );
                                   }
                                 },
-                                itemCount:
-                                    summonerProvider.summonerList.length + 1,
+                                itemCount: provider.summonerList.length + 1,
                               ),
                       ),
                     ),
@@ -97,26 +117,8 @@ class _MyHomePageState extends State<SummonerPage> {
                 ),
               ),
             ),
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 300),
-              top: summonerProvider.showUserNotFound == false
-                  ? -30
-                  : summonerProvider.statusBarHeight + 15,
-              curve: Curves.easeOut,
-              child: Container(
-                height: 30,
-                width: summonerProvider.width - 100,
-                decoration: BoxDecoration(
-                  color: primaryGoldOpacity,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Center(
-                    child: Text(
-                  summonerProvider.errorMessage,
-                  style: label,
-                )),
-              ),
-            ),
+            const AddSummoner(),
+            const ErrorDropdown(),
           ],
         ),
       ),

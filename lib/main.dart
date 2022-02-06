@@ -13,7 +13,6 @@ void main() async {
   runApp(
     ChangeNotifierProvider(
       create: (context) => SummonerProvider(
-        // background,
         regionData[2],
         SummonerAPI(regionData[0], regionData[1]),
       ),

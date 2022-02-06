@@ -1,4 +1,3 @@
-import 'dart:convert' as convert;
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:league_checker/api/summoner_api.dart';
@@ -12,17 +11,19 @@ import 'package:league_checker/utils/local_storage.dart';
 import 'package:league_checker/utils/misc.dart';
 
 class SummonerProvider extends ChangeNotifier {
+  SummonerProvider(this.region, this.summonerAPI);
   SummonerAPI summonerAPI = SummonerAPI("na1", "americas");
+
   String region = '';
   String apiVersion = '';
   bool updatingDevice = false;
-  bool showUserNotFound = false;
+  bool showError = false;
+  bool showAddSummoner = false;
   double statusBarHeight = 0;
   double height = 0;
   double width = 0;
-  String background = 'rengar';
   bool isLoadingSummoner = false;
-  String errorMessage = 'Summoner not found.';
+  String errorMessage = '';
   List<SummonerModel> summonerList = [];
   List<ChampionMasteryModel> masteryList = [];
   List<RankModel> rankList = [];
@@ -30,8 +31,7 @@ class SummonerProvider extends ChangeNotifier {
   late SummonerModel summonerData;
   List<MatchData> matchList = [];
   List myMatchStats = [];
-
-  SummonerProvider(this.region, this.summonerAPI);
+  FocusNode addSummonerKeyboardFocus = FocusNode();
 
   //Return summoner data from specified summoner name
   getSummonerData(String summonerName, [argument]) async {
@@ -39,15 +39,14 @@ class SummonerProvider extends ChangeNotifier {
       List<String> regionData = regionIndex(region);
       summonerAPI = SummonerAPI(regionData[0], regionData[1]);
       isLoadingSummoner = true;
-      var response =
-          await summonerAPI.getSummonerData(summonerName, [argument]);
+      var response = await summonerAPI.getSummonerData(summonerName, [argument]);
       summonerData = SummonerModel.fromJson(response);
       summonerData.region = region;
       await Future.wait([
         getChampionMastery(summonerData.id),
         getSummonerRank(summonerData.id),
         getChampionData(),
-        getMatchList()
+        getMatchList(),
       ]);
       if (masteryList.isNotEmpty) {
         summonerData.background = getChampionImage(masteryList[0].championId);
@@ -56,6 +55,7 @@ class SummonerProvider extends ChangeNotifier {
       return 200;
     } catch (error) {
       isLoadingSummoner = false;
+      errorHandler(error);
       return error;
     }
   }
@@ -150,7 +150,9 @@ class SummonerProvider extends ChangeNotifier {
       notifyListeners();
       return 200;
     } catch (error) {
-      return 400;
+      isLoadingSummoner = false;
+      errorHandler(error);
+      return error;
     }
   }
 
@@ -171,6 +173,12 @@ class SummonerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  removeSingleSummoner(index) async {
+    summonerList.removeAt(index);
+    await LocalStorage.clear("summoners");
+    updateSummonerList();
+  }
+
   getDeviceDimensions(context) {
     statusBarHeight = MediaQuery.of(context).padding.top;
     height = MediaQuery.of(context).size.height;
@@ -188,30 +196,39 @@ class SummonerProvider extends ChangeNotifier {
   }
 
   checkApiVersion() async {
-    var devicePatch = await LocalStorage.readString("patch");
-    if (devicePatch == null) {
-      await updateDevice();
-    } else {
-      apiVersion = devicePatch;
-      notifyListeners();
-      var patchList = await summonerAPI.getPatches();
-      if (devicePatch != patchList[0]) {
+    try {
+      var devicePatch = await LocalStorage.readString("patch");
+      if (devicePatch == null) {
         await updateDevice();
       } else {
         apiVersion = devicePatch;
         notifyListeners();
+        var patchList = await summonerAPI.getPatches();
+        if (devicePatch != patchList[0]) {
+          await updateDevice();
+        } else {
+          apiVersion = devicePatch;
+          notifyListeners();
+        }
       }
+    } catch (error) {
+      errorHandler(error);
     }
   }
 
   updateDevice() async {
-    updatingDevice = true;
-    notifyListeners();
-    var patchList = await summonerAPI.getPatches();
-    apiVersion = patchList[0];
-    await LocalStorage.writeString("patch", apiVersion);
-    updatingDevice = false;
-    notifyListeners();
+    try {
+      updatingDevice = true;
+      notifyListeners();
+      var patchList = await summonerAPI.getPatches();
+      apiVersion = patchList[0];
+      await LocalStorage.writeString("patch", apiVersion);
+      updatingDevice = false;
+      notifyListeners();
+    } catch (error) {
+      isLoadingSummoner = false;
+      errorHandler(error);
+    }
   }
 
   selectRegion(String flag) async {
@@ -223,11 +240,38 @@ class SummonerProvider extends ChangeNotifier {
   }
 
   setError(error) async {
-    showUserNotFound = true;
+    showError = true;
     errorMessage = error;
     notifyListeners();
-    await wait(3000);
-    showUserNotFound = false;
+    await wait(4000);
+    showError = false;
     notifyListeners();
+  }
+
+  clearError() async {
+    showError = false;
+    notifyListeners();
+  }
+
+  activateAddSummonerScreen(value, context) {
+    showAddSummoner = value;
+    if (value) {
+      FocusScope.of(context).requestFocus(addSummonerKeyboardFocus);
+    } else {
+      FocusScope.of(context).unfocus();
+    }
+    notifyListeners();
+  }
+
+  errorHandler(error) {
+    if (error == 404) {
+      setError("Summoner not found");
+    } else if (error == 403) {
+      setError("Type in a Summoner");
+    } else if (error == 500) {
+      setError("Network error");
+    } else {
+      setError("Unknown error");
+    }
   }
 }
