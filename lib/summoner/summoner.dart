@@ -21,17 +21,18 @@ class SummonerPage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<SummonerPage> {
+  late SummonerProvider provider;
+  double surprise = 0;
+
   @override
   void initState() {
     super.initState();
     verifyLocalFiles();
   }
 
-  double surprise = 0;
-
   @override
   Widget build(BuildContext context) {
-    SummonerProvider provider = Provider.of<SummonerProvider>(context);
+    provider = Provider.of<SummonerProvider>(context);
     provider.getDeviceDimensions(context);
 
     return WillPopScope(
@@ -67,51 +68,7 @@ class _MyHomePageState extends State<SummonerPage> {
                     MediaQuery.removePadding(
                       removeTop: true,
                       context: context,
-                      child: Expanded(
-                        child: provider.summonerList.isEmpty
-                            ? Column(
-                                children: [
-                                  SizedBox(
-                                    height: 190,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        const Icon(Icons.sentiment_neutral_outlined, size: 80, color: Colors.white),
-                                        verticalSpacer(10),
-                                        const Text(
-                                          "You have no Summoners",
-                                          style: textSmall,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const EmptyCard(),
-                                ],
-                              )
-                            : ListView.builder(
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  if (index == provider.summonerList.length) {
-                                    return const EmptyCard();
-                                  } else {
-                                    return AnimationConfiguration.staggeredList(
-                                      delay: const Duration(milliseconds: 200),
-                                      position: index,
-                                      duration: const Duration(milliseconds: 900),
-                                      child: SlideAnimation(
-                                        horizontalOffset: -provider.width,
-                                        child: SummonerCard(
-                                          summoner: provider.summonerList[index],
-                                          index: index,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
-                                itemCount: provider.summonerList.length + 1,
-                              ),
-                      ),
+                      child: Expanded(child: provider.summonerList.isEmpty ? noSummoner() : summonerList()),
                     ),
                   ],
                 ),
@@ -122,6 +79,54 @@ class _MyHomePageState extends State<SummonerPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget noSummoner() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 190,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.sentiment_neutral_outlined, size: 80, color: Colors.white),
+              verticalSpacer(10),
+              const Text(
+                "You have no Summoners",
+                style: textSmall,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+        const EmptyCard(),
+      ],
+    );
+  }
+
+  Widget summonerList() {
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      itemBuilder: (context, index) {
+        if (index == provider.summonerList.length) {
+          return const EmptyCard();
+        } else {
+          return AnimationConfiguration.staggeredList(
+            delay: const Duration(milliseconds: 200),
+            position: index,
+            duration: const Duration(milliseconds: 900),
+            child: SlideAnimation(
+              horizontalOffset: -provider.width,
+              child: SummonerCard(
+                summoner: provider.summonerList[index],
+                index: index,
+              ),
+            ),
+          );
+        }
+      },
+      itemCount: provider.summonerList.length + 1,
     );
   }
 
