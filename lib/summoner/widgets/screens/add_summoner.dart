@@ -1,13 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:league_checker/providers/summoner_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/summoner/widgets/components/error_dropdown.dart';
 import 'package:league_checker/utils/widget.dart';
-import 'package:league_checker/utils/misc.dart';
 import 'package:provider/provider.dart';
 
 class AddSummoner extends StatefulWidget {

@@ -4,7 +4,6 @@ import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/url_builder.dart';
 import 'package:league_checker/utils/widget.dart';
-import 'package:league_checker/utils/misc.dart';
 import 'package:provider/provider.dart';
 
 class RegionSelector extends StatelessWidget {
