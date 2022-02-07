@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/summoner/widgets/screens/summoner_viewer.dart';
-import 'package:league_checker/providers/summoner_provider.dart';
+import 'package:league_checker/pages/viewer/viewer.dart';
+import 'package:league_checker/providers/data_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/misc.dart';
 import 'package:league_checker/utils/url_builder.dart';
 import 'package:provider/provider.dart';
 
@@ -15,14 +14,14 @@ class Browser extends StatefulWidget {
 }
 
 class _BrowserState extends State<Browser> {
-  late SummonerProvider provider;
+  late DataProvider provider;
 
   TextEditingController searchController = TextEditingController();
   bool retrievingUser = false;
 
   @override
   Widget build(BuildContext context) {
-    provider = Provider.of<SummonerProvider>(context);
+    provider = Provider.of<DataProvider>(context);
 
     return SizedBox(
       child: Padding(
@@ -85,16 +84,27 @@ class _BrowserState extends State<Browser> {
     setState(() => retrievingUser = true);
     var response = await provider.getSummonerData(searchController.text);
     if (response == 200) {
-      showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return const SummonerViewer();
-        },
-        backgroundColor: primaryDarkblue,
-        isScrollControlled: true,
-      );
-      await wait(200);
+      Navigator.of(context).push(pageBuilder());
     }
     setState(() => retrievingUser = false);
+  }
+
+  pageBuilder() {
+    return PageRouteBuilder(
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (context, animation, secondaryAnimation) => const Viewer(index: -1),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
   }
 }

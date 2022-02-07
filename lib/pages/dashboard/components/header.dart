@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/summoner/widgets/screens/region_selector.dart';
-import 'package:league_checker/providers/summoner_provider.dart';
+import 'package:league_checker/pages/dashboard/modals/region_selector.dart';
+import 'package:league_checker/providers/data_provider.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +10,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SummonerProvider provider = Provider.of<SummonerProvider>(context);
+    DataProvider provider = Provider.of<DataProvider>(context);
 
     return SizedBox(
       height: provider.device.statusBarHeight + 100,

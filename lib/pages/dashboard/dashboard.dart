@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:league_checker/summoner/widgets/components/error_dropdown.dart';
-import 'package:league_checker/summoner/widgets/components/header.dart';
-import 'package:league_checker/providers/summoner_provider.dart';
+import 'package:league_checker/pages/dashboard/components/browser.dart';
+import 'package:league_checker/pages/dashboard/components/empty_card.dart';
+import 'package:league_checker/pages/dashboard/components/error_dropdown.dart';
+import 'package:league_checker/pages/dashboard/components/header.dart';
+import 'package:league_checker/providers/data_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/summoner/widgets/components/summoner_card.dart';
-import 'package:league_checker/summoner/widgets/screens/add_summoner.dart';
+import 'package:league_checker/pages/dashboard/components/summoner_card.dart';
+import 'package:league_checker/pages/dashboard/modals/add_summoner.dart';
 import 'package:league_checker/utils/device.dart';
 import 'package:league_checker/utils/misc.dart';
 import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
-import 'widgets/components/browser.dart';
-import 'widgets/components/empty_card.dart';
 
-class SummonerPage extends StatefulWidget {
-  const SummonerPage({Key? key}) : super(key: key);
+class DashboardPage extends StatefulWidget {
+  const DashboardPage({Key? key}) : super(key: key);
 
   @override
-  State<SummonerPage> createState() => _MyHomePageState();
+  State<DashboardPage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<SummonerPage> {
-  late SummonerProvider provider;
+class _MyHomePageState extends State<DashboardPage> {
+  late DataProvider provider;
   double surprise = 0;
 
   @override
@@ -33,7 +33,7 @@ class _MyHomePageState extends State<SummonerPage> {
 
   @override
   Widget build(BuildContext context) {
-    provider = Provider.of<SummonerProvider>(context);
+    provider = Provider.of<DataProvider>(context);
     provider.device = Device(context);
 
     return WillPopScope(
@@ -132,7 +132,7 @@ class _MyHomePageState extends State<SummonerPage> {
   }
 
   verifyLocalFiles() {
-    context.read<SummonerProvider>().checkApiVersion();
-    context.read<SummonerProvider>().updateSummonerList();
+    context.read<DataProvider>().checkApiVersion();
+    context.read<DataProvider>().updateSummonerList();
   }
 }

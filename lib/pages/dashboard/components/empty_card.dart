@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/providers/summoner_provider.dart';
+import 'package:league_checker/providers/data_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +9,7 @@ class EmptyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late SummonerProvider provider = Provider.of<SummonerProvider>(context);
+    late DataProvider provider = Provider.of<DataProvider>(context);
 
     return Column(
       children: [
@@ -68,11 +68,11 @@ class EmptyCard extends StatelessWidget {
     );
   }
 
-  showAddSummoner(SummonerProvider provider, context) async {
+  showAddSummoner(DataProvider provider, context) async {
     provider.activateAddSummonerScreen(true, context);
   }
 
-  showRemoveSummoner(context, SummonerProvider provider) {
+  showRemoveSummoner(context, DataProvider provider) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

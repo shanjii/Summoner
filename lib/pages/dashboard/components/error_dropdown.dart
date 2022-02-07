@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/providers/summoner_provider.dart';
+import 'package:league_checker/providers/data_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/widget.dart';
@@ -13,12 +13,12 @@ class ErrorDropdown extends StatefulWidget {
 }
 
 class _ErrorDropdownState extends State<ErrorDropdown> {
-  late SummonerProvider provider;
+  late DataProvider provider;
   double positionY = 0;
 
   @override
   Widget build(BuildContext context) {
-    provider = Provider.of<SummonerProvider>(context);
+    provider = Provider.of<DataProvider>(context);
 
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 800),

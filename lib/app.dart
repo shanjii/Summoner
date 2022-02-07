@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/summoner/summoner.dart';
+import 'package:league_checker/pages/dashboard/dashboard.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       color: darkGrayTone2,
-      home: const SummonerPage(),
+      home: const DashboardPage(),
     );
   }
 }

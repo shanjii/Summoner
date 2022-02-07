@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:league_checker/providers/summoner_provider.dart';
+import 'package:league_checker/providers/data_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/url_builder.dart';
@@ -11,7 +11,7 @@ class RegionSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SummonerProvider provider = Provider.of<SummonerProvider>(context);
+    DataProvider provider = Provider.of<DataProvider>(context);
 
     return Container(
       decoration: const BoxDecoration(
@@ -56,7 +56,7 @@ class RegionSelector extends StatelessWidget {
   }
 }
 
-Widget flagItem(String flag, SummonerProvider provider, context) {
+Widget flagItem(String flag, DataProvider provider, context) {
   return Padding(
     padding: const EdgeInsets.all(1),
     child: ClipRRect(

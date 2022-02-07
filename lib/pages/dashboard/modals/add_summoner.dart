@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:league_checker/providers/summoner_provider.dart';
+import 'package:league_checker/providers/data_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/widget.dart';
@@ -14,7 +14,7 @@ class AddSummoner extends StatefulWidget {
 }
 
 class _AddSummonerState extends State<AddSummoner> {
-  late SummonerProvider provider;
+  late DataProvider provider;
   TextEditingController addFavoriteController = TextEditingController();
   bool retrievingUser = false;
   bool addedUser = false;
@@ -23,7 +23,7 @@ class _AddSummonerState extends State<AddSummoner> {
 
   @override
   Widget build(BuildContext context) {
-    provider = Provider.of<SummonerProvider>(context);
+    provider = Provider.of<DataProvider>(context);
 
     return KeyboardVisibilityBuilder(builder: (context, visible) {
       return AnimatedPositioned(

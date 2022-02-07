@@ -1,26 +1,31 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:league_checker/summoner/widgets/components/profile-header.dart';
-import 'package:league_checker/providers/summoner_provider.dart';
+import 'package:league_checker/pages/viewer/components/profile-header.dart';
+import 'package:league_checker/providers/data_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/url_builder.dart';
 import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 
-class SummonerViewer extends StatelessWidget {
-  const SummonerViewer({Key? key}) : super(key: key);
+class Viewer extends StatelessWidget {
+  const Viewer({Key? key, required this.index}) : super(key: key);
+  final int index;
 
   @override
   Widget build(BuildContext context) {
-    SummonerProvider provider = Provider.of<SummonerProvider>(context);
+    DataProvider provider = Provider.of<DataProvider>(context);
 
-    return SizedBox.expand(
-      child: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: darkGrayTone2,
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ProfileHeader(),
+            ProfileHeader(
+              index: index,
+            ),
             verticalSpacer(20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

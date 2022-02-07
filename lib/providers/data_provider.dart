@@ -11,8 +11,8 @@ import 'package:league_checker/utils/indexer.dart';
 import 'package:league_checker/utils/local_storage.dart';
 import 'package:league_checker/utils/misc.dart';
 
-class SummonerProvider extends ChangeNotifier {
-  SummonerProvider(this.region, this.summonerAPI);
+class DataProvider extends ChangeNotifier {
+  DataProvider(this.region, this.summonerAPI);
   
   late SummonerAPI summonerAPI;
   late Device device;
