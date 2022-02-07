@@ -15,21 +15,21 @@ class ErrorDropdown extends StatefulWidget {
 class _ErrorDropdownState extends State<ErrorDropdown> {
   late SummonerProvider provider;
   double positionY = 0;
-  
+
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<SummonerProvider>(context);
 
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 800),
-      top: provider.showError == false ? -provider.statusBarHeight - 200 : positionY - 140,
+      top: provider.showError == false ? -provider.device.statusBarHeight - 200 : positionY - 140,
       curve: Curves.elasticOut,
       child: GestureDetector(
         onVerticalDragUpdate: (details) => verticalDrag(details),
         onVerticalDragEnd: (details) => setState(() => positionY = 0),
         child: Container(
-          height: provider.statusBarHeight + 200,
-          width: provider.width,
+          height: provider.device.statusBarHeight + 200,
+          width: provider.device.width,
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(

@@ -34,161 +34,169 @@ class _SummonerCardState extends State<SummonerCard> {
 
     return SizedBox(
       height: 190,
-      width: provider.width,
+      width: provider.device.width,
       child: AnimatedOpacity(
         opacity: deleteAction ? 0 : 1,
         duration: const Duration(milliseconds: 500),
         curve: Curves.linear,
         child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 31, right: 31, top: 1),
-              child: Material(
-                borderRadius: BorderRadius.circular(20),
-                color: darkGrayTone3,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () => tapRemove(),
-                  child: SizedBox(
-                    width: provider.width - 62,
-                    height: 168,
-                    child: const Padding(
-                      padding: EdgeInsets.only(right: 31),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Icon(
-                          Icons.delete_outline_rounded,
-                          color: Colors.white,
-                          size: 40,
-                        ),
-                      ),
-                    ),
-                  ),
+            deleteLayer(),
+            cardLayer(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget deleteLayer() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 31, right: 31, top: 1),
+      child: Material(
+        borderRadius: BorderRadius.circular(20),
+        color: darkGrayTone3,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () => tapRemove(),
+          child: SizedBox(
+            width: provider.device.width - 62,
+            height: 168,
+            child: const Padding(
+              padding: EdgeInsets.only(right: 31),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Icon(
+                  Icons.delete_outline_rounded,
+                  color: Colors.white,
+                  size: 40,
                 ),
               ),
             ),
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.decelerate,
-              left: positionX,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: SizedBox(
-                    height: 170,
-                    width: provider.width - 60,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: GestureDetector(
-                        onLongPress: () => longPressCover(),
-                        onHorizontalDragUpdate: (details) => horizontalDragCoverUpdate(details),
-                        onHorizontalDragEnd: (details) => horizontalDragCoverEnd(),
-                        child: InkWell(
-                          onTap: () => tapOpen(),
-                          child: CachedNetworkImage(
-                            imageUrl: UrlBuilder.championWallpaper(widget.summoner.background.isNotEmpty ? widget.summoner.background : "Teemo"),
-                            imageBuilder: (context, imageProvider) => Ink(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: imageProvider,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget cardLayer() {
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.decelerate,
+      left: positionX,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 30, right: 30),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: SizedBox(
+            height: 170,
+            width: provider.device.width - 60,
+            child: Material(
+              color: Colors.transparent,
+              child: GestureDetector(
+                onLongPress: () => longPressCover(),
+                onHorizontalDragUpdate: (details) => horizontalDragCoverUpdate(details),
+                onHorizontalDragEnd: (details) => horizontalDragCoverEnd(),
+                child: InkWell(
+                  onTap: () => tapOpen(),
+                  child: CachedNetworkImage(
+                    imageUrl: UrlBuilder.championWallpaper(widget.summoner.background.isNotEmpty ? widget.summoner.background : "Teemo"),
+                    imageBuilder: (context, imageProvider) => Ink(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: imageProvider,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20, top: 20),
+                                child: CachedNetworkImage(
+                                  imageUrl: UrlBuilder.profileIconUrl(widget.summoner.profileIconId, provider.apiVersion),
+                                  imageBuilder: (context, imageProvider) => Ink(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: imageProvider,
+                                      ),
+                                    ),
+                                  ),
+                                  placeholder: (context, url) => Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.black38),
+                                  ),
                                 ),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 20, top: 20),
-                                        child: CachedNetworkImage(
-                                          imageUrl: UrlBuilder.profileIconUrl(widget.summoner.profileIconId, provider.apiVersion),
-                                          imageBuilder: (context, imageProvider) => Ink(
-                                            height: 60,
-                                            width: 60,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(100),
-                                              image: DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image: imageProvider,
-                                              ),
-                                            ),
-                                          ),
-                                          placeholder: (context, url) => Container(
-                                            width: 60,
-                                            height: 60,
-                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.black38),
-                                          ),
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 20, right: 20),
-                                        child: Ink(
-                                          decoration: BoxDecoration(
-                                            color: Colors.black.withOpacity(0.7),
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: [
-                                                Center(
-                                                  child: Text(
-                                                    "Level ${widget.summoner.summonerLevel.toString()}",
-                                                    style: labelBold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                              const Spacer(),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20, right: 20),
+                                child: Ink(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.7),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  const Spacer(),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20, right: 20),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
                                     child: Row(
                                       children: [
-                                        Text(
-                                          widget.summoner.name,
-                                          style: textMediumBold,
+                                        Center(
+                                          child: Text(
+                                            "Level ${widget.summoner.summonerLevel.toString()}",
+                                            style: labelBold,
+                                          ),
                                         ),
-                                        const Spacer(),
-                                        Image.asset(
-                                          UrlBuilder.flags(widget.summoner.region),
-                                          width: 30,
-                                        )
                                       ],
                                     ),
                                   ),
-                                  verticalSpacer(10),
-                                  LinearProgressIndicator(
-                                    color: Colors.white,
-                                    backgroundColor: Colors.transparent,
-                                    value: retrievingCardUser ? null : 0,
-                                    minHeight: 2,
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                            placeholder: (context, url) => Container(
-                              height: 170,
-                              color: grayTone2,
+                            ],
+                          ),
+                          const Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            child: Row(
+                              children: [
+                                Text(
+                                  widget.summoner.name,
+                                  style: textMediumBold,
+                                ),
+                                const Spacer(),
+                                Image.asset(
+                                  UrlBuilder.flags(widget.summoner.region),
+                                  width: 30,
+                                )
+                              ],
                             ),
                           ),
-                        ),
+                          verticalSpacer(10),
+                          LinearProgressIndicator(
+                            color: Colors.white,
+                            backgroundColor: Colors.transparent,
+                            value: retrievingCardUser ? null : 0,
+                            minHeight: 2,
+                          ),
+                        ],
                       ),
+                    ),
+                    placeholder: (context, url) => Container(
+                      height: 170,
+                      color: grayTone2,
                     ),
                   ),
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

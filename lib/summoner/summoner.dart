@@ -7,6 +7,7 @@ import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/summoner/widgets/components/summoner_card.dart';
 import 'package:league_checker/summoner/widgets/screens/add_summoner.dart';
+import 'package:league_checker/utils/device.dart';
 import 'package:league_checker/utils/misc.dart';
 import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +34,7 @@ class _MyHomePageState extends State<SummonerPage> {
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<SummonerProvider>(context);
-    provider.getDeviceDimensions(context);
+    provider.device = Device(context);
 
     return WillPopScope(
       onWillPop: () {
@@ -117,7 +118,7 @@ class _MyHomePageState extends State<SummonerPage> {
             position: index,
             duration: const Duration(milliseconds: 900),
             child: SlideAnimation(
-              horizontalOffset: -provider.width,
+              horizontalOffset: -provider.device.width,
               child: SummonerCard(
                 summoner: provider.summonerList[index],
                 index: index,

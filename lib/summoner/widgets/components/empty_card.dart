@@ -26,7 +26,7 @@ class EmptyCard extends StatelessWidget {
                       showRemoveSummoner(context, provider);
                     },
                     child: SizedBox(
-                      width: (provider.width / 2) - 80,
+                      width: (provider.device.width / 2) - 80,
                       height: 102,
                       child: const Icon(
                         Icons.clear_all_rounded,
@@ -49,7 +49,7 @@ class EmptyCard extends StatelessWidget {
                       showAddSummoner(provider, context);
                     },
                     child: SizedBox(
-                      width: (provider.width / 2),
+                      width: (provider.device.width / 2),
                       height: 102,
                       child: const Icon(
                         Icons.add,

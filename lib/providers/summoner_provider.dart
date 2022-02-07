@@ -6,29 +6,29 @@ import 'package:league_checker/models/champion_mastery_model.dart';
 import 'package:league_checker/models/match_data_model.dart';
 import 'package:league_checker/models/rank_model.dart';
 import 'package:league_checker/models/summoner_model.dart';
+import 'package:league_checker/utils/device.dart';
 import 'package:league_checker/utils/indexer.dart';
 import 'package:league_checker/utils/local_storage.dart';
 import 'package:league_checker/utils/misc.dart';
 
 class SummonerProvider extends ChangeNotifier {
   SummonerProvider(this.region, this.summonerAPI);
-  SummonerAPI summonerAPI = SummonerAPI("na1", "americas");
+  
+  late SummonerAPI summonerAPI;
+  late Device device;
+  late SummonerModel summonerData;
 
-  String region = '';
-  String apiVersion = '';
   bool updatingDevice = false;
   bool showError = false;
   bool showAddSummoner = false;
-  double statusBarHeight = 0;
-  double height = 0;
-  double width = 0;
   bool isLoadingSummoner = false;
+  String region = '';
+  String apiVersion = '';
   String errorMessage = '';
   List<SummonerModel> summonerList = [];
   List<ChampionMasteryModel> masteryList = [];
   List<RankModel> rankList = [];
   List<ChampionData> championList = [];
-  late SummonerModel summonerData;
   List<MatchData> matchList = [];
   List myMatchStats = [];
   FocusNode addSummonerKeyboardFocus = FocusNode();
@@ -36,11 +36,8 @@ class SummonerProvider extends ChangeNotifier {
   //Return summoner data from specified summoner name
   getSummonerData(String summonerName, [argument]) async {
     try {
-      List<String> regionData = regionIndex(region);
-      summonerAPI = SummonerAPI(regionData[0], regionData[1]);
-      isLoadingSummoner = true;
-      var response = await summonerAPI.getSummonerData(summonerName, [argument]);
-      summonerData = SummonerModel.fromJson(response);
+      isLoadingSummoner;
+      summonerData = SummonerModel.fromJson(await summonerAPI.getSummonerData(summonerName, [argument]));
       summonerData.region = region;
       await Future.wait([
         getChampionMastery(summonerData.id),
@@ -51,10 +48,10 @@ class SummonerProvider extends ChangeNotifier {
       if (masteryList.isNotEmpty) {
         summonerData.background = getChampionImage(masteryList[0].championId);
       }
-      isLoadingSummoner = false;
+      !isLoadingSummoner;
       return 200;
     } catch (error) {
-      isLoadingSummoner = false;
+      !isLoadingSummoner;
       errorHandler(error);
       return error;
     }
@@ -150,7 +147,7 @@ class SummonerProvider extends ChangeNotifier {
       notifyListeners();
       return 200;
     } catch (error) {
-      isLoadingSummoner = false;
+      !isLoadingSummoner;
       errorHandler(error);
       return error;
     }
@@ -177,12 +174,6 @@ class SummonerProvider extends ChangeNotifier {
     summonerList.removeAt(index);
     await LocalStorage.clear("summoners");
     updateSummonerList();
-  }
-
-  getDeviceDimensions(context) {
-    statusBarHeight = MediaQuery.of(context).padding.top;
-    height = MediaQuery.of(context).size.height;
-    width = MediaQuery.of(context).size.width;
   }
 
   //Return the champion image url from a champion ID
@@ -226,7 +217,7 @@ class SummonerProvider extends ChangeNotifier {
       updatingDevice = false;
       notifyListeners();
     } catch (error) {
-      isLoadingSummoner = false;
+      !isLoadingSummoner;
       errorHandler(error);
     }
   }

@@ -13,9 +13,9 @@ class Header extends StatelessWidget {
     SummonerProvider provider = Provider.of<SummonerProvider>(context);
 
     return SizedBox(
-      height: provider.statusBarHeight + 100,
+      height: provider.device.statusBarHeight + 100,
       child: Padding(
-        padding: EdgeInsets.only(left: 30, top: provider.statusBarHeight + 10),
+        padding: EdgeInsets.only(left: 30, top: provider.device.statusBarHeight + 10),
         child: Row(
           children: [
             const Image(

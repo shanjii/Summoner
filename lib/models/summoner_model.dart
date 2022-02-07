@@ -10,7 +10,8 @@ class SummonerModel {
   late String background;
 
   SummonerModel(
-      {required this.id,
+      {
+      required this.id,
       required this.accountId,
       required this.puuid,
       required this.name,

@@ -24,7 +24,7 @@ class ProfileHeader extends StatelessWidget {
         children: [
           SizedBox(
             height: 300,
-            width: provider.width,
+            width: provider.device.width,
             child: provider.masteryList.isNotEmpty
                 ? CachedNetworkImage(
                     fit: BoxFit.cover,
@@ -37,7 +37,7 @@ class ProfileHeader extends StatelessWidget {
                 : const SizedBox(),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(10, provider.statusBarHeight + 10, 0, 0),
+            padding: EdgeInsets.fromLTRB(10, provider.device.statusBarHeight + 10, 0, 0),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
