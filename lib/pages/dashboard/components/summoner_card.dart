@@ -220,7 +220,7 @@ class _SummonerCardState extends State<SummonerCard> {
   pageBuilder() {
     return PageRouteBuilder(
       transitionDuration: const Duration(milliseconds: 500),
-      pageBuilder: (context, animation, secondaryAnimation) => Viewer(index: widget.index),
+      pageBuilder: (context, animation, secondaryAnimation) => ViewerPage(index: widget.index),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(1.0, 0.0);
         const end = Offset.zero;

@@ -8,8 +8,8 @@ import 'package:league_checker/utils/url_builder.dart';
 import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 
-class Viewer extends StatelessWidget {
-  const Viewer({Key? key, required this.index}) : super(key: key);
+class ViewerPage extends StatelessWidget {
+  const ViewerPage({Key? key, required this.index}) : super(key: key);
   final int index;
 
   @override
