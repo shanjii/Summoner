@@ -13,7 +13,7 @@ import 'package:league_checker/utils/misc.dart';
 
 class DataProvider extends ChangeNotifier {
   DataProvider(this.region, this.summonerAPI);
-  
+
   late SummonerAPI summonerAPI;
   late Device device;
   late SummonerModel summonerData;
@@ -36,7 +36,8 @@ class DataProvider extends ChangeNotifier {
   //Return summoner data from specified summoner name
   getSummonerData(String summonerName, [argument]) async {
     try {
-      isLoadingSummoner;
+      isLoadingSummoner = true;
+      await selectRegion(region);
       summonerData = SummonerModel.fromJson(await summonerAPI.getSummonerData(summonerName, [argument]));
       summonerData.region = region;
       await Future.wait([
@@ -48,10 +49,10 @@ class DataProvider extends ChangeNotifier {
       if (masteryList.isNotEmpty) {
         summonerData.background = getChampionImage(masteryList[0].championId);
       }
-      !isLoadingSummoner;
+      isLoadingSummoner = false;
       return 200;
     } catch (error) {
-      !isLoadingSummoner;
+      isLoadingSummoner = false;
       errorHandler(error);
       return error;
     }
@@ -131,25 +132,44 @@ class DataProvider extends ChangeNotifier {
   }
 
   //Add a favorited summoner to the summoner list and save them in the memory
-  addFavoriteSummoner(String summonerName) async {
+  addFavoriteSummoner(String summonerName, region) async {
     try {
       var summoner = SummonerModel.fromJson(
         await summonerAPI.getSummonerData(summonerName),
       );
-      summoner.region = region;
-      var masteries = await summonerAPI.getChampionMastery(summoner.id);
-      if (masteries.isNotEmpty) {
-        await getChampionData();
-        summoner.background = getChampionImage(masteries[0]["championId"]);
+
+      if (!hasFavoriteSummoner(summoner)) {
+        summoner.region = region;
+        var masteries = await summonerAPI.getChampionMastery(summoner.id);
+        if (masteries.isNotEmpty) {
+          await getChampionData();
+          summoner.background = getChampionImage(masteries[0]["championId"]);
+        }
+        summonerList.add(summoner);
+        await LocalStorage.writeEncoded("summoners", summonerList);
+        notifyListeners();
+        return 200;
+      } else {
+        setError("Summoner already added.");
       }
-      summonerList.add(summoner);
-      await LocalStorage.writeEncoded("summoners", summonerList);
-      notifyListeners();
-      return 200;
     } catch (error) {
-      !isLoadingSummoner;
+      isLoadingSummoner = false;
       errorHandler(error);
       return error;
+    }
+  }
+
+  hasFavoriteSummoner(SummonerModel summoner) {
+    bool hasSummoner = false;
+    for (var item in summonerList) {
+      if (summoner.accountId == item.accountId) {
+        hasSummoner = true;
+      }
+    }
+    if (hasSummoner) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -217,7 +237,7 @@ class DataProvider extends ChangeNotifier {
       updatingDevice = false;
       notifyListeners();
     } catch (error) {
-      !isLoadingSummoner;
+      isLoadingSummoner = false;
       errorHandler(error);
     }
   }

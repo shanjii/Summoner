@@ -59,7 +59,7 @@ class _AddSummonerState extends State<AddSummoner> {
                 verticalSpacer(30),
                 const Center(
                   child: Text(
-                    'Highlight a Summoner:',
+                    'Add to cards',
                     style: textMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -88,7 +88,7 @@ class _AddSummonerState extends State<AddSummoner> {
                       },
                       textInputAction: TextInputAction.search,
                       decoration: InputDecoration(
-                        hintText: 'Search in ${provider.region.toUpperCase()} region',
+                        hintText: 'Summoner from ${provider.region.toUpperCase()}',
                         hintStyle: label,
                         border: InputBorder.none,
                       ),
@@ -117,7 +117,7 @@ class _AddSummonerState extends State<AddSummoner> {
 
   retrieveFavoriteUser() async {
     setState(() => retrievingUser = true);
-    var response = await provider.addFavoriteSummoner(addFavoriteController.text);
+    var response = await provider.addFavoriteSummoner(addFavoriteController.text, provider.region);
     if (response == 200) {
       setState(() {
         addedUser = true;

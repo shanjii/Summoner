@@ -9,8 +9,9 @@ import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 
 class ViewerPage extends StatelessWidget {
-  const ViewerPage({Key? key, required this.index}) : super(key: key);
+  const ViewerPage({Key? key, required this.index, required this.region}) : super(key: key);
   final int index;
+  final String region;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class ViewerPage extends StatelessWidget {
           children: [
             ProfileHeader(
               index: index,
+              region: region,
             ),
             verticalSpacer(20),
             Row(

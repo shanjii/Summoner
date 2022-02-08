@@ -99,6 +99,7 @@ class _SummonerCardState extends State<SummonerCard> {
                   onHorizontalDragUpdate: (details) => horizontalDragCoverUpdate(details),
                   onHorizontalDragEnd: (details) => horizontalDragCoverEnd(),
                   child: InkWell(
+                    splashColor: provider.showAddSummoner ? Colors.transparent : null,
                     onTap: () => tapOpen(),
                     child: CachedNetworkImage(
                       imageUrl: UrlBuilder.championWallpaper(widget.summoner.background.isNotEmpty ? widget.summoner.background : "Teemo"),
@@ -220,7 +221,7 @@ class _SummonerCardState extends State<SummonerCard> {
   pageBuilder() {
     return PageRouteBuilder(
       transitionDuration: const Duration(milliseconds: 500),
-      pageBuilder: (context, animation, secondaryAnimation) => ViewerPage(index: widget.index),
+      pageBuilder: (context, animation, secondaryAnimation) => ViewerPage(index: widget.index, region: widget.summoner.region),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(1.0, 0.0);
         const end = Offset.zero;
@@ -246,11 +247,14 @@ class _SummonerCardState extends State<SummonerCard> {
     }
   }
 
-  tapOpen() {
-    setState(() {
-      positionX = 0;
-    });
-    openSummonerCard(widget.summoner.name, widget.summoner.region);
+  tapOpen() async {
+    if (!provider.showAddSummoner) {
+      setState(() => positionX = 0);
+      openSummonerCard(widget.summoner.name, widget.summoner.region);
+    }
+    FocusManager.instance.primaryFocus?.unfocus();
+    await wait(100);
+    provider.activateAddSummonerScreen(false, context);
   }
 
   tapRemove() async {

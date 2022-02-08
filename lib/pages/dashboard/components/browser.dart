@@ -92,7 +92,7 @@ class _BrowserState extends State<Browser> {
   pageBuilder() {
     return PageRouteBuilder(
       transitionDuration: const Duration(milliseconds: 500),
-      pageBuilder: (context, animation, secondaryAnimation) => const ViewerPage(index: -1),
+      pageBuilder: (context, animation, secondaryAnimation) => ViewerPage(index: -1, region: provider.region),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(1.0, 0.0);
         const end = Offset.zero;
