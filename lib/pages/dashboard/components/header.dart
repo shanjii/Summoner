@@ -25,7 +25,7 @@ class Header extends StatelessWidget {
             ),
             horizontalSpacer(20),
             const Text(
-              "Summoner",
+              "Dashboard",
               style: textMediumBold,
             ),
             const Spacer(),
