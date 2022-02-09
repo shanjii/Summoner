@@ -31,8 +31,8 @@ class _AddSummonerState extends State<AddSummoner> {
         curve: visible ? Curves.linear : Curves.easeInBack,
         bottom: provider.showAddSummoner
             ? visible
-                ? -provider.device.height + MediaQuery.of(context).viewInsets.bottom + 105
-                : -provider.device.height + 105
+                ? -provider.device.height + MediaQuery.of(context).viewInsets.bottom + 90
+                : -provider.device.height + 90
             : -provider.device.height,
         child: GestureDetector(
           onVerticalDragUpdate: (details) {
@@ -49,20 +49,20 @@ class _AddSummonerState extends State<AddSummoner> {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: darkGrayTone3,
+              color: Colors.white,
             ),
             height: provider.device.height,
             width: provider.device.width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                verticalSpacer(30),
+                verticalSpacer(20),
                
                 Container(
-                  margin: const EdgeInsets.only(left: 30, right: 30),
+                  margin: const EdgeInsets.only(left: 20, right: 20),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    color: Colors.white24,
+                    color: Colors.black,
                   ),
                   height: 50,
                   child: Padding(

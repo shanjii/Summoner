@@ -54,7 +54,7 @@ class _SummonerCardState extends State<SummonerCard> {
       padding: const EdgeInsets.only(left: 31, right: 31, top: 1),
       child: Material(
         borderRadius: BorderRadius.circular(20),
-        color: darkGrayTone3,
+        color: positionX == 0 ? Colors.transparent : Colors.white,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () => tapRemove(),
@@ -67,7 +67,7 @@ class _SummonerCardState extends State<SummonerCard> {
                 alignment: Alignment.centerRight,
                 child: Icon(
                   Icons.delete_outline_rounded,
-                  color: Colors.white,
+                  color: Colors.black,
                   size: 40,
                 ),
               ),
@@ -241,8 +241,12 @@ class _SummonerCardState extends State<SummonerCard> {
     if (positionX > -30) {
       setState(() => positionX = -30);
       await wait(1000);
+      setState(() => positionX = 0.1);
+      await wait(300);
       setState(() => positionX = 0);
     } else {
+      setState(() => positionX = 0.1);
+      await wait(300);
       setState(() => positionX = 0);
     }
   }
@@ -258,6 +262,8 @@ class _SummonerCardState extends State<SummonerCard> {
   }
 
   tapRemove() async {
+    setState(() => positionX = 0.1);
+    await wait(300);
     setState(() => positionX = 0);
     await wait(100);
     setState(() => deleteAction = true);
@@ -270,6 +276,8 @@ class _SummonerCardState extends State<SummonerCard> {
     if (positionX <= -40) {
       setState(() => positionX = -100);
     } else {
+      setState(() => positionX = 0.1);
+      await wait(300);
       setState(() => positionX = 0);
     }
   }
