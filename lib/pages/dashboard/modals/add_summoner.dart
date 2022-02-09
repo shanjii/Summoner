@@ -57,7 +57,6 @@ class _AddSummonerState extends State<AddSummoner> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 verticalSpacer(20),
-               
                 Container(
                   margin: const EdgeInsets.only(left: 20, right: 20),
                   decoration: BoxDecoration(
@@ -80,26 +79,16 @@ class _AddSummonerState extends State<AddSummoner> {
                         retrieveFavoriteUser();
                       },
                       textInputAction: TextInputAction.search,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: 'Add a Summoner to cards',
                         hintStyle: label,
+                        suffixIconConstraints: const BoxConstraints(maxHeight: 20, maxWidth: 20),
+                        suffixIcon: CircularProgressIndicator(color: Colors.white, value: retrievingUser ? null : 0),
                         border: InputBorder.none,
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 45, right: 45),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: LinearProgressIndicator(
-                      color: grayTone2,
-                      backgroundColor: Colors.transparent,
-                      value: retrievingUser ? null : 0,
-                      minHeight: 2,
-                    ),
-                  ),
-                )
               ],
             ),
           ),
