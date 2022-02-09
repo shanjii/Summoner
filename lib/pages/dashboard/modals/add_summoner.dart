@@ -93,7 +93,7 @@ class _AddSummonerState extends State<AddSummoner> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: LinearProgressIndicator(
-                      color: Colors.black,
+                      color: grayTone2,
                       backgroundColor: Colors.transparent,
                       value: retrievingUser ? null : 0,
                       minHeight: 2,
