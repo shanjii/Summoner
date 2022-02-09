@@ -21,17 +21,10 @@ class RegionSelector extends StatelessWidget {
           topRight: Radius.circular(20),
         ),
       ),
-      height: 470,
+      height: 390,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          verticalSpacer(30),
-          const Center(
-            child: Text(
-              "Select a region",
-              style: textMedium,
-            ),
-          ),
           verticalSpacer(30),
           Center(
             child: Wrap(

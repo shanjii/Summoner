@@ -16,7 +16,7 @@ class DataProvider extends ChangeNotifier {
 
   late SummonerAPI summonerAPI;
   late Device device;
-  late SummonerModel summonerData;
+  late SummonerModel selectedSummonerData;
 
   bool updatingDevice = false;
   bool showError = false;
@@ -34,20 +34,20 @@ class DataProvider extends ChangeNotifier {
   FocusNode addSummonerKeyboardFocus = FocusNode();
 
   //Return summoner data from specified summoner name
-  getSummonerData(String summonerName, [argument]) async {
+  getSelectedSummonerData(String summonerName, [argument]) async {
     try {
       isLoadingSummoner = true;
       await selectRegion(region);
-      summonerData = SummonerModel.fromJson(await summonerAPI.getSummonerData(summonerName, [argument]));
-      summonerData.region = region;
+      selectedSummonerData = SummonerModel.fromJson(await summonerAPI.getselectedSummonerData(summonerName, [argument]));
+      selectedSummonerData.region = region;
       await Future.wait([
-        getChampionMastery(summonerData.id),
-        getSummonerRank(summonerData.id),
+        getChampionMastery(selectedSummonerData.id),
+        getSummonerRank(selectedSummonerData.id),
         getChampionData(),
         getMatchList(),
       ]);
       if (masteryList.isNotEmpty) {
-        summonerData.background = getChampionImage(masteryList[0].championId);
+        selectedSummonerData.background = getChampionImage(masteryList[0].championId);
       }
       isLoadingSummoner = false;
       return 200;
@@ -74,7 +74,7 @@ class DataProvider extends ChangeNotifier {
   Future getMatchList() async {
     matchList.clear();
     myMatchStats.clear();
-    var matchIds = await summonerAPI.getMatchId(summonerData.puuid);
+    var matchIds = await summonerAPI.getMatchId(selectedSummonerData.puuid);
     List<Future> promises = [];
     for (var id in matchIds) {
       promises.add(getMatchData(id));
@@ -89,7 +89,7 @@ class DataProvider extends ChangeNotifier {
     if (matchList.isNotEmpty) {
       for (var match in matchList) {
         for (var participant in match.info.participants) {
-          if (participant.puuid == summonerData.puuid) {
+          if (participant.puuid == selectedSummonerData.puuid) {
             myMatchStats.add(participant);
           }
         }
@@ -135,7 +135,7 @@ class DataProvider extends ChangeNotifier {
   addFavoriteSummoner(String summonerName, region) async {
     try {
       var summoner = SummonerModel.fromJson(
-        await summonerAPI.getSummonerData(summonerName),
+        await summonerAPI.getselectedSummonerData(summonerName),
       );
 
       if (!hasFavoriteSummoner(summoner)) {

@@ -10,7 +10,7 @@ class SummonerAPI {
 
   SummonerAPI(this.region, this.regionType);
 
-  Future getSummonerData(summonerName, [argument]) async {
+  Future getselectedSummonerData(summonerName, [argument]) async {
     try {
       if (argument != null) {
         if (argument[0] != null) {

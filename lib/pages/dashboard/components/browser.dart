@@ -82,7 +82,7 @@ class _BrowserState extends State<Browser> {
   retrieveUser() async {
     FocusManager.instance.primaryFocus?.unfocus();
     setState(() => retrievingUser = true);
-    var response = await provider.getSummonerData(searchController.text);
+    var response = await provider.getSelectedSummonerData(searchController.text);
     if (response == 200) {
       Navigator.of(context).push(pageBuilder());
     }

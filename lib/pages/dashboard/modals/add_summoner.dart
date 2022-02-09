@@ -31,8 +31,8 @@ class _AddSummonerState extends State<AddSummoner> {
         curve: visible ? Curves.linear : Curves.easeInBack,
         bottom: provider.showAddSummoner
             ? visible
-                ? -provider.device.height + MediaQuery.of(context).viewInsets.bottom + 180
-                : -provider.device.height + 180
+                ? -provider.device.height + MediaQuery.of(context).viewInsets.bottom + 105
+                : -provider.device.height + 105
             : -provider.device.height,
         child: GestureDetector(
           onVerticalDragUpdate: (details) {
@@ -57,14 +57,7 @@ class _AddSummonerState extends State<AddSummoner> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 verticalSpacer(30),
-                const Center(
-                  child: Text(
-                    'Add to cards',
-                    style: textMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                verticalSpacer(30),
+               
                 Container(
                   margin: const EdgeInsets.only(left: 30, right: 30),
                   decoration: BoxDecoration(
@@ -87,8 +80,8 @@ class _AddSummonerState extends State<AddSummoner> {
                         retrieveFavoriteUser();
                       },
                       textInputAction: TextInputAction.search,
-                      decoration: InputDecoration(
-                        hintText: 'Summoner from ${provider.region.toUpperCase()}',
+                      decoration: const InputDecoration(
+                        hintText: 'Add a Summoner to cards',
                         hintStyle: label,
                         border: InputBorder.none,
                       ),

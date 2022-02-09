@@ -209,7 +209,7 @@ class _SummonerCardState extends State<SummonerCard> {
   openSummonerCard(summonerName, region) async {
     if (!provider.isLoadingSummoner) {
       setState(() => retrievingCardUser = true);
-      var response = await provider.getSummonerData(summonerName, regionIndex(region));
+      var response = await provider.getSelectedSummonerData(summonerName, regionIndex(region));
       if (response == 200) {
         Navigator.of(context).push(pageBuilder());
       }
