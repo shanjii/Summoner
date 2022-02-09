@@ -186,7 +186,7 @@ class _SummonerCardState extends State<SummonerCard> {
                               color: Colors.white,
                               backgroundColor: Colors.transparent,
                               value: retrievingCardUser ? null : 0,
-                              minHeight: 4,
+                              minHeight: 3,
                             ),
                           ],
                         ),
