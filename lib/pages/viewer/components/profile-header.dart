@@ -105,7 +105,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
 
   starSummoner() async {
     setState(() => isAddingSummoner = true);
-    await provider.addFavoriteSummoner(provider.selectedSummonerData.name, widget.region);
+    await provider.addSelectedSummoner(widget.region);
     setState(() => isAddingSummoner = false);
   }
 

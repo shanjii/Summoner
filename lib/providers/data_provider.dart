@@ -159,6 +159,28 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
+  addSelectedSummoner(region) async {
+    try {
+      if (!hasFavoriteSummoner(selectedSummonerData)) {
+        selectedSummonerData.region = region;
+        if (masteryList.isNotEmpty) {
+          await getChampionData();
+          selectedSummonerData.background = getChampionImage(masteryList[0].championId);
+        }
+        summonerList.add(selectedSummonerData);
+        await LocalStorage.writeEncoded("summoners", summonerList);
+        notifyListeners();
+        return 200;
+      } else {
+        setError("Summoner already added.");
+      }
+    } catch (error) {
+      isLoadingSummoner = false;
+      errorHandler(error);
+      return error;
+    }
+  }
+
   hasFavoriteSummoner(SummonerModel summoner) {
     bool hasSummoner = false;
     for (var item in summonerList) {
