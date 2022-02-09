@@ -69,32 +69,40 @@ class EmptyCard extends StatelessWidget {
   }
 
   showAddSummoner(DataProvider provider, context) async {
-    provider.activateAddSummonerScreen(true, context);
+    if (provider.showAddSummoner) {
+      provider.activateAddSummonerScreen(false, context);
+    } else {
+      provider.activateAddSummonerScreen(true, context);
+    }
   }
 
   showRemoveSummoner(context, DataProvider provider) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Remove all favorited Summoners?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('CANCEL'),
-            ),
-            TextButton(
-              onPressed: () {
-                provider.removeSummonerList();
-                Navigator.pop(context);
-              },
-              child: const Text('REMOVE ALL'),
-            )
-          ],
-        );
-      },
-    );
+    if (provider.showAddSummoner) {
+      provider.activateAddSummonerScreen(false, context);
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Remove all favorited Summoners?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('CANCEL'),
+              ),
+              TextButton(
+                onPressed: () {
+                  provider.removeSummonerList();
+                  Navigator.pop(context);
+                },
+                child: const Text('REMOVE ALL'),
+              )
+            ],
+          );
+        },
+      );
+    }
   }
 }
