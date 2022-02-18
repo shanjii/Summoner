@@ -207,21 +207,19 @@ class _SummonerCardState extends State<SummonerCard> {
   }
 
   openSummonerCard(summonerName, region) async {
-    if (!provider.isLoadingSummoner) {
-      setState(() => retrievingCardUser = true);
-      var response = await provider.getSelectedSummonerData(summonerName, regionIndex(region));
-      if (response == 200) {
-        Navigator.of(context).push(pageBuilder());
-      }
-      await wait(200);
-      setState(() => retrievingCardUser = false);
-    }
+    provider.getSelectedSummonerData(summonerName, regionIndex(region));
+    Navigator.of(context).push(pageBuilder());
+    await wait(200);
   }
 
   pageBuilder() {
     return PageRouteBuilder(
       transitionDuration: const Duration(milliseconds: 500),
-      pageBuilder: (context, animation, secondaryAnimation) => ViewerPage(index: widget.index, region: widget.summoner.region),
+      pageBuilder: (context, animation, secondaryAnimation) => ViewerPage(
+        index: widget.index,
+        summoner: widget.summoner,
+        region: widget.summoner.region,
+      ),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(1.0, 0.0);
         const end = Offset.zero;

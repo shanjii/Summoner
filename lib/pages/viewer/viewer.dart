@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:league_checker/models/summoner_model.dart';
 import 'package:league_checker/pages/viewer/components/mastery-card.dart';
 import 'package:league_checker/pages/viewer/components/profile-banner.dart';
 import 'package:league_checker/pages/viewer/components/profile-header.dart';
@@ -11,9 +12,10 @@ import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 
 class ViewerPage extends StatelessWidget {
-  const ViewerPage({Key? key, required this.index, required this.region}) : super(key: key);
+  const ViewerPage({Key? key, required this.index, required this.region, this.summoner}) : super(key: key);
   final int index;
   final String region;
+  final SummonerModel? summoner;
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +32,13 @@ class ViewerPage extends StatelessWidget {
               children: [
                 ProfileBanner(
                   index: index,
-                  region: region,
+                  summoner: summoner,
                 ),
                 const MasteryCard(),
               ],
             ),
           ),
-          ProfileHeader(region: region)
+          ProfileHeader(summoner: summoner, region: region,)
         ],
       ),
     );

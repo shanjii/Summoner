@@ -22,9 +22,11 @@ class DataProvider extends ChangeNotifier {
   bool showError = false;
   bool showAddSummoner = false;
   bool isLoadingSummoner = false;
+
   String region = '';
   String apiVersion = '';
   String errorMessage = '';
+  
   List<SummonerModel> summonerList = [];
   List<ChampionMasteryModel> masteryList = [];
   List<RankModel> rankList = [];
@@ -50,6 +52,7 @@ class DataProvider extends ChangeNotifier {
         selectedSummonerData.background = getChampionImage(masteryList[0].championId);
       }
       isLoadingSummoner = false;
+      notifyListeners();
       return 200;
     } catch (error) {
       isLoadingSummoner = false;

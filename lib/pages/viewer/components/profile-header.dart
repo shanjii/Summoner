@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:league_checker/models/summoner_model.dart';
 import 'package:league_checker/providers/data_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
@@ -6,8 +7,9 @@ import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 
 class ProfileHeader extends StatefulWidget {
-  const ProfileHeader({Key? key, required this.region}) : super(key: key);
+  const ProfileHeader({Key? key, required this.region, this.summoner}) : super(key: key);
   final String region;
+  final SummonerModel? summoner;
   @override
   _ProfileHeaderState createState() => _ProfileHeaderState();
 }
@@ -63,7 +65,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                   borderRadius: BorderRadius.circular(100),
                   child: Material(
                     color: Colors.transparent,
-                    child: provider.hasFavoriteSummoner(provider.selectedSummonerData)
+                    child: provider.hasFavoriteSummoner(widget.summoner == null ? provider.selectedSummonerData : widget.summoner!)
                         ? InkWell(
                             onTap: () => removeIndex(),
                             child: const Icon(
