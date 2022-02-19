@@ -80,13 +80,19 @@ class _BrowserState extends State<Browser> {
   }
 
   retrieveUser() async {
-    FocusManager.instance.primaryFocus?.unfocus();
-    setState(() => retrievingUser = true);
-    var response = await provider.getSelectedSummonerData(searchController.text);
-    if (response == 200) {
-      Navigator.of(context).push(pageBuilder());
+    if (provider.recentRequests > 3) {
+      provider.setError("Slow down!");
+    } else {
+      provider.recentRequests++;
+      provider.rateLimiter();
+      FocusManager.instance.primaryFocus?.unfocus();
+      setState(() => retrievingUser = true);
+      var response = await provider.getSelectedSummonerData(searchController.text);
+      if (response == 200) {
+        Navigator.of(context).push(pageBuilder());
+      }
+      setState(() => retrievingUser = false);
     }
-    setState(() => retrievingUser = false);
   }
 
   pageBuilder() {

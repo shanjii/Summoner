@@ -36,7 +36,11 @@ class _SummonerCardState extends State<SummonerCard> {
       height: 190,
       width: provider.device.width,
       child: AnimatedOpacity(
-        opacity: deleteAction ? 0 : 1,
+        opacity: deleteAction
+            ? 0
+            : provider.isLoadingSummoner && !retrievingCardUser
+                ? 0.3
+                : 1,
         duration: const Duration(milliseconds: 500),
         curve: Curves.linear,
         child: Stack(
@@ -181,13 +185,7 @@ class _SummonerCardState extends State<SummonerCard> {
                                 ],
                               ),
                             ),
-                            verticalSpacer(10),
-                            LinearProgressIndicator(
-                              color: Colors.white,
-                              backgroundColor: Colors.transparent,
-                              value: retrievingCardUser ? null : 0,
-                              minHeight: 3,
-                            ),
+                            verticalSpacer(20),
                           ],
                         ),
                       ),
@@ -206,10 +204,22 @@ class _SummonerCardState extends State<SummonerCard> {
     );
   }
 
-  openSummonerCard(summonerName, region) async {
-    provider.getSelectedSummonerData(summonerName, regionIndex(region));
-    Navigator.of(context).push(pageBuilder());
-    await wait(200);
+  openSummonerCard(summonerName, accountId, region) async {
+    if (!retrievingCardUser && !provider.isLoadingSummoner) {
+      if (provider.recentRequests > 3) {
+        provider.setError("Slow down!");
+      } else {
+        provider.recentRequests++;
+        provider.rateLimiter();
+        Navigator.of(context).push(pageBuilder());
+        setState(() => retrievingCardUser = true);
+        await provider.getSelectedSummonerData(summonerName, regionIndex(region));
+        await provider.updateSummoner(accountId, region);
+        setState(() => retrievingCardUser = false);
+      }
+    } else if (retrievingCardUser && provider.isLoadingSummoner) {
+      Navigator.of(context).push(pageBuilder());
+    }
   }
 
   pageBuilder() {
@@ -252,7 +262,7 @@ class _SummonerCardState extends State<SummonerCard> {
   tapOpen() async {
     if (!provider.showAddSummoner) {
       setState(() => positionX = 0);
-      openSummonerCard(widget.summoner.name, widget.summoner.region);
+      openSummonerCard(widget.summoner.name, widget.summoner.accountId, widget.summoner.region);
     }
     FocusManager.instance.primaryFocus?.unfocus();
     await wait(100);

@@ -42,27 +42,31 @@ class _ProfileBannerState extends State<ProfileBanner> {
               child: SizedBox(
                 height: 200,
                 width: provider.device.width,
-                child: provider.masteryList.isNotEmpty || widget.summoner!.background.isNotEmpty
-                    ? CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        imageUrl: UrlBuilder.championWallpaper(widget.summoner == null ? provider.getChampionImage(provider.masteryList[0].championId) : widget.summoner!.background),
-                        imageBuilder: (context, imageProvider) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: imageProvider,
-                              ),
-                            ),
-                          );
-                        },
-                        placeholder: (context, url) => Container(
-                          color: Colors.white10,
+                child: CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: UrlBuilder.championWallpaper(
+                    widget.summoner == null || !provider.isLoadingSummoner
+                        ? provider.masteryList.isNotEmpty
+                            ? provider.getChampionImage(provider.masteryList[0].championId)
+                            : "Teemo"
+                        : widget.summoner!.background,
+                  ),
+                  imageBuilder: (context, imageProvider) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: imageProvider,
                         ),
-                        errorWidget: (context, url, error) => const Icon(Icons.error),
-                      )
-                    : const SizedBox(),
+                      ),
+                    );
+                  },
+                  placeholder: (context, url) => Container(
+                    color: Colors.white10,
+                  ),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
               ),
             ),
             AnimatedOpacity(
@@ -81,7 +85,9 @@ class _ProfileBannerState extends State<ProfileBanner> {
                         CachedNetworkImage(
                           width: 100,
                           height: 100,
-                          imageUrl: UrlBuilder.profileIconUrl(widget.summoner == null ? provider.selectedSummonerData.profileIconId : widget.summoner!.profileIconId, provider.apiVersion),
+                          imageUrl: UrlBuilder.profileIconUrl(
+                              widget.summoner == null || !provider.isLoadingSummoner ? provider.selectedSummonerData.profileIconId : widget.summoner!.profileIconId,
+                              provider.apiVersion),
                           imageBuilder: (context, imageProvider) {
                             return Container(
                               decoration: BoxDecoration(
@@ -110,7 +116,9 @@ class _ProfileBannerState extends State<ProfileBanner> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 8.0, top: 2, bottom: 2, right: 8),
                                 child: Text(
-                                  widget.summoner == null ? provider.selectedSummonerData.summonerLevel.toString() : widget.summoner!.summonerLevel.toString(),
+                                  widget.summoner == null || !provider.isLoadingSummoner
+                                      ? provider.selectedSummonerData.summonerLevel.toString()
+                                      : widget.summoner!.summonerLevel.toString(),
                                   style: textSmall,
                                 ),
                               ),
@@ -131,7 +139,7 @@ class _ProfileBannerState extends State<ProfileBanner> {
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Text(
-                    widget.summoner == null ? provider.selectedSummonerData.name : widget.summoner!.name,
+                    widget.summoner == null || !provider.isLoadingSummoner ? provider.selectedSummonerData.name : widget.summoner!.name,
                     style: textMedium,
                   ),
                 ),

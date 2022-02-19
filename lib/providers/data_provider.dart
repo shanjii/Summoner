@@ -26,7 +26,7 @@ class DataProvider extends ChangeNotifier {
   String region = '';
   String apiVersion = '';
   String errorMessage = '';
-  
+
   List<SummonerModel> summonerList = [];
   List<ChampionMasteryModel> masteryList = [];
   List<RankModel> rankList = [];
@@ -34,6 +34,7 @@ class DataProvider extends ChangeNotifier {
   List<MatchData> matchList = [];
   List myMatchStats = [];
   FocusNode addSummonerKeyboardFocus = FocusNode();
+  int recentRequests = 0;
 
   //Return summoner data from specified summoner name
   getSelectedSummonerData(String summonerName, [argument]) async {
@@ -276,12 +277,14 @@ class DataProvider extends ChangeNotifier {
   }
 
   setError(error) async {
-    showError = true;
-    errorMessage = error;
-    notifyListeners();
-    await wait(4000);
-    showError = false;
-    notifyListeners();
+    if (!showError) {
+      showError = true;
+      errorMessage = error;
+      notifyListeners();
+      await wait(4000);
+      showError = false;
+      notifyListeners();
+    }
   }
 
   clearError() async {
@@ -297,6 +300,30 @@ class DataProvider extends ChangeNotifier {
       FocusScope.of(context).unfocus();
     }
     notifyListeners();
+  }
+
+  updateSummoner(String accountId, String region) {
+    for (var i = 0; i < summonerList.length; i++) {
+      if (summonerList[i].accountId == accountId) {
+        summonerList.removeAt(i);
+        selectedSummonerData.region = region;
+        summonerList.insert(0, selectedSummonerData);
+      }
+    }
+  }
+
+  rateLimiter() async {
+    if (recentRequests == 1) {
+      while (recentRequests > 0) {
+        await wait(20000);
+        if (recentRequests == 4) {
+          await wait(15000);
+          recentRequests = 0;
+          break;
+        }
+        recentRequests--;
+      }
+    }
   }
 
   errorHandler(error) {

@@ -37,7 +37,9 @@ class Header extends StatelessWidget {
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
-                      openRegionSelector(context);
+                      if (!provider.isLoadingSummoner) {
+                        openRegionSelector(context);
+                      }
                     },
                     child: const Icon(
                       Icons.public_rounded,
