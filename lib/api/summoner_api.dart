@@ -132,7 +132,7 @@ class SummonerAPI {
     try {
       var response = await http.get(
         Uri.parse(
-          'https://$regionType.api.riotgames.com/lol/match/v5/matches/by-puuid/$puuid/ids?start=0&count=10',
+          'https://$regionType.api.riotgames.com/lol/match/v5/matches/by-puuid/$puuid/ids?start=0&count=5',
         ),
         headers: {"X-Riot-Token": riotToken},
       ).timeout(const Duration(seconds: 15));

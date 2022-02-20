@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:league_checker/api/summoner_api.dart';
 import 'package:league_checker/models/champion_data_model.dart';
@@ -6,6 +5,7 @@ import 'package:league_checker/models/champion_mastery_model.dart';
 import 'package:league_checker/models/match_data_model.dart';
 import 'package:league_checker/models/rank_model.dart';
 import 'package:league_checker/models/summoner_model.dart';
+import 'package:league_checker/repositories/data_repository.dart';
 import 'package:league_checker/utils/device.dart';
 import 'package:league_checker/utils/indexer.dart';
 import 'package:league_checker/utils/local_storage.dart';
@@ -15,6 +15,8 @@ class DataProvider extends ChangeNotifier {
   DataProvider(this.region, this.summonerAPI);
 
   late SummonerAPI summonerAPI;
+  late final DataRepository _dataRepository = DataRepository(summonerAPI);
+
   late Device device;
   late SummonerModel selectedSummonerData;
 
@@ -31,8 +33,8 @@ class DataProvider extends ChangeNotifier {
   List<ChampionMasteryModel> masteryList = [];
   List<RankModel> rankList = [];
   List<ChampionData> championList = [];
-  List<MatchData> matchList = [];
   List myMatchStats = [];
+  List<MatchData> matchList = [];
   FocusNode addSummonerKeyboardFocus = FocusNode();
   int recentRequests = 0;
 
@@ -41,13 +43,16 @@ class DataProvider extends ChangeNotifier {
     try {
       isLoadingSummoner = true;
       await selectRegion(region);
-      selectedSummonerData = SummonerModel.fromJson(await summonerAPI.getselectedSummonerData(summonerName, [argument]));
+      selectedSummonerData = await _dataRepository.getSummonerData(summonerName, [argument]);
       selectedSummonerData.region = region;
       await Future.wait([
-        getChampionMastery(selectedSummonerData.id),
-        getSummonerRank(selectedSummonerData.id),
-        getChampionData(),
-        getMatchList(),
+        _dataRepository.getChampionMastery(selectedSummonerData.id).then((value) => masteryList = value),
+        _dataRepository.getSummonerRank(selectedSummonerData.id).then((value) => rankList = value),
+        _dataRepository.getChampionData(championList, apiVersion).then((value) => championList = value),
+        _dataRepository.getMatchList(selectedSummonerData).then((value) {
+          myMatchStats = value[0];
+          matchList = value[1];
+        }),
       ]);
       if (masteryList.isNotEmpty) {
         selectedSummonerData.background = getChampionImage(masteryList[0].championId);
@@ -62,91 +67,14 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
-  //Return the top 3 champion masteries from specified summoner ID
-  Future getChampionMastery(summonerId) async {
-    masteryList.clear();
-    var championMasteries = await summonerAPI.getChampionMastery(summonerId);
-    for (var i = 0; i < championMasteries.length; i++) {
-      masteryList.add(ChampionMasteryModel.fromJson(championMasteries[i]));
-      if (i >= 2) {
-        break;
-      }
-    }
-  }
-
-  //Return all recent matches from the selected summoner
-  Future getMatchList() async {
-    matchList.clear();
-    myMatchStats.clear();
-    var matchIds = await summonerAPI.getMatchId(selectedSummonerData.puuid);
-    List<Future> promises = [];
-    for (var id in matchIds) {
-      promises.add(getMatchData(id));
-    }
-    if (promises.isNotEmpty) {
-      await Future.wait(promises);
-    }
-    //Needed for match order based on most the recent match
-    matchList.sort(
-      (b, a) => a.info.gameCreation.compareTo(b.info.gameCreation),
-    );
-    if (matchList.isNotEmpty) {
-      for (var match in matchList) {
-        for (var participant in match.info.participants) {
-          if (participant.puuid == selectedSummonerData.puuid) {
-            myMatchStats.add(participant);
-          }
-        }
-      }
-    }
-  }
-
-  //Return the match data from specified match ID
-  Future getMatchData(id) async {
-    var summonerMatches = await summonerAPI.getMatchData(id);
-    try {
-      matchList.add(MatchData.fromJson(summonerMatches));
-    } catch (error) {
-      log("A match had an unknown error");
-      return;
-    }
-  }
-
-  //Return all the ranks of the specified summoner ID
-  Future getSummonerRank(summonerId) async {
-    rankList.clear();
-    var summonerRanks = await summonerAPI.getSummonerRank(summonerId);
-    if (summonerRanks.isNotEmpty) {
-      for (var i = 0; i < summonerRanks.length; i++) {
-        if (summonerRanks[i]['queueType'] != "RANKED_TFT_PAIRS") {
-          rankList.add(RankModel.fromJson(summonerRanks[i]));
-        }
-      }
-    }
-  }
-
-  //Load all champion data into a list
-  Future getChampionData() async {
-    if (championList.isEmpty) {
-      var championData = await summonerAPI.getChampionData(apiVersion);
-      championData.values.forEach((value) {
-        championList.add(ChampionData.fromJson(value));
-      });
-    }
-  }
-
   //Add a favorited summoner to the summoner list and save them in the memory
   addFavoriteSummoner(String summonerName, region) async {
     try {
-      var summoner = SummonerModel.fromJson(
-        await summonerAPI.getselectedSummonerData(summonerName),
-      );
-
+      var summoner = await _dataRepository.getSummonerData(summonerName);
       if (!hasFavoriteSummoner(summoner)) {
         summoner.region = region;
-        var masteries = await summonerAPI.getChampionMastery(summoner.id);
+        var masteries = await _dataRepository.getChampionMastery(summoner.id);
         if (masteries.isNotEmpty) {
-          await getChampionData();
           summoner.background = getChampionImage(masteries[0]["championId"]);
         }
         summonerList.add(summoner);
@@ -168,7 +96,6 @@ class DataProvider extends ChangeNotifier {
       if (!hasFavoriteSummoner(selectedSummonerData)) {
         selectedSummonerData.region = region;
         if (masteryList.isNotEmpty) {
-          await getChampionData();
           selectedSummonerData.background = getChampionImage(masteryList[0].championId);
         }
         summonerList.add(selectedSummonerData);
@@ -315,9 +242,9 @@ class DataProvider extends ChangeNotifier {
   rateLimiter() async {
     if (recentRequests == 1) {
       while (recentRequests > 0) {
-        await wait(20000);
+        await wait(25000);
         if (recentRequests == 4) {
-          await wait(15000);
+          await wait(25000);
           recentRequests = 0;
           break;
         }
