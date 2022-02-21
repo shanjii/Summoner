@@ -47,7 +47,7 @@ Future preloadImages() async {
   for (var summoner in summonerList) {
     if (summoner.background != "") {
       await loadImage(
-        NetworkImage(UrlBuilder.championWallpaper(summoner.background)),
+        NetworkImage(championWallpaper(summoner.background)),
       );
     }
   }

@@ -4,6 +4,7 @@ import 'package:league_checker/models/summoner_model.dart';
 import 'package:league_checker/providers/data_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
+import 'package:league_checker/utils/parser.dart';
 import 'package:league_checker/utils/url_builder.dart';
 import 'package:provider/provider.dart';
 
@@ -44,10 +45,10 @@ class _ProfileBannerState extends State<ProfileBanner> {
                 width: provider.device.width,
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: UrlBuilder.championWallpaper(
+                  imageUrl: championWallpaper(
                     widget.summoner == null || !provider.isLoadingSummoner
                         ? provider.masteryList.isNotEmpty
-                            ? provider.getChampionImage(provider.masteryList[0].championId)
+                            ? getChampionImage(provider.masteryList[0].championId, provider.championList)
                             : "Teemo"
                         : widget.summoner!.background,
                   ),
@@ -85,7 +86,7 @@ class _ProfileBannerState extends State<ProfileBanner> {
                         CachedNetworkImage(
                           width: 100,
                           height: 100,
-                          imageUrl: UrlBuilder.profileIconUrl(
+                          imageUrl: profileIconUrl(
                               widget.summoner == null || !provider.isLoadingSummoner ? provider.selectedSummonerData.profileIconId : widget.summoner!.profileIconId,
                               provider.apiVersion),
                           imageBuilder: (context, imageProvider) {

@@ -3,6 +3,7 @@ import 'package:league_checker/models/summoner_model.dart';
 import 'package:league_checker/providers/data_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
+import 'package:league_checker/utils/checker.dart';
 import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +35,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
       duration: duration,
       curve: Curves.easeOut,
       child: Container(
-        color: Colors.black54,
+        color: darkGrayTone2,
         width: provider.device.width,
         height: provider.device.statusBarHeight + 102,
         child: Padding(
@@ -45,7 +46,10 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                 width: 40,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(100),
-                  onTap: () => Navigator.pop(context),
+                  onTap: () {
+                    Navigator.pop(context);
+                    provider.viewerOpen = false;
+                  },
                   child: const Icon(
                     Icons.arrow_back_ios_new_rounded,
                     color: Colors.white,
@@ -65,7 +69,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                   borderRadius: BorderRadius.circular(100),
                   child: Material(
                     color: Colors.transparent,
-                    child: provider.hasFavoriteSummoner(widget.summoner == null ? provider.selectedSummonerData : widget.summoner!)
+                    child: hasFavoriteSummoner(widget.summoner == null ? provider.selectedSummonerData : widget.summoner!, provider.summonerList)
                         ? InkWell(
                             onTap: () => removeIndex(),
                             child: const Icon(

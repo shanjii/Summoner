@@ -1,12 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:league_checker/models/summoner_model.dart';
+import 'package:league_checker/pages/dashboard/dashboard.dart';
 import 'package:league_checker/pages/viewer/viewer.dart';
 import 'package:league_checker/providers/data_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/utils/indexer.dart';
-import 'package:league_checker/utils/misc.dart';
+import 'package:league_checker/utils/waiter.dart';
 import 'package:league_checker/utils/url_builder.dart';
 import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
@@ -106,7 +107,7 @@ class _SummonerCardState extends State<SummonerCard> {
                     splashColor: provider.showAddSummoner ? Colors.transparent : null,
                     onTap: () => tapOpen(),
                     child: CachedNetworkImage(
-                      imageUrl: UrlBuilder.championWallpaper(widget.summoner.background.isNotEmpty ? widget.summoner.background : "Teemo"),
+                      imageUrl: championWallpaper(widget.summoner.background.isNotEmpty ? widget.summoner.background : "Teemo"),
                       imageBuilder: (context, imageProvider) => Ink(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
@@ -124,7 +125,7 @@ class _SummonerCardState extends State<SummonerCard> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 20, top: 20),
                                   child: CachedNetworkImage(
-                                    imageUrl: UrlBuilder.profileIconUrl(widget.summoner.profileIconId, provider.apiVersion),
+                                    imageUrl: profileIconUrl(widget.summoner.profileIconId, provider.apiVersion),
                                     imageBuilder: (context, imageProvider) => Ink(
                                       height: 60,
                                       width: 60,
@@ -179,7 +180,7 @@ class _SummonerCardState extends State<SummonerCard> {
                                   ),
                                   const Spacer(),
                                   Image.asset(
-                                    UrlBuilder.flags(widget.summoner.region),
+                                    flags(widget.summoner.region),
                                     width: 30,
                                   )
                                 ],
@@ -212,9 +213,16 @@ class _SummonerCardState extends State<SummonerCard> {
         provider.recentRequests++;
         provider.rateLimiter();
         Navigator.of(context).push(pageBuilder());
+        provider.viewerOpen = true;
         setState(() => retrievingCardUser = true);
-        await provider.getSelectedSummonerData(summonerName, regionIndex(region));
-        await provider.updateSummoner(accountId, region);
+        var status = await provider.getSelectedSummonerData(summonerName, regionIndex(region));
+        if (status == 200) {
+          provider.updateSummoner(accountId, region);
+        } else {
+          if (provider.viewerOpen) {
+            Navigator.pop(context);
+          }
+        }
         setState(() => retrievingCardUser = false);
       }
     } else if (retrievingCardUser && provider.isLoadingSummoner) {

@@ -12,7 +12,7 @@ class DataRepository {
   late SummonerAPI summonerAPI;
 
   getSummonerData(summonerName, [argument]) async {
-    if (argument[0] == null) {
+    if (argument == null) {
       return SummonerModel.fromJson(await summonerAPI.getselectedSummonerData(summonerName));
     } else {
       return SummonerModel.fromJson(await summonerAPI.getselectedSummonerData(summonerName, argument));

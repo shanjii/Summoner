@@ -16,7 +16,6 @@ class ViewerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DataProvider provider = Provider.of<DataProvider>(context);
 
     return Scaffold(
       backgroundColor: darkGrayTone2,

@@ -10,7 +10,7 @@ import 'package:league_checker/style/stylesheet.dart';
 import 'package:league_checker/pages/dashboard/components/summoner_card.dart';
 import 'package:league_checker/pages/dashboard/modals/add_summoner.dart';
 import 'package:league_checker/utils/device.dart';
-import 'package:league_checker/utils/misc.dart';
+import 'package:league_checker/utils/waiter.dart';
 import 'package:league_checker/utils/widget.dart';
 import 'package:provider/provider.dart';
 

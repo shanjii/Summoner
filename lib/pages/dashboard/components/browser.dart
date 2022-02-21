@@ -53,7 +53,7 @@ class _BrowserState extends State<Browser> {
                   },
                   textInputAction: TextInputAction.search,
                   decoration: InputDecoration(
-                    suffixIcon: Image(image: AssetImage(UrlBuilder.flags(provider.region))),
+                    suffixIcon: Image(image: AssetImage(flags(provider.region))),
                     hintText: provider.updatingDevice ? "Retrieving latest patch..." : "Find a Summoner",
                     hintStyle: label,
                     border: InputBorder.none,

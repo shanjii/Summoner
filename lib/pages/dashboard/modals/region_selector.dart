@@ -72,7 +72,7 @@ Widget flagItem(String flag, DataProvider provider, context) {
             child: Column(
               children: [
                 Image(
-                  image: AssetImage(UrlBuilder.flags(flag)),
+                  image: AssetImage(flags(flag)),
                 ),
                 const Spacer(
                   flex: 1,

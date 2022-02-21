@@ -5,3 +5,5 @@ winRate(wins, losses) {
   double winrate = ((matches - losses) / matches) * 100;
   return winrate.toStringAsFixed(2);
 }
+
+
