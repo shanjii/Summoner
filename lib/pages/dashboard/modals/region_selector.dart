@@ -15,36 +15,46 @@ class RegionSelector extends StatelessWidget {
 
     return Container(
       decoration: const BoxDecoration(
-        color: darkGrayTone4,
+        color: darkGrayTone5,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 25, 0, 25),
-        child: Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 1,
-          runSpacing: 1,
+        padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            flagItem("br", provider, context),
-            flagItem("eune", provider, context),
-            flagItem("euw", provider, context),
-            flagItem("jp", provider, context),
-            flagItem("kr", provider, context),
-            flagItem("lan", provider, context),
-            flagItem("las", provider, context),
-            flagItem("na", provider, context),
-            flagItem("oce", provider, context),
-            flagItem("ru", provider, context),
-            flagItem("tr", provider, context),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              child: SizedBox(
-                height: 50,
-                width: 80,
-              ),
+            const Text(
+              "Select a region",
+              style: textMediumBold,
+            ),
+            verticalSpacer(20),
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              spacing: 1,
+              runSpacing: 1,
+              children: [
+                flagItem("br", provider, context),
+                flagItem("eune", provider, context),
+                flagItem("euw", provider, context),
+                flagItem("jp", provider, context),
+                flagItem("kr", provider, context),
+                flagItem("lan", provider, context),
+                flagItem("las", provider, context),
+                flagItem("na", provider, context),
+                flagItem("oce", provider, context),
+                flagItem("ru", provider, context),
+                flagItem("tr", provider, context),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  child: SizedBox(
+                    height: 50,
+                    width: 80,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

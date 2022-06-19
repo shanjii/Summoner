@@ -17,7 +17,7 @@ class DataProvider extends ChangeNotifier {
   DataProvider(this.region, this.summonerAPI);
 
   late SummonerAPI summonerAPI;
-  late final DataRepository _dataRepository = DataRepository(summonerAPI);
+  late DataRepository _dataRepository = DataRepository(summonerAPI);
 
   late Device device;
   late SummonerModel selectedSummonerData;
@@ -180,6 +180,7 @@ class DataProvider extends ChangeNotifier {
     region = flag;
     List<String> regionData = regionIndex(region);
     summonerAPI = SummonerAPI(regionData[0], regionData[1]);
+    _dataRepository = DataRepository(summonerAPI);
     notifyListeners();
   }
 

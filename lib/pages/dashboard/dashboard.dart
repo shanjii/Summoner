@@ -23,7 +23,6 @@ class DashboardPage extends StatefulWidget {
 
 class _MyHomePageState extends State<DashboardPage> {
   late DataProvider provider;
-  double surprise = 0;
 
   @override
   void initState() {
@@ -38,13 +37,6 @@ class _MyHomePageState extends State<DashboardPage> {
 
     return WillPopScope(
       onWillPop: () {
-        if (!provider.showAddSummoner) {
-          surprise++;
-          if (surprise > 20) {
-            provider.setError("Why are you running?");
-            surprise = 0;
-          }
-        }
         provider.activateAddSummonerScreen(false, context);
         return Future.value(false);
       },
@@ -91,7 +83,7 @@ class _MyHomePageState extends State<DashboardPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.sentiment_neutral_outlined, size: 80, color: Colors.white),
+              const Icon(Icons.no_accounts_rounded, size: 80, color: Colors.white),
               verticalSpacer(10),
               const Text(
                 "You have no Summoners",

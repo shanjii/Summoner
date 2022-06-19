@@ -187,6 +187,12 @@ class _SummonerCardState extends State<SummonerCard> {
                               ),
                             ),
                             verticalSpacer(20),
+                            LinearProgressIndicator(
+                              color: Colors.white,
+                              backgroundColor: Colors.transparent,
+                              value: retrievingCardUser ? null : 0,
+                              minHeight: 2,
+                            ),
                           ],
                         ),
                       ),
