@@ -4,7 +4,6 @@ import 'package:league_checker/models/summoner_model.dart';
 import 'package:league_checker/providers/data_provider.dart';
 import 'package:league_checker/style/color_palette.dart';
 import 'package:league_checker/style/stylesheet.dart';
-import 'package:league_checker/utils/parser.dart';
 import 'package:league_checker/utils/url_builder.dart';
 import 'package:provider/provider.dart';
 

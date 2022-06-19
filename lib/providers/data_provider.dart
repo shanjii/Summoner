@@ -53,8 +53,10 @@ class DataProvider extends ChangeNotifier {
         _dataRepository.getSummonerRank(selectedSummonerData.id).then((value) => rankList = value),
         _dataRepository.getChampionData(championList, apiVersion).then((value) => championList = value),
         _dataRepository.getMatchList(selectedSummonerData).then((value) {
-          myMatchStats = value[0];
-          matchList = value[1];
+          if (value != null) {
+            myMatchStats = value[0];
+            matchList = value[1];
+          }
         }),
       ]);
       if (masteryList.isNotEmpty) {
